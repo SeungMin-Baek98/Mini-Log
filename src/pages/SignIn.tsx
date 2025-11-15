@@ -4,16 +4,32 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useSignInWithPassword } from '@/hooks/mutations/use-sign-in-with-password';
 
+import gitHubLogo from '@/assets/github-mark.svg';
+import { useSignInWithOAuth } from '@/hooks/mutations/use-sign-in-with-OAuth';
+
 export default function SignUpPage() {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const { mutate: signInWithPassword } = useSignInWithPassword();
+	const { mutate: signInWithOAuth } = useSignInWithOAuth();
 
 	const handleSignInWithPasswordClick = () => {
 		if (email.trim() === '') return;
 		if (password.trim() === '') return;
 
 		signInWithPassword({ email, password });
+	};
+
+	const handleSignInWithGithubClick = () => {
+		signInWithOAuth('github');
+	};
+
+	const handleSignInWithKakaoClick = () => {
+		signInWithOAuth('kakao');
+	};
+
+	const handleSignInWithGoogleClick = () => {
+		signInWithOAuth('google');
 	};
 
 	return (
@@ -39,9 +55,20 @@ export default function SignUpPage() {
 					placeholder="password"
 				/>
 			</div>
-			<div>
+			<div className="flex flex-col gap-2">
 				<Button className="w-full" onClick={handleSignInWithPasswordClick}>
 					로그인
+				</Button>
+				<Button className="w-full" variant={'outline'} onClick={handleSignInWithGithubClick}>
+					<img src={gitHubLogo} className="h-4 w-4" />
+					Github 계정으로 로그인
+				</Button>
+
+				<Button className="w-full" variant={'outline'} onClick={handleSignInWithKakaoClick}>
+					카카오 계정으로 로그인
+				</Button>
+				<Button className="w-full" variant={'outline'} onClick={handleSignInWithGoogleClick}>
+					구글 계정으로 로그인
 				</Button>
 			</div>
 
