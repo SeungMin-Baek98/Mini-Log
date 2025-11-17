@@ -15,24 +15,26 @@ import kakaoLogo from '@/assets/kakaotalk_sharing_btn_small.png';
 export default function SignUpPage() {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const { mutate: signInWithPassword, isPending: isSignInWithPasswordPending } = useSignInWithPassword({
-		onError: error => {
-			const message = generateErrorMessage(error);
-			toast.error(message, {
-				position: 'top-center'
-			});
+	const { mutate: signInWithPassword, isPending: isSignInWithPasswordPending } =
+		useSignInWithPassword({
+			onError: error => {
+				const message = generateErrorMessage(error);
+				toast.error(message, {
+					position: 'top-center'
+				});
 
-			setPassword('');
-		}
-	});
-	const { mutate: signInWithOAuth, isPending: isSignInWithOAuthPending } = useSignInWithOAuth({
-		onError: error => {
-			const message = generateErrorMessage(error);
-			toast.error(message, {
-				position: 'top-center'
-			});
-		}
-	});
+				setPassword('');
+			}
+		});
+	const { mutate: signInWithOAuth, isPending: isSignInWithOAuthPending } =
+		useSignInWithOAuth({
+			onError: error => {
+				const message = generateErrorMessage(error);
+				toast.error(message, {
+					position: 'top-center'
+				});
+			}
+		});
 
 	/** 이메일 & 비밀번호 로그인 */
 	const handleSignInWithPasswordClick = () => {
@@ -84,11 +86,16 @@ export default function SignUpPage() {
 				/>
 			</div>
 			<div className="flex flex-col gap-2">
-				<Button disabled={isPending} className="w-full" onClick={handleSignInWithPasswordClick}>
+				<Button
+					disabled={isPending}
+					className="w-full"
+					onClick={handleSignInWithPasswordClick}>
 					로그인
 				</Button>
 				<div className="flex flex-col gap-9">
-					<div className="border-t border-solid border-gray-400 pt-4 text-xl font-bold">소셜 로그인</div>
+					<div className="border-t border-solid border-gray-400 pt-4 text-xl font-bold">
+						소셜 로그인
+					</div>
 					<div className="flex flex-col gap-2">
 						<Button
 							disabled={isPending}
@@ -122,7 +129,9 @@ export default function SignUpPage() {
 				<Link className="text-muted-foreground hover:underline" to={'/sign-up'}>
 					계정이 없으시다면? 회원가입
 				</Link>
-				<Link className="text-muted-foreground hover:underline" to={'/forget-password'}>
+				<Link
+					className="text-muted-foreground hover:underline"
+					to={'/forget-password'}>
 					비밀번호를 잊으셨나요?
 				</Link>
 			</div>

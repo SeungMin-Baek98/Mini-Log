@@ -12,8 +12,10 @@ const AUTH_ERROR_MESSAGE_MAP: Record<string, string> = {
 	signup_disabled: '현재 회원가입이 불가능한 상태입니다.',
 	user_already_exists: '이미 가입된 사용자입니다.',
 	captcha_failed: '보안 인증에 실패했습니다. 다시 시도해주세요.',
-	over_email_send_rate_limit: '이메일 전송 한도를 초과했습니다. 잠시 후 다시 시도해주세요.',
-	over_sms_send_rate_limit: '문자 전송 한도를 초과했습니다. 잠시 후 다시 시도해주세요.',
+	over_email_send_rate_limit:
+		'이메일 전송 한도를 초과했습니다. 잠시 후 다시 시도해주세요.',
+	over_sms_send_rate_limit:
+		'문자 전송 한도를 초과했습니다. 잠시 후 다시 시도해주세요.',
 	otp_expired: 'OTP 코드가 만료되었습니다. 다시 시도해주세요.',
 	otp_disabled: 'OTP 사용이 비활성화되어 있습니다.',
 	email_address_invalid: '유효하지 않은 이메일 주소입니다.',
@@ -23,7 +25,10 @@ const AUTH_ERROR_MESSAGE_MAP: Record<string, string> = {
 
 export function generateErrorMessage(error: unknown) {
 	if (error instanceof AuthError && error.code) {
-		return AUTH_ERROR_MESSAGE_MAP[error.code] ?? '알 수 없는 인증 오류가 발생했습니다. 잠시 후 다시 시도해주세요';
+		return (
+			AUTH_ERROR_MESSAGE_MAP[error.code] ??
+			'알 수 없는 인증 오류가 발생했습니다. 잠시 후 다시 시도해주세요'
+		);
 	}
 
 	return '문제가 발생했습니다. 잠시 후 다시 시도해주세요';
