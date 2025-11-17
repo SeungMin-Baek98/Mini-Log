@@ -1,7 +1,8 @@
 /** 인증관련 API 호출 */
 
-import supabase from '@/utils/supabase';
 import type { Provider } from '@supabase/supabase-js';
+
+import supabase from '@/utils/supabase';
 
 export async function signUp({ email, password }: { email: string; password: string }) {
 	const { data, error } = await supabase.auth.signUp({ email, password });
@@ -24,6 +25,25 @@ export async function signInWithOAuth(provider: Provider) {
 		provider
 	});
 
+	if (error) throw error;
+
+	return data;
+}
+
+export async function requestPasswordResetEmail(email: string) {
+	const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+		redirectTo: `${import.meta.env.VITE_PUBLIC_URL}/reset-password`
+	});
+
+	if (error) throw error;
+
+	return data;
+}
+
+export async function updatePassword(password: string) {
+	const { data, error } = await supabase.auth.updateUser({
+		password
+	});
 	if (error) throw error;
 
 	return data;
