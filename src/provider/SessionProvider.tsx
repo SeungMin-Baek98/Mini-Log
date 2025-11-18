@@ -3,7 +3,7 @@ import { useProfileData } from '@/hooks/queries/use-profile-data';
 import { useIsSessionLoaded, useSession, useSetSession } from '@/store/session';
 
 import supabase from '@/utils/supabase';
-import GlobalLoader from '@/components/global-loader';
+import GlobalLoader from '@/components/GlobalLoader';
 
 export default function SessionProvder({
 	children

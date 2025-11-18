@@ -4,13 +4,13 @@ import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useSignInWithPassword } from '@/hooks/mutations/use-sign-in-with-password';
-import { useSignInWithOAuth } from '@/hooks/mutations/use-sign-in-with-OAuth';
 import { generateErrorMessage } from '@/lib/error';
 
 import gitHubLogo from '@/assets/github-mark.svg';
 import googleLogo from '@/assets/google-icon.png';
 import kakaoLogo from '@/assets/kakaotalk_sharing_btn_small.png';
+import { useSignInWithPassword } from '@/hooks/mutations/useSignInWithPassword';
+import { useSignInWithOAuth } from '@/hooks/mutations/useSignInWithOAuth';
 
 export default function SignUpPage() {
 	const [email, setEmail] = useState('');
