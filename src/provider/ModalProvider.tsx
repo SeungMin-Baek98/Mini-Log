@@ -1,5 +1,6 @@
-import PostEditorModal from '@/components/modal/PostEditorModal';
 import { createPortal } from 'react-dom';
+
+import PostEditorModal from '@/components/modal/PostEditorModal';
 
 export default function ModalProvider({
 	children

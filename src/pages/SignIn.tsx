@@ -9,8 +9,8 @@ import { generateErrorMessage } from '@/lib/error';
 import gitHubLogo from '@/assets/github-mark.svg';
 import googleLogo from '@/assets/google-icon.png';
 import kakaoLogo from '@/assets/kakaotalk_sharing_btn_small.png';
-import { useSignInWithPassword } from '@/hooks/mutations/useSignInWithPassword';
-import { useSignInWithOAuth } from '@/hooks/mutations/useSignInWithOAuth';
+import { useSignInWithPassword } from '@/hooks/mutations/auth/useSignInWithPassword';
+import { useSignInWithOAuth } from '@/hooks/mutations/auth/useSignInWithOAuth';
 
 export default function SignUpPage() {
 	const [email, setEmail] = useState('');

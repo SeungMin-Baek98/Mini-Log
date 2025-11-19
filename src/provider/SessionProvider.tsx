@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
-import { useProfileData } from '@/hooks/queries/use-profile-data';
+
+import { useProfileData } from '@/hooks/queries/useProfileData';
 import { useIsSessionLoaded, useSession, useSetSession } from '@/store/session';
 
 import supabase from '@/utils/supabase';

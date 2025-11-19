@@ -1,16 +1,66 @@
-import { ImageIcon } from 'lucide-react';
+import { ImageIcon, XIcon } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
 import { usePostEditorModal } from '@/store/postEditorModal';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ChangeEvent } from 'react';
+import { useCreatePost } from '@/hooks/mutations/post/useCreatePost';
+import { toast } from 'sonner';
+import { Carousel, CarouselContent, CarouselItem } from '../ui/carousel';
+
+type Image = {
+	file: File;
+	previewURL: string;
+};
 
 export default function PostEditorModal() {
 	const { isOpen, close } = usePostEditorModal();
 	const [content, setContent] = useState('');
+	const [images, setImages] = useState<Image[]>([]);
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
+	const fileInputRef = useRef<HTMLInputElement>(null);
+
+	const { mutate: createPost, isPending: isCreatePostPending } = useCreatePost({
+		onSuccess: () => {
+			close();
+		},
+		onError: error => {
+			toast.error('포스트 작성에 실패했습닏나', {
+				position: 'top-center'
+			});
+		}
+	});
 
 	const handleCloseModal = () => {
 		close();
+	};
+
+	const handleCreatePost = () => {
+		if (content.trim() === '') return;
+
+		createPost(content);
+	};
+
+	/** 이미지 선택 핸들러 */
+	const handleSelectImages = (e: ChangeEvent<HTMLInputElement>) => {
+		if (e.target.files) {
+			const files = Array.from(e.target.files);
+
+			files.forEach(file => {
+				setImages(prev => [
+					...prev,
+					{ file, previewURL: URL.createObjectURL(file) }
+				]);
+			});
+		}
+
+		e.target.value = '';
+	};
+
+	/** 선택된 이미지 삭제 핸들러 */
+	const handleDeleteImages = (image: Image) => {
+		setImages(prevImages =>
+			prevImages.filter(item => item.previewURL !== image.previewURL)
+		);
 	};
 
 	useEffect(() => {
@@ -25,6 +75,7 @@ export default function PostEditorModal() {
 		if (!isOpen) return;
 		textareaRef.current?.focus();
 		setContent('');
+		setImages([]);
 	}, [isOpen]);
 
 	return (
@@ -34,15 +85,56 @@ export default function PostEditorModal() {
 				<textarea
 					ref={textareaRef}
 					value={content}
+					disabled={isCreatePostPending}
 					onChange={e => setContent(e.target.value)}
 					className="max-h-125 min-h-25 focus:outline-none"
 					placeholder="무슨 일이 있었나요?"
 				/>
-				<Button variant={'outline'} className="cursor-pointer">
+				<input
+					ref={fileInputRef}
+					onChange={handleSelectImages}
+					type="file"
+					accept="image/*"
+					multiple
+					className="hidden"
+				/>
+				{images.length > 0 && (
+					<Carousel>
+						<CarouselContent>
+							{images.map(image => (
+								<CarouselItem className="basis-2/5" key={image.previewURL}>
+									<div className="relative">
+										<img
+											src={image.previewURL}
+											className="h-full w-full rounded-sm object-cover"
+										/>
+										<div
+											onClick={() => handleDeleteImages(image)}
+											className="absolute top-0 right-0 m-1 cursor-pointer rounded-full bg-black/30 p-1">
+											<XIcon className="h-4 w-4 text-white" />
+										</div>
+									</div>
+								</CarouselItem>
+							))}
+						</CarouselContent>
+					</Carousel>
+				)}
+				<Button
+					onClick={() => {
+						fileInputRef.current?.click();
+					}}
+					disabled={isCreatePostPending}
+					variant={'outline'}
+					className="cursor-pointer">
 					<ImageIcon />
 					이미지 추가
 				</Button>
-				<Button className="cursor-pointer">저장</Button>
+				<Button
+					className="cursor-pointer"
+					onClick={handleCreatePost}
+					disabled={isCreatePostPending}>
+					저장
+				</Button>
 			</DialogContent>
 		</Dialog>
 	);
