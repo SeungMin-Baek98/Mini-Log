@@ -1,6 +1,17 @@
-import supabase from '@/utils/supabase';
 import { uploadImage } from './image';
 import type { PostEntity } from '@/types';
+
+import supabase from '@/utils/supabase';
+
+export async function fetchPosts() {
+	const { data, error } = await supabase
+		.from('post')
+		.select('*, author: profile!author_id (*)')
+		.order('created_at', { ascending: false });
+
+	if (error) throw error;
+	return data;
+}
 
 /** 게시글 POST 요청 */
 export async function createPost(content: string) {

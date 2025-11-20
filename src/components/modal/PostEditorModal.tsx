@@ -1,13 +1,14 @@
 import { ImageIcon, XIcon } from 'lucide-react';
-import { Button } from '../ui/button';
-import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
+import { toast } from 'sonner';
 import { usePostEditorModal } from '@/store/postEditorModal';
 import { useEffect, useRef, useState, type ChangeEvent } from 'react';
 import { useCreatePost } from '@/hooks/mutations/post/useCreatePost';
-import { toast } from 'sonner';
 import { Carousel, CarouselContent, CarouselItem } from '../ui/carousel';
 import { useSession } from '@/store/session';
+import { useOpenAlertModal } from '@/store/alertModal';
 
+import { Button } from '../ui/button';
+import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
 type Image = {
 	file: File;
 	previewURL: string;
@@ -16,6 +17,7 @@ type Image = {
 export default function PostEditorModal() {
 	const { isOpen, close } = usePostEditorModal();
 	const session = useSession();
+	const openAlertModal = useOpenAlertModal();
 
 	const [content, setContent] = useState('');
 	const [images, setImages] = useState<Image[]>([]);
@@ -34,7 +36,38 @@ export default function PostEditorModal() {
 		}
 	});
 
+	useEffect(() => {
+		if (textareaRef.current) {
+			textareaRef.current.style.height = 'auto';
+			textareaRef.current.style.height =
+				textareaRef.current.scrollHeight + 'px';
+		}
+	}, [content]);
+
+	useEffect(() => {
+		if (!isOpen) {
+			// 메모리 누수를 막기위해 생성된 이미지 URL 해제
+			images.forEach(image => URL.revokeObjectURL(image.previewURL));
+			return;
+		}
+		textareaRef.current?.focus();
+		setContent('');
+		setImages([]);
+	}, [isOpen]);
+
 	const handleCloseModal = () => {
+		if (content !== '' || images.length > 0) {
+			// Alert Modal 열기
+			openAlertModal({
+				title: '게시글 작성이 마무리 되지 않았습니다',
+				description: '이 화면에서 나가면 작성중이던 내용이 사라집니다',
+				onPositive: () => {
+					close();
+				}
+			});
+
+			return;
+		}
 		close();
 	};
 
@@ -69,22 +102,10 @@ export default function PostEditorModal() {
 		setImages(prevImages =>
 			prevImages.filter(item => item.previewURL !== image.previewURL)
 		);
+
+		// 메모리 누수 방지
+		URL.revokeObjectURL(image.previewURL);
 	};
-
-	useEffect(() => {
-		if (textareaRef.current) {
-			textareaRef.current.style.height = 'auto';
-			textareaRef.current.style.height =
-				textareaRef.current.scrollHeight + 'px';
-		}
-	}, [content]);
-
-	useEffect(() => {
-		if (!isOpen) return;
-		textareaRef.current?.focus();
-		setContent('');
-		setImages([]);
-	}, [isOpen]);
 
 	return (
 		<Dialog open={isOpen} onOpenChange={handleCloseModal}>
