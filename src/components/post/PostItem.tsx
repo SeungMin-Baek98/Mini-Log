@@ -2,8 +2,9 @@ import type { Post } from '@/types';
 import { Button } from '../ui/button';
 import { Carousel, CarouselContent, CarouselItem } from '../ui/carousel';
 import { HeartIcon, MessageCircle } from 'lucide-react';
-import defaultAvatar from '@/assets/default-avatar.jpg';
 import { formatTimeAgo } from '@/lib/time';
+
+import defaultAvatar from '@/assets/default-avatar.jpg';
 
 export default function PostItem(post: Post) {
 	return (
