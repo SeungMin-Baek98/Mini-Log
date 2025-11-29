@@ -49,18 +49,21 @@ const usePostEditorModalStore = create(
 	)
 );
 
+/** PostEditorModal 창 open 커스텀 훅(게시글 생성) */
 export const useOpenCreatePostModal = () => {
 	const openCreate = usePostEditorModalStore(store => store.actions.openCreate);
 
 	return openCreate;
 };
 
+/** PostEditorModal 창 open 커스텀 훅(게시글 수정) */
 export const useOpenEditPostModal = () => {
 	const openEdit = usePostEditorModalStore(store => store.actions.openEdit);
 
 	return openEdit;
 };
 
+/** PostEditorModal 상태 커스텀 훅 */
 export const usePostEditorModal = () => {
 	const store = usePostEditorModalStore();
 
