@@ -1,11 +1,11 @@
-import { useOpenPostEditorModal } from '@/store/postEditorModal';
+import { useOpenCreatePostModal } from '@/store/postEditorModal';
 import { PlusCircleIcon } from 'lucide-react';
 
 export default function CreatePostButton() {
-	const openPostEditorModal = useOpenPostEditorModal();
+	const openCreatePostModal = useOpenCreatePostModal();
 	return (
 		<div
-			onClick={openPostEditorModal}
+			onClick={openCreatePostModal}
 			className="bg-muted text-muted-foreground cursor-pointer rounded-xl px-6 py-4">
 			<div className="flex items-center justify-between">
 				<div>나누고 싶은 이야기가 있나요?</div>
