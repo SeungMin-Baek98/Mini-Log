@@ -1,10 +1,12 @@
 import { fetchPosts } from '@/api/post';
 import { QUERY_KEYS } from '@/lib/constants';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 
 const PAGE_SIZE = 5; // 한 번에 불러올 포스트 개수
 
 export function useInfinitePostsData() {
+	const queryClient = useQueryClient();
+
 	return useInfiniteQuery({
 		queryKey: QUERY_KEYS.post.list,
 		queryFn: async ({ pageParam }) => {
@@ -12,7 +14,12 @@ export function useInfinitePostsData() {
 			const to = from + PAGE_SIZE - 1;
 
 			const posts = await fetchPosts({ from, to });
-			return posts;
+
+			posts.forEach(post => {
+				queryClient.setQueryData(QUERY_KEYS.post.byId(post.id), post);
+			});
+
+			return posts.map(post => post.id);
 		},
 
 		initialPageParam: 0,
@@ -20,6 +27,9 @@ export function useInfinitePostsData() {
 		getNextPageParam: (lastPage, allPages) => {
 			if (lastPage.length < PAGE_SIZE) return undefined; // 더이상 불러올 데이터가 없음
 			return allPages.length;
-		}
+		},
+
+		// 데이터를 무한정 캐싱
+		staleTime: Infinity
 	});
 }

@@ -1,9 +1,12 @@
 import { deletePost } from '@/api/post';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteImagesInPath } from '@/api/image';
 import type { UseMutationCallback } from '@/types';
+import { QUERY_KEYS } from '@/lib/constants';
 
 export default function useDeletePost(callbacks?: UseMutationCallback) {
+	const queryClient = useQueryClient();
+
 	return useMutation({
 		mutationFn: deletePost,
 		onSuccess: async deletedPost => {
@@ -13,6 +16,10 @@ export default function useDeletePost(callbacks?: UseMutationCallback) {
 				// 포스트 삭제시  스토리지에 저장된 이미지 삭제 로직 구현
 				await deleteImagesInPath(`${deletedPost.author_id}/${deletedPost.id}`);
 			}
+
+			queryClient.resetQueries({
+				queryKey: QUERY_KEYS.post.list
+			});
 		},
 		onError: error => {
 			if (callbacks?.onError) callbacks.onError(error);

@@ -1,8 +1,8 @@
-import type { PostEntity } from '@/types';
 import { Button } from '../ui/button';
 import { useOpenAlertModal } from '@/store/alertModal';
-import useDeletePost from '@/hooks/mutations/post/useDeletePost';
 import { toast } from 'sonner';
+
+import useDeletePost from '@/hooks/mutations/post/useDeletePost';
 
 export default function DeletePostButton({ id }: { id: number }) {
 	const openAlertModal = useOpenAlertModal();

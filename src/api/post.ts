@@ -14,6 +14,17 @@ export async function fetchPosts({ from, to }: { from: number; to: number }) {
 	return data;
 }
 
+export async function fetchPostById(postId: number) {
+	const { data, error } = await supabase
+		.from('post')
+		.select('*, author: profile!author_id (*)')
+		.eq('id', postId)
+		.single();
+
+	if (error) throw error;
+	return data;
+}
+
 /** 게시글 POST 요청 */
 export async function createPost(content: string) {
 	const { data, error } = await supabase
