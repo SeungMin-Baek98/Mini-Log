@@ -6,18 +6,25 @@ import supabase from '@/utils/supabase';
 export async function fetchPosts({
 	from,
 	to,
-	userId
+	userId,
+	authorId
 }: {
 	from: number;
 	to: number;
 	userId: string;
+	authorId?: string;
 }) {
-	const { data, error } = await supabase
+	const request = supabase
 		.from('post')
 		.select('*, author: profile!author_id (*), myLiked: like!post_id (*)')
 		.eq('like.user_id', userId)
 		.order('created_at', { ascending: false })
 		.range(from, to);
+
+	// authorId가 주어지면 author_id로 필터링
+	if (authorId) request.eq('author_id', authorId);
+
+	const { data, error } = await request;
 
 	if (error) throw error;
 

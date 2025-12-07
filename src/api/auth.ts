@@ -4,6 +4,16 @@ import type { Provider } from '@supabase/supabase-js';
 
 import supabase from '@/utils/supabase';
 
+export async function signOut() {
+	const { error } = await supabase.auth.signOut();
+
+	if (error) {
+		await supabase.auth.signOut({
+			scope: 'local' // 로컬 세션만 종료(브라우저 토큰 삭제)
+		});
+	}
+}
+
 export async function signUp({
 	email,
 	password
