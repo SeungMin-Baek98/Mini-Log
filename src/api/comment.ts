@@ -1,5 +1,18 @@
 import supabase from '@/utils/supabase';
 
+// 모든 댓글 불러오기
+export async function fetchComments(postId: number) {
+	const { data, error } = await supabase
+		.from('comment')
+		.select('*, author: profile!author_id (*)')
+		.eq('post_id', postId)
+		.order('created_at', { ascending: false });
+
+	if (error) throw error;
+	return data;
+}
+
+// 댓글 작성하기
 export async function createComment({
 	postId,
 	content
@@ -13,6 +26,26 @@ export async function createComment({
 			post_id: postId,
 			content: content
 		})
+		.select()
+		.single();
+
+	if (error) throw error;
+
+	return data;
+}
+
+// 댓글 수정하기
+export async function updateComment({
+	id,
+	content
+}: {
+	id: number;
+	content: string;
+}) {
+	const { data, error } = await supabase
+		.from('comment')
+		.update({ content })
+		.eq('id', id)
 		.select()
 		.single();
 

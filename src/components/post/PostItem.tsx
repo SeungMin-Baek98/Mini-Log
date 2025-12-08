@@ -23,14 +23,10 @@ export default function PostItem({
 }) {
 	const session = useSession();
 	const userId = session?.user.id;
-	const {
-		data: post,
-		isPending,
-		error
-	} = usePostByIdData({ postId, type: 'FEED' });
+	const { data: post, isPending, error } = usePostByIdData({ postId, type });
 
-	if (isPending) return <Loader />;
 	if (error) return <Fallback />;
+	if (isPending) return <Loader />;
 
 	const isMine = userId === post.author_id;
 

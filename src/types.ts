@@ -6,6 +6,7 @@ export type ProfileEntity = Database['public']['Tables']['profile']['Row'];
 export type CommentEntity = Database['public']['Tables']['comment']['Row'];
 
 export type Post = PostEntity & { author: ProfileEntity; isLiked: boolean };
+export type Comment = CommentEntity & { author: ProfileEntity };
 
 /** useMutation 콜백 타입 정의 */
 export type UseMutationCallback = {
