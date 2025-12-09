@@ -17,13 +17,22 @@ type EditMode = {
 	onClose: () => void; // 편집 모드시에 닫기 함수를 추가하여 isEditing 상태를 토글하는 용도
 };
 
-type Props = CreateMode | EditMode;
+type ReplyMode = {
+	type: 'REPLY';
+	postId: number;
+	parentCommentId: number;
+	rootCommentId: number;
+	onClose: () => void; // 답글 모드시에 닫기 함수를 추가하여 isReply 상태를 토글하는 용도
+};
+
+type Props = CreateMode | EditMode | ReplyMode;
 
 export default function CommentEditor(props: Props) {
 	const { mutate: createComment, isPending: isCreateCommentPending } =
 		useCreateComment({
 			onSuccess: () => {
 				setContent('');
+				if (props.type === 'REPLY') props.onClose();
 			},
 			onError: error => {
 				toast.error('댓글 추가에 실패했습니다', {
@@ -54,6 +63,13 @@ export default function CommentEditor(props: Props) {
 
 		if (props.type === 'CREATE') {
 			createComment({ postId: props.postId, content });
+		} else if (props.type === 'REPLY') {
+			createComment({
+				postId: props.postId,
+				content,
+				parentCommentId: props.parentCommentId,
+				rootCommentId: props.rootCommentId
+			});
 		} else {
 			// EDIT 모드일 때의 처리 (추가 구현 필요)
 			updateComment({
@@ -75,14 +91,15 @@ export default function CommentEditor(props: Props) {
 				}}
 			/>
 			<div className="flex justify-end gap-2">
-				{props.type === 'EDIT' && (
-					<Button
-						disabled={isPending}
-						variant={'outline'}
-						onClick={() => props.onClose()}>
-						취소
-					</Button>
-				)}
+				{props.type === 'EDIT' ||
+					(props.type === 'REPLY' && (
+						<Button
+							disabled={isPending}
+							variant={'outline'}
+							onClick={() => props.onClose()}>
+							취소
+						</Button>
+					))}
 				<Button disabled={isPending} onClick={handleSubmitClick}>
 					작성
 				</Button>
