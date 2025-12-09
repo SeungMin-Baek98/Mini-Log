@@ -1,6 +1,6 @@
 import { useProfileData } from '@/hooks/queries/useProfileData';
 import { useSession } from '@/store/session';
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover';
 
 import defaultAvatar from '@/assets/default-avatar.jpg';
 import { PopoverClose } from '@radix-ui/react-popover';
