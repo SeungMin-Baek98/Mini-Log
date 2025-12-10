@@ -105,6 +105,7 @@ export type Database = {
       post: {
         Row: {
           author_id: string
+          comment_count: number
           content: string
           created_at: string
           id: number
@@ -113,6 +114,7 @@ export type Database = {
         }
         Insert: {
           author_id?: string
+          comment_count?: number
           content: string
           created_at?: string
           id?: number
@@ -121,6 +123,7 @@ export type Database = {
         }
         Update: {
           author_id?: string
+          comment_count?: number
           content?: string
           created_at?: string
           id?: number
@@ -166,6 +169,72 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      add_comment_with_count:
+        | {
+            Args: {
+              p_author_id: string
+              p_content: string
+              p_parent_comment_id?: number
+              p_post_id: number
+              p_root_comment_id?: number
+            }
+            Returns: {
+              author_id: string
+              content: string
+              created_at: string
+              id: number
+              parent_comment_id: number | null
+              post_id: number
+              root_comment_id: number | null
+            }
+            SetofOptions: {
+              from: "*"
+              to: "comment"
+              isOneToOne: true
+              isSetofReturn: false
+            }
+          }
+        | {
+            Args: {
+              p_content: string
+              p_parent_comment_id?: number
+              p_post_id: number
+              p_root_comment_id?: number
+            }
+            Returns: {
+              author_id: string
+              content: string
+              created_at: string
+              id: number
+              parent_comment_id: number | null
+              post_id: number
+              root_comment_id: number | null
+            }
+            SetofOptions: {
+              from: "*"
+              to: "comment"
+              isOneToOne: true
+              isSetofReturn: false
+            }
+          }
+      delete_comment_with_count: {
+        Args: { p_comment_id: number }
+        Returns: {
+          author_id: string
+          content: string
+          created_at: string
+          id: number
+          parent_comment_id: number | null
+          post_id: number
+          root_comment_id: number | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "comment"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       toggle_post_like: {
         Args: { p_post_id: number; p_user_id: string }
         Returns: boolean

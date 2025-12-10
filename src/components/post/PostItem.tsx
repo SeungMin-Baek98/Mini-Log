@@ -1,7 +1,13 @@
 import { Link } from 'react-router';
 
-import { Carousel, CarouselContent, CarouselItem } from '../ui/carousel';
-import { MessageCircle } from 'lucide-react';
+import {
+	Carousel,
+	CarouselContent,
+	CarouselItem,
+	CarouselNext,
+	CarouselPrevious
+} from '../ui/carousel';
+
 import { formatTimeAgo } from '@/lib/time';
 import { useSession } from '@/store/session';
 import { usePostByIdData } from '@/hooks/queries/usePostByIdData';
@@ -13,6 +19,7 @@ import EditPostButton from './EditPostButton';
 import Loader from '../Loader';
 import Fallback from '../Fallback';
 import LikePostButton from './LikePostButton';
+import CommentButton from './CommentButton';
 
 export default function PostItem({
 	postId,
@@ -80,19 +87,26 @@ export default function PostItem({
 				)}
 
 				{/* 2-2. 이미지 캐러셀 */}
-				<Carousel>
+				<Carousel className="relative">
 					<CarouselContent>
 						{post.image_urls?.map((url, index) => (
-							<CarouselItem className={`basis-3/5`} key={index}>
-								<div className="overflow-hidden rounded-xl">
+							<CarouselItem className="basis-full sm:basis-1/3" key={index}>
+								<div className="relative mx-auto aspect-square w-full max-w-[480px] overflow-hidden rounded-xl bg-neutral-100">
 									<img
 										src={url}
-										className="h-full max-h-[350px] w-full object-cover"
+										alt={`게시 이미지 ${index + 1}`}
+										className="h-full w-full object-cover"
 									/>
 								</div>
 							</CarouselItem>
 						))}
 					</CarouselContent>
+					{post.image_urls && post.image_urls.length > 3 && (
+						<>
+							<CarouselPrevious className="absolute left-2" />
+							<CarouselNext className="absolute right-2" />
+						</>
+					)}
 				</Carousel>
 			</div>
 
@@ -104,16 +118,12 @@ export default function PostItem({
 					likeCount={post.like_count}
 					isLiked={post.isLiked}
 				/>
-
 				{/* 3-2. 댓글 버튼 */}
-				{type === 'FEED' && (
-					<Link to={`/post/${post.id}`}>
-						<div className="hover:bg-muted flex cursor-pointer items-center gap-2 rounded-xl border-1 p-2 px-4 text-sm">
-							<MessageCircle className="h-4 w-4" />
-							<span>댓글 달기</span>
-						</div>
-					</Link>
-				)}
+				<CommentButton
+					id={post.id}
+					commentCount={post.comment_count}
+					disabled={type === 'DETAIL'}
+				/>
 			</div>
 		</div>
 	);

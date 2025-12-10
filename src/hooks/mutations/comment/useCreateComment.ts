@@ -2,7 +2,7 @@ import { createComment } from '@/api/comment';
 import { useProfileData } from '@/hooks/queries/useProfileData';
 import { QUERY_KEYS } from '@/lib/constants';
 import { useSession } from '@/store/session';
-import type { Comment, UseMutationCallback } from '@/types';
+import type { Comment, Post, UseMutationCallback } from '@/types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export function useCreateComment(callbacks?: UseMutationCallback) {
@@ -25,6 +25,17 @@ export function useCreateComment(callbacks?: UseMutationCallback) {
 						throw new Error('사용자의 프로필 정보를 찾을 수 없습니다.');
 
 					return [...comments, { ...newComment, author: profile }];
+				}
+			);
+
+			queryClient.setQueryData<Post>(
+				QUERY_KEYS.post.byId(newComment.post_id),
+				post => {
+					if (!post) return post;
+					return {
+						...post,
+						comment_count: post.comment_count + 1
+					};
 				}
 			);
 		},
