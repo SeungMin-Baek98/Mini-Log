@@ -1,8 +1,26 @@
 import { useOpenCreatePostModal } from '@/store/postEditorModal';
 import { PlusCircleIcon } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
-export default function CreatePostButton() {
+function FloatingButton() {
 	const openCreatePostModal = useOpenCreatePostModal();
+	return (
+		<div
+			onClick={openCreatePostModal}
+			className="group bg-muted fixed right-5 bottom-5 flex cursor-pointer items-center rounded-full text-white transition-all hover:px-4">
+			<span className="text-muted-foreground max-w-0 overflow-hidden whitespace-nowrap opacity-0 transition-all group-hover:max-w-sm group-hover:opacity-100">
+				게시글 만들기
+			</span>
+			<div className="text-muted-foreground flex h-12 w-12 items-center justify-center">
+				<PlusCircleIcon className="h-6 w-6" />
+			</div>
+		</div>
+	);
+}
+
+function NormalButton() {
+	const openCreatePostModal = useOpenCreatePostModal();
+
 	return (
 		<div
 			onClick={openCreatePostModal}
@@ -13,4 +31,28 @@ export default function CreatePostButton() {
 			</div>
 		</div>
 	);
+}
+
+export default function CreatePostButton() {
+	const [isScrollDown, setIsScrollDown] = useState(false);
+
+	useEffect(() => {
+		const handleScroll = () => {
+			const y = window.scrollY;
+
+			setIsScrollDown(prev => {
+				if (y > 350) return true;
+				if (y < 250) return false;
+				return prev;
+			});
+		};
+
+		window.addEventListener('scroll', handleScroll);
+
+		return () => {
+			window.removeEventListener('scroll', handleScroll);
+		};
+	}, []);
+
+	return isScrollDown ? <FloatingButton /> : <NormalButton />;
 }

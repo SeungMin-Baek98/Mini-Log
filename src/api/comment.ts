@@ -24,16 +24,21 @@ export async function createComment({
 	parentCommentId?: number;
 	rootCommentId?: number;
 }) {
-	const { data, error } = await supabase
-		.from('comment')
-		.insert({
-			post_id: postId,
-			content: content,
-			parent_comment_id: parentCommentId,
-			root_comment_id: rootCommentId
-		})
-		.select()
-		.single();
+	const { data, error } = await supabase.rpc('add_comment_with_count', {
+		p_post_id: postId,
+		p_content: content,
+		p_parent_comment_id: parentCommentId,
+		p_root_comment_id: rootCommentId
+	});
+	// .from('comment')
+	// .insert({
+	// 	post_id: postId,
+	// 	content: content,
+	// 	parent_comment_id: parentCommentId,
+	// 	root_comment_id: rootCommentId
+	// })
+	// .select()
+	// .single();
 
 	if (error) throw error;
 
@@ -62,12 +67,14 @@ export async function updateComment({
 
 // 댓글 삭제하기
 export async function deleteComment(id: number) {
-	const { data, error } = await supabase
-		.from('comment')
-		.delete()
-		.eq('id', id)
-		.select()
-		.single();
+	const { data, error } = await supabase.rpc('delete_comment_with_count', {
+		p_comment_id: id
+	});
+	// .from('comment')
+	// .delete()
+	// .eq('id', id)
+	// .select()
+	// .single();
 
 	if (error) throw error;
 	return data;

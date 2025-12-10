@@ -5,12 +5,12 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { generateErrorMessage } from '@/lib/error';
+import { useSignInWithPassword } from '@/hooks/mutations/auth/useSignInWithPassword';
+import { useSignInWithOAuth } from '@/hooks/mutations/auth/useSignInWithOAuth';
 
 import gitHubLogo from '@/assets/github-mark.svg';
 import googleLogo from '@/assets/google-icon.png';
 import kakaoLogo from '@/assets/kakaotalk_sharing_btn_small.png';
-import { useSignInWithPassword } from '@/hooks/mutations/auth/useSignInWithPassword';
-import { useSignInWithOAuth } from '@/hooks/mutations/auth/useSignInWithOAuth';
 
 export default function SignUpPage() {
 	const [email, setEmail] = useState('');
@@ -37,11 +37,18 @@ export default function SignUpPage() {
 		});
 
 	/** 이메일 & 비밀번호 로그인 */
-	const handleSignInWithPasswordClick = () => {
+	const handleSignInWithPassword = () => {
 		if (email.trim() === '') return;
 		if (password.trim() === '') return;
 
 		signInWithPassword({ email, password });
+	};
+
+	/** 엔터키 누를시 로그인 처리 */
+	const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+		if (e.key === 'Enter') {
+			handleSignInWithPassword();
+		}
 	};
 
 	/** 깃허브 로그인 */
@@ -61,7 +68,12 @@ export default function SignUpPage() {
 
 	const isPending = isSignInWithPasswordPending || isSignInWithOAuthPending;
 	return (
-		<div className="flex flex-col gap-9">
+		<form
+			className="flex flex-col gap-9"
+			onSubmit={e => {
+				e.preventDefault();
+				handleSignInWithPassword();
+			}}>
 			<div className="text-xl font-bold">로그인</div>
 			<div className="flex flex-col gap-2">
 				<Input
@@ -89,7 +101,9 @@ export default function SignUpPage() {
 				<Button
 					disabled={isPending}
 					className="w-full"
-					onClick={handleSignInWithPasswordClick}>
+					type="submit"
+					onKeyDown={handleKeyDown}
+					onClick={handleSignInWithPassword}>
 					로그인
 				</Button>
 				<div className="flex flex-col gap-9">
@@ -135,6 +149,6 @@ export default function SignUpPage() {
 					비밀번호를 잊으셨나요?
 				</Link>
 			</div>
-		</div>
+		</form>
 	);
 }

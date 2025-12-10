@@ -3,7 +3,13 @@ import { toast } from 'sonner';
 import { usePostEditorModal } from '@/store/postEditorModal';
 import { useEffect, useRef, useState, type ChangeEvent } from 'react';
 import { useCreatePost } from '@/hooks/mutations/post/useCreatePost';
-import { Carousel, CarouselContent, CarouselItem } from '../ui/carousel';
+import {
+	Carousel,
+	CarouselContent,
+	CarouselItem,
+	CarouselNext,
+	CarouselPrevious
+} from '../ui/carousel';
 import { useSession } from '@/store/session';
 import { useOpenAlertModal } from '@/store/alertModal';
 
@@ -144,7 +150,12 @@ export default function PostEditorModal() {
 	return (
 		<Dialog open={postEditorModal.isOpen} onOpenChange={handleCloseModal}>
 			<DialogContent className="max-h-[90vh]">
-				<DialogTitle>포스트 작성</DialogTitle>
+				<DialogTitle>
+					포스트{' '}
+					{postEditorModal.isOpen && postEditorModal.type === 'CREATE'
+						? '작성'
+						: '수정'}
+				</DialogTitle>
 				<textarea
 					ref={textareaRef}
 					value={content}
@@ -162,14 +173,15 @@ export default function PostEditorModal() {
 					className="hidden"
 				/>
 				{postEditorModal.isOpen && postEditorModal.type === 'EDIT' && (
-					<Carousel>
+					<Carousel className="relative">
 						<CarouselContent>
 							{postEditorModal.imageUrls?.map(url => (
-								<CarouselItem className="basis-2/5" key={url}>
-									<div className="relative">
+								<CarouselItem className="basis-full sm:basis-1/3" key={url}>
+									<div className="relative mx-auto aspect-square w-full max-w-[360px] overflow-hidden rounded-xl bg-neutral-100">
 										<img
 											src={url}
-											className="h-full w-full rounded-sm object-cover"
+											alt="기존 게시 이미지"
+											className="h-full w-full object-cover"
 										/>
 									</div>
 								</CarouselItem>
@@ -179,14 +191,17 @@ export default function PostEditorModal() {
 				)}
 
 				{images.length > 0 && (
-					<Carousel>
+					<Carousel className="relative">
 						<CarouselContent>
 							{images.map(image => (
-								<CarouselItem className="basis-2/5" key={image.previewURL}>
-									<div className="relative">
+								<CarouselItem
+									className="basis-full sm:basis-1/3"
+									key={image.previewURL}>
+									<div className="relative mx-auto aspect-square w-full max-w-[360px] overflow-hidden rounded-xl bg-neutral-100">
 										<img
 											src={image.previewURL}
-											className="h-full w-full rounded-sm object-cover"
+											alt="선택한 이미지 미리보기"
+											className="h-full w-full object-cover"
 										/>
 										<div
 											onClick={() => handleDeleteImages(image)}
@@ -197,6 +212,12 @@ export default function PostEditorModal() {
 								</CarouselItem>
 							))}
 						</CarouselContent>
+						{images.length > 1 && (
+							<>
+								<CarouselPrevious className="absolute left-2 max-sm:left-10" />
+								<CarouselNext className="absolute right-2 max-sm:right-10" />
+							</>
+						)}
 					</Carousel>
 				)}
 				{postEditorModal.isOpen && postEditorModal.type === 'CREATE' && (
