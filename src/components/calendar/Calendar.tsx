@@ -1,3 +1,12 @@
+import { useCalendar } from '@/hooks/useCalendar';
+
 export default function Calendar() {
-	return <div>Calendar Component</div>;
+	const { weekDays } = useCalendar(new Date());
+	return (
+		<div>
+			{weekDays.map(day => (
+				<div key={day.formatted}>{day.formatted}</div>
+			))}
+		</div>
+	);
 }

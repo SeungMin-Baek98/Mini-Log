@@ -3,6 +3,7 @@ import { Navigate, useParams } from 'react-router';
 import ProfileInfo from '@/components/profile/ProfileInfo';
 import PostFeed from '@/components/post/PostFeed';
 import { useEffect } from 'react';
+import Calendar from '@/components/calendar/Calendar';
 
 export default function ProfileDetailPage() {
 	const params = useParams();
