@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import Calendar from './Calendar';
 
@@ -8,4 +9,15 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const Default: Story = {
+	render: () => {
+		const [date, setDate] = useState<Date | null>(null);
+
+		return (
+			<div className="space-y-4">
+				<Calendar value={date} onChange={setDate} />
+				<div className="text-sm">선택된 날짜: {date?.toDateString()}</div>
+			</div>
+		);
+	}
+};
