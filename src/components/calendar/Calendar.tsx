@@ -41,22 +41,22 @@ export default function Calendar({ value, onChange, userId }: props) {
 	}, [postCountByDate]);
 
 	return (
-		<div className="w-[360px] rounded-xl border bg-white p-4 shadow-sm">
+		<div className="bg-muted w-[360px] rounded-xl border p-4 shadow-sm">
 			{/* Header */}
 			<header className="mb-4 flex items-center justify-between">
 				<button
 					onClick={prevMonth}
-					className="text-muted-foreground hover:bg-muted rounded-md px-2 py-1 text-sm">
+					className="text-muted-foreground hover:bg-muted-foreground hover:text-muted rounded-md px-2 py-1 text-sm">
 					◀
 				</button>
 
-				<span className="text-sm font-semibold">
+				<span className="text-muted-foreground text-sm font-semibold">
 					{format(cursor, 'yyyy.MM')}
 				</span>
 
 				<button
 					onClick={nextMonth}
-					className="text-muted-foreground hover:bg-muted rounded-md px-2 py-1 text-sm">
+					className="text-muted-foreground hover:bg-muted-foreground hover:text-muted rounded-md px-2 py-1 text-sm">
 					▶
 				</button>
 			</header>
@@ -78,9 +78,9 @@ export default function Calendar({ value, onChange, userId }: props) {
 									onClick={() => handleSelect(day)}
 									key={day.toISOString()}
 									className={[
-										'flex h-9 w-9 items-center justify-center rounded-md text-sm transition',
+										'hover:bg-muted-foreground hover:text-muted flex h-9 w-9 items-center justify-center rounded-md text-sm transition',
 										isSelected(day)
-											? 'bg-primary text-primary-foreground'
+											? 'bg-muted-foreground text-primary-foreground'
 											: isSameMonth(day, cursor)
 												? 'text-muted-foreground'
 												: 'text-muted-foreground/30'

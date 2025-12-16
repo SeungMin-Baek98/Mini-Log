@@ -5,6 +5,7 @@ import { useInfinitePostsData } from '@/hooks/queries/useInfinitePosts';
 import Fallback from '../Fallback';
 import Loader from '../Loader';
 import PostItem from './PostItem';
+import Nodata from '../Nodata';
 
 export default function PostFeed({
 	authorId,
@@ -26,6 +27,10 @@ export default function PostFeed({
 	if (error) return <Fallback />;
 	if (isPending) return <Loader />;
 
+	const hasPosts = data.pages.some(page => page.length > 0);
+	if (!hasPosts) {
+		return <Nodata />;
+	}
 	return (
 		<div className="flex flex-col gap-10">
 			{data.pages.map(page =>
