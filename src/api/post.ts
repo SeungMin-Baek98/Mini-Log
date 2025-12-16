@@ -7,12 +7,14 @@ export async function fetchPosts({
 	from,
 	to,
 	userId,
-	authorId
+	authorId,
+	dateRange
 }: {
 	from: number;
 	to: number;
 	userId: string;
 	authorId?: string;
+	dateRange?: { start: Date; end: Date };
 }) {
 	const request = supabase
 		.from('post')
@@ -23,6 +25,11 @@ export async function fetchPosts({
 
 	// authorId가 주어지면 author_id로 필터링
 	if (authorId) request.eq('author_id', authorId);
+	if (dateRange) {
+		request
+			.gte('created_at', dateRange.start.toISOString())
+			.lte('created_at', dateRange.end.toISOString());
+	}
 
 	const { data, error } = await request;
 
@@ -54,6 +61,27 @@ export async function fetchPostById({
 		...data,
 		isLiked: data.myLiked && data.myLiked.length > 0
 	};
+}
+
+export async function fetchPostsByDate({
+	userId,
+	start,
+	end
+}: {
+	userId: string;
+	start: Date;
+	end: Date;
+}) {
+	const { data, error } = await supabase
+		.from('post')
+		.select('*, author: profile!author_id (*), myLiked: like!post_id (*)')
+		.eq('author_id', userId)
+		.gte('created_at', start.toISOString())
+		.lte('created_at', end.toISOString());
+
+	if (error) throw error;
+
+	return data;
 }
 
 /** 게시글 POST 요청 */

@@ -95,7 +95,7 @@ export default function PostItem({
 									<img
 										src={url}
 										alt={`게시 이미지 ${index + 1}`}
-										className="h-full w-full object-cover"
+										className="h-full w-full object-fill"
 									/>
 								</div>
 							</CarouselItem>

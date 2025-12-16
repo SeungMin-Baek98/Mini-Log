@@ -1,7 +1,8 @@
+import { Navigate, useParams } from 'react-router';
+
 import CommentEditor from '@/components/comment/CommentEditor';
 import CommentList from '@/components/comment/CommentList';
 import PostItem from '@/components/post/PostItem';
-import { Navigate, useParams } from 'react-router';
 
 export default function PostDetailPage() {
 	const params = useParams();

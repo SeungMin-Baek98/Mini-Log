@@ -2,16 +2,33 @@ import { fetchPosts } from '@/api/post';
 import { QUERY_KEYS } from '@/lib/constants';
 import { useSession } from '@/store/session';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
+import { endOfDay, format, startOfDay } from 'date-fns';
 
 const PAGE_SIZE = 5; // 한 번에 불러올 포스트 개수
 
-export function useInfinitePostsData(authorId?: string) {
+type Options = {
+	authorId?: string;
+	date?: Date | null;
+};
+
+export function useInfinitePostsData(options?: Options) {
+	const authorId = options?.authorId;
+	const date = options?.date ? new Date(options.date) : null;
+	const dateKey = date ? format(date, 'yyyy-MM-dd') : undefined;
+	const dateRange = date
+		? { start: startOfDay(date), end: endOfDay(date) }
+		: undefined;
+
 	const queryClient = useQueryClient();
 	const session = useSession();
+
+	const baseKey = !authorId
+		? QUERY_KEYS.post.list
+		: QUERY_KEYS.post.userList(authorId);
+	const queryKey = dateKey ? [...baseKey, 'date', dateKey] : baseKey;
+
 	return useInfiniteQuery({
-		queryKey: !authorId
-			? QUERY_KEYS.post.list
-			: QUERY_KEYS.post.userList(authorId),
+		queryKey,
 		queryFn: async ({ pageParam }) => {
 			const from = pageParam * PAGE_SIZE;
 			const to = from + PAGE_SIZE - 1;
@@ -20,7 +37,8 @@ export function useInfinitePostsData(authorId?: string) {
 				from,
 				to,
 				userId: session!.user.id,
-				authorId
+				authorId,
+				dateRange
 			});
 
 			posts.forEach(post => {
