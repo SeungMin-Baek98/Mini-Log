@@ -6,9 +6,15 @@ import Fallback from '../Fallback';
 import Loader from '../Loader';
 import PostItem from './PostItem';
 
-export default function PostFeed({ authorId }: { authorId?: string }) {
+export default function PostFeed({
+	authorId,
+	date
+}: {
+	authorId?: string;
+	date?: Date | null;
+}) {
 	const { data, error, isPending, fetchNextPage, isFetchingNextPage } =
-		useInfinitePostsData(authorId);
+		useInfinitePostsData({ authorId, date });
 	const { ref, inView } = useInView();
 
 	useEffect(() => {

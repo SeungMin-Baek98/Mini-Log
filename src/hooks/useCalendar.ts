@@ -14,7 +14,7 @@ import {
 
 export function useCalendar(initialDate = new Date()) {
 	const [cursor, setCursor] = useState(initialDate);
-	const [selectedDate, setSelectedDate] = useState<Date | null>(initialDate);
+	const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
 	const start = startOfWeek(startOfMonth(cursor), { weekStartsOn: 0 });
 	const end = endOfWeek(endOfMonth(cursor), { weekStartsOn: 0 });
@@ -22,9 +22,10 @@ export function useCalendar(initialDate = new Date()) {
 	const days = useMemo(() => eachDayOfInterval({ start, end }), [start, end]);
 
 	const weeks = useMemo(() => {
-		const chunks: Date[][] = [];
-		for (let i = 0; i < days.length; i += 7) chunks.push(days.slice(i, i + 7));
-		return chunks;
+		const daysForEach: Date[][] = [];
+		for (let i = 0; i < days.length; i += 7)
+			daysForEach.push(days.slice(i, i + 7));
+		return daysForEach;
 	}, [days]);
 
 	const nextMonth = useCallback(

@@ -17,8 +17,12 @@ export default function useDeletePost(callbacks?: UseMutationCallback) {
 				await deleteImagesInPath(`${deletedPost.author_id}/${deletedPost.id}`);
 			}
 
-			queryClient.resetQueries({
-				queryKey: QUERY_KEYS.post.list
+			queryClient.removeQueries({
+				queryKey: QUERY_KEYS.post.byId(deletedPost.id)
+			});
+
+			await queryClient.invalidateQueries({
+				queryKey: QUERY_KEYS.post.all
 			});
 		},
 		onError: error => {
