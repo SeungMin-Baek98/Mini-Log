@@ -11,10 +11,10 @@ export default function Header() {
 				<Link to={'/'} className="flex items-center gap-2">
 					<img
 						src={logo}
-						alt="한입 로그의 로고, 메세지 말풍선을 형상화한 모양이다"
+						alt="미니 로그의 로고, 메세지 말풍선을 형상화한 모양이다"
 						className="w-5"
 					/>
-					<div className="font-bold">한입 로그</div>
+					<div className="font-bold">미니 로그</div>
 				</Link>
 				<div className="flex items-center gap-5">
 					<ThemeButton />
