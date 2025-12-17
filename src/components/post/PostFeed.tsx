@@ -31,6 +31,7 @@ export default function PostFeed({
 	if (!hasPosts) {
 		return <Nodata />;
 	}
+
 	return (
 		<div className="flex flex-col gap-10">
 			{data.pages.map(page =>

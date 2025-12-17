@@ -3,13 +3,7 @@ import { toast } from 'sonner';
 import { usePostEditorModal } from '@/store/postEditorModal';
 import { useEffect, useRef, useState, type ChangeEvent } from 'react';
 import { useCreatePost } from '@/hooks/mutations/post/useCreatePost';
-import {
-	Carousel,
-	CarouselContent,
-	CarouselItem,
-	CarouselNext,
-	CarouselPrevious
-} from '../ui/carousel';
+import { Carousel, CarouselContent, CarouselItem } from '../ui/carousel';
 import { useSession } from '@/store/session';
 import { useOpenAlertModal } from '@/store/alertModal';
 
@@ -212,12 +206,6 @@ export default function PostEditorModal() {
 								</CarouselItem>
 							))}
 						</CarouselContent>
-						{images.length > 1 && (
-							<>
-								<CarouselPrevious className="absolute left-2 max-sm:left-10" />
-								<CarouselNext className="absolute right-2 max-sm:right-10" />
-							</>
-						)}
 					</Carousel>
 				)}
 				{postEditorModal.isOpen && postEditorModal.type === 'CREATE' && (
