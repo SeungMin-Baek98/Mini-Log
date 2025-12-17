@@ -1,16 +1,11 @@
 import { Link } from 'react-router';
 
-import {
-	Carousel,
-	CarouselContent,
-	CarouselItem,
-	CarouselNext,
-	CarouselPrevious
-} from '../ui/carousel';
+import { Carousel, CarouselContent, CarouselItem } from '../ui/carousel';
 
 import { formatTimeAgo } from '@/lib/time';
 import { useSession } from '@/store/session';
 import { usePostByIdData } from '@/hooks/queries/usePostByIdData';
+import { useOpenShowOriginImagesModal } from '@/store/showOriginImagesModal';
 
 import defaultAvatar from '@/assets/default-avatar.jpg';
 
@@ -31,6 +26,18 @@ export default function PostItem({
 	const session = useSession();
 	const userId = session?.user.id;
 	const { data: post, isPending, error } = usePostByIdData({ postId, type });
+	const openShowOriginImagesModal = useOpenShowOriginImagesModal();
+
+	const handleShowOriginImagesModalOpen = (index: number) => {
+		if (!post) return;
+
+		if (!post.image_urls?.length) return;
+
+		openShowOriginImagesModal({
+			images: post.image_urls,
+			initialIndex: index
+		});
+	};
 
 	if (error) return <Fallback />;
 	if (isPending) return <Loader />;
@@ -94,19 +101,14 @@ export default function PostItem({
 								<div className="relative mx-auto aspect-square w-full max-w-[480px] overflow-hidden rounded-xl bg-neutral-100">
 									<img
 										src={url}
+										onClick={() => handleShowOriginImagesModalOpen(index)}
 										alt={`게시 이미지 ${index + 1}`}
-										className="h-full w-full object-fill"
+										className="h-full w-full object-cover"
 									/>
 								</div>
 							</CarouselItem>
 						))}
 					</CarouselContent>
-					{post.image_urls && post.image_urls.length > 3 && (
-						<>
-							<CarouselPrevious className="absolute left-2" />
-							<CarouselNext className="absolute right-2" />
-						</>
-					)}
 				</Carousel>
 			</div>
 
