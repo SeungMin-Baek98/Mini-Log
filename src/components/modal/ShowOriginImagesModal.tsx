@@ -19,7 +19,7 @@ export default function ShowOriginImagesModal() {
 
 	return (
 		<Dialog open={store.isOpen} onOpenChange={handleOpenChange}>
-			<DialogContent className="max-sm:realtive border-none p-4">
+			<DialogContent className="border-none p-4 max-sm:relative">
 				<Carousel
 					className="relative"
 					opts={{
