@@ -28,7 +28,7 @@ export default function PostItem({
 	const { data: post, isPending, error } = usePostByIdData({ postId, type });
 	const openShowOriginImagesModal = useOpenShowOriginImagesModal();
 
-	const handleShowOriginImagesModalOpen = (index: number) => {
+	const handleShowOriginImagesModal = (index: number) => {
 		if (!post) return;
 
 		if (!post.image_urls?.length) return;
@@ -101,7 +101,7 @@ export default function PostItem({
 								<div className="relative mx-auto aspect-square w-full max-w-[480px] overflow-hidden rounded-xl bg-neutral-100">
 									<img
 										src={url}
-										onClick={() => handleShowOriginImagesModalOpen(index)}
+										onClick={() => handleShowOriginImagesModal(index)}
 										alt={`게시 이미지 ${index + 1}`}
 										className="h-full w-full object-cover"
 									/>

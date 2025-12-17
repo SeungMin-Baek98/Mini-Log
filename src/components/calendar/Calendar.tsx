@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { CircleIcon } from 'lucide-react';
 import { endOfMonth, format, isSameMonth, startOfMonth } from 'date-fns';
 
@@ -8,13 +8,20 @@ import { usePostCountByDate } from '@/hooks/queries/usePostCountByDate';
 
 type props = {
 	value?: Date | null;
-	onChange?: (date: Date) => void;
+	onChange?: (date: Date | null) => void;
 	userId: string;
 };
 
 export default function Calendar({ value, onChange, userId }: props) {
-	const { cursor, weeks, nextMonth, prevMonth, selectDate, isSelected } =
-		useCalendar();
+	const {
+		cursor,
+		weeks,
+		nextMonth,
+		prevMonth,
+		selectDate,
+		isSelected,
+		goToMonth
+	} = useCalendar();
 	const start = startOfMonth(cursor);
 	const end = endOfMonth(cursor);
 
@@ -28,6 +35,16 @@ export default function Calendar({ value, onChange, userId }: props) {
 		selectDate(day);
 		onChange?.(day);
 	};
+
+	useEffect(() => {
+		if (!value) {
+			selectDate(null);
+			return;
+		}
+
+		selectDate(value);
+		goToMonth(value);
+	}, [value, selectDate, goToMonth]);
 
 	const postCount = useMemo(() => {
 		const countMap: Record<string, number> = {};

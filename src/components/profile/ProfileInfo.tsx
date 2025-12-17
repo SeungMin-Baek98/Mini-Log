@@ -9,10 +9,12 @@ import Calendar from '../calendar/Calendar';
 
 export default function ProfileInfo({
 	userId,
-	onDateChange
+	onDateChange,
+	selectedDate
 }: {
 	userId: string;
-	onDateChange?: (date: Date) => void;
+	onDateChange?: (date: Date | null) => void;
+	selectedDate?: Date | null;
 }) {
 	const session = useSession();
 
@@ -43,7 +45,11 @@ export default function ProfileInfo({
 				{isMine && <EditProfileButton />}
 			</div>
 			<div className="invisible border-b max-sm:visible max-sm:w-full"></div>
-			<Calendar userId={userId} onChange={onDateChange} />
+			<Calendar
+				userId={userId}
+				onChange={onDateChange}
+				value={selectedDate}
+			/>
 		</div>
 	);
 }

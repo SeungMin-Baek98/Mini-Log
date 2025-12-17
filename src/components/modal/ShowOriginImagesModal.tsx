@@ -7,7 +7,6 @@ import {
 	CarouselPrevious
 } from '../ui/carousel';
 import { Dialog, DialogContent } from '../ui/dialog';
-import { useEffect } from 'react';
 
 export default function ShowOriginImagesModal() {
 	const store = useShowOriginImagesModal();
@@ -20,7 +19,7 @@ export default function ShowOriginImagesModal() {
 
 	return (
 		<Dialog open={store.isOpen} onOpenChange={handleOpenChange}>
-			<DialogContent className="max-sm:realtive border-none bg-black p-4 text-white">
+			<DialogContent className="border-none p-4 max-sm:relative">
 				<Carousel
 					className="relative"
 					opts={{
@@ -34,7 +33,7 @@ export default function ShowOriginImagesModal() {
 									<img
 										src={url}
 										alt={`원본 게시 이미지 ${index + 1}`}
-										className="max-h-[70vh] w-full rounded-lg object-contain"
+										className="max-h-[450px] w-full rounded-lg object-contain"
 									/>
 								</div>
 							</CarouselItem>
