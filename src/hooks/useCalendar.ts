@@ -38,8 +38,12 @@ export function useCalendar(initialDate = new Date()) {
 		[cursor]
 	);
 
-	const selectDate = useCallback((date: Date) => {
+	const selectDate = useCallback((date: Date | null) => {
 		setSelectedDate(date);
+	}, []);
+
+	const goToMonth = useCallback((date: Date) => {
+		setCursor(startOfMonth(date));
 	}, []);
 
 	const isSelected = useCallback(
@@ -55,6 +59,7 @@ export function useCalendar(initialDate = new Date()) {
 		isSameMonth,
 		isSameDay,
 		selectDate,
+		goToMonth,
 		isSelected,
 		format
 	};
