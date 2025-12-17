@@ -8,8 +8,10 @@ import { useProfileSelectedDate } from '@/store/profileSelectedDate';
 export default function ProfileDetailPage() {
 	const params = useParams();
 	const userId = params.userId;
+	const currentUserId = userId ?? null;
 	const {
 		selectedDate,
+		selectedUserId,
 		actions: { setSelectedDate, clear }
 	} = useProfileSelectedDate();
 
@@ -21,10 +23,10 @@ export default function ProfileDetailPage() {
 
 	useEffect(() => {
 		// 다른 유저 프로필로 이동 시 선택 날짜 초기화
-		return () => {
+		if (selectedUserId && selectedUserId !== currentUserId) {
 			clear();
-		};
-	}, []);
+		}
+	}, [selectedUserId, currentUserId, clear]);
 
 	if (!userId) return <Navigate to={'/'} replace />;
 
@@ -32,7 +34,7 @@ export default function ProfileDetailPage() {
 		<div className="flex flex-col gap-3">
 			<ProfileInfo
 				userId={userId}
-				onDateChange={setSelectedDate}
+				onDateChange={date => setSelectedDate(date, currentUserId)}
 				selectedDate={selectedDate}
 			/>
 			<div className="visible border-b max-sm:invisible"></div>

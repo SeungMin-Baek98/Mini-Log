@@ -3,18 +3,21 @@ import { combine, devtools } from 'zustand/middleware';
 
 type State = {
 	selectedDate: Date | null;
+	selectedUserId: string | null;
 };
 
 const initialState: State = {
-	selectedDate: null
+	selectedDate: null,
+	selectedUserId: null
 };
 
 const useProfileSelectedDateStore = create(
 	devtools(
 		combine(initialState, set => ({
 			actions: {
-				setSelectedDate: (date: Date | null) => set({ selectedDate: date }),
-				clear: () => set({ selectedDate: null })
+				setSelectedDate: (date: Date | null, userId: string | null) =>
+					set({ selectedDate: date, selectedUserId: userId }),
+				clear: () => set(initialState)
 			}
 		})),
 		{ name: 'ProfileSelectedDateStore' }
