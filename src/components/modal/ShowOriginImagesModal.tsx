@@ -20,9 +20,17 @@ export default function ShowOriginImagesModal() {
 	return (
 		<Dialog open={store.isOpen} onOpenChange={handleOpenChange}>
 			<DialogContent className="border-none p-4">
-				<DialogTitle className="text-muted-foreground text-xs opacity-45">
-					{store.images.length > 1 && '이미지를 좌우로 넘기세요'}
+				<DialogTitle className="sr-only">
+					게시 이미지 {store.images.length}개 보기
 				</DialogTitle>
+
+				{store.images.length > 1 && (
+					<p
+						className="text-muted-foreground text-xs opacity-70"
+						aria-hidden="true">
+						이미지를 좌우로 넘기세요
+					</p>
+				)}
 				<Carousel
 					className="relative"
 					opts={{
