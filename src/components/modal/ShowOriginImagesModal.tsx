@@ -36,7 +36,7 @@ export default function ShowOriginImagesModal() {
 									<img
 										src={url}
 										alt={`원본 게시 이미지 ${index + 1}`}
-										className="max-h-[70vh] w-full rounded-lg object-contain"
+										className="max-h-[450px] w-full rounded-lg object-contain"
 									/>
 								</div>
 							</CarouselItem>
