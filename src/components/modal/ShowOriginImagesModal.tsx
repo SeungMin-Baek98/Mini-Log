@@ -6,7 +6,7 @@ import {
 	CarouselNext,
 	CarouselPrevious
 } from '../ui/carousel';
-import { Dialog, DialogContent } from '../ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
 
 export default function ShowOriginImagesModal() {
 	const store = useShowOriginImagesModal();
@@ -19,7 +19,18 @@ export default function ShowOriginImagesModal() {
 
 	return (
 		<Dialog open={store.isOpen} onOpenChange={handleOpenChange}>
-			<DialogContent className="border-none p-4 max-sm:relative">
+			<DialogContent className="border-none p-4">
+				<DialogTitle className="sr-only">
+					게시 이미지 {store.images.length}개 보기
+				</DialogTitle>
+
+				{store.images.length > 1 && (
+					<p
+						className="text-muted-foreground text-xs opacity-70"
+						aria-hidden="true">
+						이미지를 좌우로 넘기세요
+					</p>
+				)}
 				<Carousel
 					className="relative"
 					opts={{
@@ -41,8 +52,8 @@ export default function ShowOriginImagesModal() {
 					</CarouselContent>
 					{store.images.length > 1 && (
 						<>
-							<CarouselPrevious className="border-none bg-white/20 text-white max-sm:absolute max-sm:left-2" />
-							<CarouselNext className="border-none bg-white/20 text-white max-sm:absolute max-sm:right-2" />
+							<CarouselPrevious className="border-none bg-white/20 text-white max-sm:absolute max-sm:left-2 max-sm:bg-black" />
+							<CarouselNext className="border-none bg-white/20 text-white max-sm:absolute max-sm:right-2 max-sm:bg-black" />
 						</>
 					)}
 				</Carousel>
