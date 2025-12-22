@@ -19,7 +19,7 @@ export default function ShowOriginImagesModal() {
 
 	return (
 		<Dialog open={store.isOpen} onOpenChange={handleOpenChange}>
-			<DialogContent className="border-none p-4">
+			<DialogContent className="border-none p-10">
 				<DialogTitle className="sr-only">
 					게시 이미지 {store.images.length}개 보기
 				</DialogTitle>
