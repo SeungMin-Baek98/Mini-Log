@@ -26,12 +26,16 @@ export default function CommentItem(props: NestedComment) {
 		});
 	const [isEditing, setIsEditing] = useState(false);
 	const [isReply, setIsReply] = useState(false);
+	const [showReplies, setShowReplies] = useState(false);
 
 	const toggleIsEditing = () => {
 		setIsEditing(!isEditing);
 	};
 	const toggleIsReply = () => {
 		setIsReply(!isReply);
+	};
+	const toggleShowReplies = () => {
+		setShowReplies(!showReplies);
 	};
 
 	const handleDeleteClick = () => {
@@ -86,6 +90,18 @@ export default function CommentItem(props: NestedComment) {
 								className="cursor-pointer hover:underline">
 								댓글
 							</div>
+							{props.children.length > 0 && (
+								<>
+									<div className="bg-border h-[13px] w-[2px]"></div>
+									<div
+										onClick={toggleShowReplies}
+										className="cursor-pointer hover:underline">
+										{showReplies
+											? '대댓글 숨기기'
+											: `대댓글 보기 (${props.children.length})`}
+									</div>
+								</>
+							)}
 							<div className="bg-border h-[13px] w-[2px]"></div>
 							<div>{formatTimeAgo(props.created_at)}</div>
 						</div>
@@ -118,9 +134,10 @@ export default function CommentItem(props: NestedComment) {
 					onClose={toggleIsReply}
 				/>
 			)}
-			{props.children.map(comment => (
-				<CommentItem key={comment.id} {...comment} />
-			))}
+			{showReplies &&
+				props.children.map(comment => (
+					<CommentItem key={comment.id} {...comment} />
+				))}
 		</div>
 	);
 }
