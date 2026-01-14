@@ -1,54 +1,123 @@
-# React + TypeScript + Vite
+# Onebite Log
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+일상을 서로 공유할 수 있는 소셜 네트워크 서비스입니다.
 
-Currently, two official plugins are available:
+## 프로젝트 개요
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+**개발 기간**: 2024년 (개인 프로젝트)  
+**프로젝트 성격**: 개인 프로젝트 (기획, 설계, 개발 전부 1인 수행)  
+**배포 링크**: [배포 예정]
 
-## Expanding the ESLint configuration
+## 주요 기능
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 무한 스크롤 피드
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+사용자가 스크롤만으로 자연스럽게 콘텐츠를 탐색할 수 있도록 Intersection Observer API를 활용한 무한 스크롤을 구현했습니다. 페이지네이션 버튼 클릭 없이 연속적인 콘텐츠 소비 경험을 제공합니다.
+
+### 캐시 기반 네비게이션 최적화
+
+피드에서 게시글을 클릭해 상세 페이지로 이동할 때, 이미 캐시된 데이터를 활용하여 즉시 렌더링합니다. React Query의 `enabled` 옵션을 통해 피드에서는 캐시만 사용하고, 상세 페이지에서만 필요시 서버 요청을 수행하여 불필요한 네트워크 요청을 최소화했습니다.
+
+### Optimistic Update를 통한 즉각적인 피드백
+
+좋아요 버튼 클릭 시 서버 응답을 기다리지 않고 즉시 UI를 업데이트합니다. `onMutate`에서 낙관적 업데이트를 수행하고, 에러 발생 시 `onError`에서 이전 상태로 롤백하여 사용자 경험과 데이터 일관성을 모두 확보했습니다.
+
+### 날짜별 게시글 필터링
+
+프로필 페이지의 캘린더에서 특정 날짜를 선택하면 해당 날짜의 게시글만 필터링하여 표시합니다. React Query의 동적 쿼리 키를 활용하여 날짜별로 독립적인 캐시를 관리하며, 사용자가 이전에 조회한 날짜의 데이터는 즉시 표시됩니다.
+
+## 기술 스택
+
+| 분류        | 기술           | 선택 이유                                                                                                                                               |
+| ----------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 프레임워크  | React 19       | 최신 버전의 동시성 기능과 성능 개선을 활용하기 위해 선택했습니다.                                                                                       |
+| 언어        | TypeScript     | 컴파일 타임에 타입 안정성을 확보하여 런타임 에러를 사전에 방지하고, 코드 자동완성과 리팩토링을 용이하게 하기 위해 도입했습니다.                         |
+| 빌드 도구   | Vite           | 빠른 개발 서버 시작 시간과 HMR 속도로 개발 생산성을 높이기 위해 선택했습니다.                                                                           |
+| 상태 관리   | Zustand        | Redux에 비해 보일러플레이트가 적고, 전역 상태가 필요한 모달 상태와 세션 상태를 간단하게 관리하기 위해 도입했습니다.                                     |
+| 서버 상태   | React Query    | 서버 데이터 캐싱, 무한 스크롤, Optimistic Update 등 복잡한 서버 상태 관리 로직을 간소화하고, 자동 리페칭과 에러 처리 기능을 활용하기 위해 선택했습니다. |
+| 라우팅      | React Router 7 | 파일 기반 라우팅 없이 컴포넌트 기반 라우팅을 선호하며, 중첩 라우팅과 레이아웃 컴포넌트를 활용한 인증 기반 라우팅 가드를 구현하기 위해 사용했습니다.     |
+| 스타일링    | Tailwind CSS   | 유틸리티 클래스를 통한 빠른 스타일링과 일관된 디자인 시스템 구축을 위해 선택했습니다.                                                                   |
+| UI 컴포넌트 | Shadcn/ui      | 접근성을 고려한 헤드리스 UI 컴포넌트를 활용하여 커스터마이징과 접근성 확보를 동시에 달성하기 위해 도입했습니다.                                         |
+| 백엔드      | Supabase       | 인증, 데이터베이스, 스토리지를 통합 제공하여 백엔드 개발 시간을 단축하고, 실시간 기능 확장 가능성을 고려하여 선택했습니다.                              |
+| 테스트      | Storybook      | 컴포넌트 단위 개발과 문서화를 동시에 수행하여 재사용 가능한 컴포넌트 라이브러리를 구축하기 위해 도입했습니다.                                           |
+
+## 아키텍처 & 구조 설계
+
+### 상태 관리 전략
+
+서버 상태와 클라이언트 상태를 명확히 분리했습니다. React Query는 서버에서 가져온 데이터(게시글, 댓글, 프로필 등)를 관리하고, Zustand는 클라이언트에서만 필요한 상태(모달 열림/닫힘, 선택된 날짜, 테마 설정 등)를 관리합니다.
+
+### 라우팅 구조
+
+`GlobalLayout`을 최상위 레이아웃으로 두고, 그 하위에 `GuestOnlyLayout`과 `MemberOnlyLayout`을 중첩하여 인증 상태에 따른 라우팅 가드를 구현했습니다. 각 레이아웃은 세션 상태를 확인하여 비인증 사용자는 로그인 페이지로, 인증 사용자는 메인 페이지로 리다이렉트합니다. 이 구조는 라우트별로 인증 로직을 중복 작성하지 않고도 일관된 접근 제어를 제공합니다.
+
+## 문제 해결 경험
+
+### 문제 상황: 게시글 상세 페이지 로딩 지연
+
+피드에서 게시글을 클릭해 상세 페이지로 이동할 때마다 서버 요청이 발생하여 로딩 시간이 발생했습니다. 사용자가 이미 피드에서 본 게시글을 다시 조회하는 경우에도 불필요한 네트워크 요청이 발생했습니다.
+
+### 원인 분석
+
+`useInfinitePostsData`에서 게시글 목록을 가져올 때 개별 게시글 데이터를 캐시에 저장하고 있었지만, 상세 페이지의 `usePostByIdData`가 캐시 존재 여부와 관계없이 항상 서버 요청을 수행하고 있었습니다. 또한 피드에서 상세 페이지로 이동하는 흐름이 빈번한데, 이때마다 추가 요청이 발생하는 것이 성능 저하의 원인이었습니다.
+
+### 해결 방법
+
+`usePostByIdData`에 `type` 파라미터를 추가하여 피드(`FEED`)와 상세 페이지(`DETAIL`)를 구분했습니다. 피드에서는 `enabled: false`로 설정하여 쿼리를 실행하지 않고 캐시만 참조하도록 했고, 상세 페이지에서는 `enabled: true`로 설정하여 캐시가 없을 경우에만 서버 요청을 수행하도록 변경했습니다. 또한 `useInfinitePostsData`에서 각 게시글 데이터를 `queryClient.setQueryData`로 개별 쿼리 키에 저장하여, 상세 페이지에서 동일한 캐시를 활용할 수 있도록 했습니다.
+
+### 결과 / 배운 점
+
+피드에서 상세 페이지로 이동할 때 추가 네트워크 요청 없이 즉시 렌더링되어 사용자 경험이 크게 개선되었습니다. React Query의 쿼리 키 기반 캐시 시스템을 이해하고, `enabled` 옵션을 활용하여 컨텍스트에 맞는 데이터 페칭 전략을 수립할 수 있었습니다. 컴포넌트 재사용성과 성능 최적화를 동시에 달성하는 방법을 학습했습니다.
+
+### 문제 상황: 좋아요 버튼 클릭 시 지연된 UI 업데이트
+
+좋아요 버튼을 클릭하면 서버 요청이 완료될 때까지 UI가 업데이트되지 않아 반응이 느리게 느껴졌습니다. 네트워크 지연이 있을 경우 사용자는 버튼이 제대로 작동하는지 의심하게 됩니다.
+
+### 원인 분석
+
+`useTogglePostLike` 훅에서 `mutationFn`만 정의하고 있었고, 서버 응답을 기다린 후에만 쿼리 데이터를 업데이트하고 있었습니다. 이로 인해 네트워크 왕복 시간만큼 UI 업데이트가 지연되었습니다.
+
+### 해결 방법
+
+React Query의 `onMutate` 콜백을 활용하여 Optimistic Update를 구현했습니다. `onMutate`에서 진행 중인 쿼리를 취소하고, 현재 캐시된 데이터를 백업한 후, 좋아요 상태와 개수를 즉시 업데이트했습니다. `onError`에서는 백업한 이전 데이터로 롤백하여 서버 요청 실패 시에도 데이터 일관성을 유지했습니다. `onSuccess`에서는 서버 응답을 받아 최종적으로 데이터를 동기화했습니다.
+
+### 결과 / 배운 점
+
+좋아요 버튼 클릭 시 즉시 UI가 업데이트되어 반응성이 크게 향상되었습니다. Optimistic Update 패턴을 통해 네트워크 지연을 사용자에게 노출하지 않고, 에러 발생 시에도 안전하게 롤백할 수 있는 방법을 학습했습니다. 사용자 경험 개선과 데이터 일관성 확보를 동시에 달성하는 중요성을 이해했습니다.
+
+## 실행 방법
+
+### 환경 변수 설정
+
+프로젝트 루트에 `.env` 파일을 생성하고 아래 환경 변수를 설정하세요.
+
+```env
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 로컬 실행
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+# 의존성 설치
+npm install
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+# 개발 서버 실행
+npm run dev
+
+# 프로덕션 빌드
+npm run build
+
+# 빌드 미리보기
+npm run preview
+```
+
+### 추가 스크립트
+
+```bash
+# Supabase 타입 생성
+npm run type-gen
+
+# Storybook 실행
+npm run storybook
 ```
