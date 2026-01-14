@@ -3,7 +3,7 @@ import { CircleIcon } from 'lucide-react';
 import { endOfMonth, format, isSameMonth, startOfMonth } from 'date-fns';
 
 import { useCalendar } from '@/hooks/useCalendar';
-import { getBgColorByPostLength } from '@/lib/color';
+import { getBgColorByPostCount } from '@/lib/color';
 import { usePostCountByDate } from '@/hooks/queries/usePostCountByDate';
 
 type props = {
@@ -106,7 +106,7 @@ export default function Calendar({ value, onChange, userId }: props) {
 										{format(day, 'd')}
 
 										<CircleIcon
-											className={`h-2 w-2 rounded-full ${getBgColorByPostLength(postCount[format(day, 'yyyy-MM-dd')] || 0)}`}
+											className={`h-2 w-2 rounded-full ${getBgColorByPostCount(postCount[format(day, 'yyyy-MM-dd')] || 0)}`}
 										/>
 									</div>
 								</button>

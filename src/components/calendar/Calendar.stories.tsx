@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { useQueryClient } from '@tanstack/react-query';
 
 import Calendar from './Calendar';
 
@@ -16,7 +15,6 @@ export const Default: Story = {
 		userId: 'exampleUserId'
 	},
 	render: () => {
-		const queryClient = useQueryClient();
 		const [date, setDate] = useState<Date | null>(null);
 
 		return (

@@ -45,11 +45,7 @@ export default function ProfileInfo({
 				{isMine && <EditProfileButton />}
 			</div>
 			<div className="invisible border-b max-sm:visible max-sm:w-full"></div>
-			<Calendar
-				userId={userId}
-				onChange={onDateChange}
-				value={selectedDate}
-			/>
+			<Calendar userId={userId} onChange={onDateChange} value={selectedDate} />
 		</div>
 	);
 }
