@@ -1,7 +1,7 @@
-export function getBgColorByPostLength(postLength: number) {
-	if (postLength >= 5) return 'bg-chart-5';
+export function getBgColorByPostCount(postCount: number) {
+	if (postCount >= 5) return 'bg-chart-5';
 
-	switch (postLength) {
+	switch (postCount) {
 		case 1:
 			return 'bg-chart-1';
 		case 2:
