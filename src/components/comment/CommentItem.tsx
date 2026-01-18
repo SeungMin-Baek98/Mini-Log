@@ -54,7 +54,7 @@ export default function CommentItem(props: NestedComment) {
 
 	return (
 		<div
-			className={`flex flex-col gap-8 pb-5 ${isRootComment ? 'bordoer-b' : 'ml-6'}`}>
+			className={`flex flex-col gap-8 pb-5 ${isRootComment ? 'border-b' : 'ml-6'}`}>
 			<div className="flex items-start gap-4">
 				<Link to={'#'}>
 					<div className="flex h-full flex-col">

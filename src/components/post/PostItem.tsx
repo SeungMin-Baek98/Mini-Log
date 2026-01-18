@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { Carousel, CarouselContent, CarouselItem } from '../ui/carousel';
 
 import { formatTimeAgo } from '@/lib/time';
+import { MAX_IMAGE_WIDTH_PX } from '@/lib/constants';
 import { useSession } from '@/store/session';
 import { usePostByIdData } from '@/hooks/queries/usePostByIdData';
 import { useOpenShowOriginImagesModal } from '@/store/showOriginImagesModal';
@@ -98,7 +99,9 @@ export default function PostItem({
 					<CarouselContent>
 						{post.image_urls?.map((url, index) => (
 							<CarouselItem className="basis-full sm:basis-1/3" key={index}>
-								<div className="relative mx-auto aspect-square w-full max-w-[480px] overflow-hidden rounded-xl bg-neutral-100">
+								<div
+									className="relative mx-auto aspect-square w-full overflow-hidden rounded-xl bg-neutral-100"
+									style={{ maxWidth: `${MAX_IMAGE_WIDTH_PX}px` }}>
 									<img
 										src={url}
 										onClick={() => handleShowOriginImagesModal(index)}

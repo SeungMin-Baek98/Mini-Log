@@ -1,5 +1,7 @@
+import { MIN_POST_COUNT_FOR_HIGHEST_COLOR } from './constants';
+
 export function getBgColorByPostCount(postCount: number) {
-	if (postCount >= 5) return 'bg-chart-5';
+	if (postCount >= MIN_POST_COUNT_FOR_HIGHEST_COLOR) return 'bg-chart-5';
 
 	switch (postCount) {
 		case 1:

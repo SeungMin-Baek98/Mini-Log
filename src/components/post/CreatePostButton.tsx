@@ -1,4 +1,8 @@
 import { useOpenCreatePostModal } from '@/store/postEditorModal';
+import {
+	SCROLL_DOWN_THRESHOLD_PX,
+	SCROLL_UP_THRESHOLD_PX
+} from '@/lib/constants';
 import { PlusCircleIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
@@ -38,11 +42,13 @@ export default function CreatePostButton() {
 
 	useEffect(() => {
 		const handleScroll = () => {
-			const y = window.scrollY;
+			const scrollY = window.scrollY;
+			const shouldShowFloatingButton = scrollY > SCROLL_DOWN_THRESHOLD_PX;
+			const shouldShowNormalButton = scrollY < SCROLL_UP_THRESHOLD_PX;
 
 			setIsScrollDown(prev => {
-				if (y > 350) return true;
-				if (y < 250) return false;
+				if (shouldShowFloatingButton) return true;
+				if (shouldShowNormalButton) return false;
 				return prev;
 			});
 		};
