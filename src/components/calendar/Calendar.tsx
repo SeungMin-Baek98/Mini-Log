@@ -61,7 +61,7 @@ export default function Calendar({ value, onChange, userId }: props) {
 
 	return (
 		<div className="bg-muted flex w-full flex-col gap-4 rounded-xl border p-4 shadow-sm">
-			<div className="text-muted-foreground text-sm font-semibold">
+			<div className="text-muted-foreground text-center text-sm font-semibold">
 				{format(cursor, 'yyyy.MM')}
 			</div>
 
