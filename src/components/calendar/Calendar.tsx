@@ -69,6 +69,7 @@ export default function Calendar({ value, onChange, userId }: props) {
 				<button
 					type="button"
 					onClick={prevWeek}
+					aria-label="이전 주"
 					className="text-muted-foreground hover:bg-muted-foreground hover:text-muted flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-sm transition">
 					<ChevronLeft />
 				</button>
@@ -118,6 +119,7 @@ export default function Calendar({ value, onChange, userId }: props) {
 				<button
 					type="button"
 					onClick={nextWeek}
+					aria-label="다음 주"
 					className="text-muted-foreground hover:bg-muted-foreground hover:text-muted flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-sm transition">
 					<ChevronRight />
 				</button>

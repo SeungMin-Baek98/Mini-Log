@@ -35,6 +35,11 @@ export default function ProfileInfo({
 				<div className="flex flex-1 flex-col items-center justify-center gap-5">
 					<img
 						src={profile.avatar_url || defaultAvatar}
+						alt={
+							profile.nickname
+								? `${profile.nickname}의 이미지`
+								: '프로필 이미지'
+						}
 						className="h-30 w-30 rounded-full object-cover"
 					/>
 
