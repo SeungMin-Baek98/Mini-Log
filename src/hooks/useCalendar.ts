@@ -1,60 +1,36 @@
-import { useMemo, useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import {
-	addMonths,
-	subMonths,
-	startOfMonth,
-	endOfMonth,
 	startOfWeek,
 	endOfWeek,
 	eachDayOfInterval,
 	isSameMonth,
 	isSameDay,
-	format
+	addWeeks,
+	subWeeks
 } from 'date-fns';
 
 export function useCalendar(initialDate = new Date()) {
 	const [cursor, setCursor] = useState(initialDate);
 	const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
-	/**
-	 * 달력에 표시할 시작일과 종료일
-	 * 예: 2023년 8월이면 7월 마지막 주 일요일 ~ 9월 첫째 주 토요일
-	 */
-	const start = startOfWeek(startOfMonth(cursor), { weekStartsOn: 0 });
-	const end = endOfWeek(endOfMonth(cursor), { weekStartsOn: 0 });
+	const start = startOfWeek(cursor, { weekStartsOn: 0 });
+	const end = endOfWeek(cursor, { weekStartsOn: 0 });
+	const weekDays = eachDayOfInterval({ start, end });
 
 	/**
-	 * 달력에 표시할 날짜들
-	 * 예: 2023년 8월이면 7월 마지막 주 일요일 ~ 9월 첫째 주 토요일
+	 * 다음 주로 이동
 	 */
-	const days = useMemo(() => eachDayOfInterval({ start, end }), [start, end]);
-
-	/**
-	 * 각 주차별로 날짜들을 나눈 배열
-	 */
-	const weeks = useMemo(() => {
-		const daysForEach: Date[][] = [];
-		for (let i = 0; i < days.length; i += 7)
-			daysForEach.push(days.slice(i, i + 7));
-		return daysForEach;
-	}, [days]);
-
-	/**
-	 * 다음 달로 이동
-	 * 예: 2023년 8월 -> 2023년 9월
-	 */
-	const nextMonth = useCallback(
-		() => setCursor(addMonths(cursor, 1)),
-		[cursor]
+	const nextWeek = useCallback(
+		() => setCursor(current => addWeeks(current, 1)),
+		[]
 	);
 
 	/**
-	 * 이전 달로 이동
-	 * 예: 2023년 8월 -> 2023년 7월
+	 * 이전 주로 이동
 	 */
-	const prevMonth = useCallback(
-		() => setCursor(subMonths(cursor, 1)),
-		[cursor]
+	const prevWeek = useCallback(
+		() => setCursor(current => subWeeks(current, 1)),
+		[]
 	);
 
 	/**
@@ -66,11 +42,11 @@ export function useCalendar(initialDate = new Date()) {
 	}, []);
 
 	/**
-	 * 특정 달로 이동
-	 * @param date 이동할 달의 날짜
+	 * 특정 날짜가 포함된 주로 이동
+	 * @param date 이동할 기준 날짜
 	 */
-	const goToMonth = useCallback((date: Date) => {
-		setCursor(startOfMonth(date));
+	const goToDate = useCallback((date: Date) => {
+		setCursor(date);
 	}, []);
 
 	/**
@@ -85,14 +61,14 @@ export function useCalendar(initialDate = new Date()) {
 
 	return {
 		cursor,
-		weeks,
-		nextMonth,
-		prevMonth,
+		weekDays,
+		start,
+		end,
+		nextWeek,
+		prevWeek,
 		isSameMonth,
-		isSameDay,
 		selectDate,
-		goToMonth,
-		isSelected,
-		format
+		goToDate,
+		isSelected
 	};
 }
