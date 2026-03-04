@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { AuthFormLayout, AuthSubmitButton } from '@/components/auth';
 import { useUpdatePassword } from '@/hooks/mutations/auth/useUpdatePassword';
 
 import { generateErrorMessage } from '@/lib/error';
@@ -32,13 +32,9 @@ export default function ResetPasswordPage() {
 	};
 
 	return (
-		<div className="flex flex-col gap-8">
-			<div className="flex flex-col gap-2">
-				<div className="text-xl font-bold">비밀번호를 재설정하기</div>
-				<div className="text-muted-foreground">
-					새로운 비밀번호를 입력하세요
-				</div>
-			</div>
+		<AuthFormLayout
+			title="비밀번호를 재설정하기"
+			description="새로운 비밀번호를 입력하세요">
 			<Input
 				disabled={isUpdatePasswordPending}
 				value={password}
@@ -47,12 +43,12 @@ export default function ResetPasswordPage() {
 				placeholder="password"
 				type="password"
 			/>
-			<Button
-				className="w-full"
+			<AuthSubmitButton
 				disabled={isUpdatePasswordPending}
+				type="button"
 				onClick={handleUpdatePasswordClick}>
 				비밀번호 재설정
-			</Button>
-		</div>
+			</AuthSubmitButton>
+		</AuthFormLayout>
 	);
 }
