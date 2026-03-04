@@ -1,10 +1,11 @@
 import { useEffect, useMemo } from 'react';
-import { CircleIcon } from 'lucide-react';
-import { endOfMonth, format, isSameMonth, startOfMonth } from 'date-fns';
+import { ChevronLeft, ChevronRight, CircleIcon } from 'lucide-react';
+import { format, getDay, isSameMonth } from 'date-fns';
 
 import { useCalendar } from '@/hooks/useCalendar';
 import { getBgColorByPostCount } from '@/lib/color';
 import { usePostCountByDate } from '@/hooks/queries/usePostCountByDate';
+import { cn } from '@/lib/utils';
 
 type props = {
 	value?: Date | null;
@@ -13,17 +14,18 @@ type props = {
 };
 
 export default function Calendar({ value, onChange, userId }: props) {
+	const weekDayLabels = ['일', '월', '화', '수', '목', '금', '토'];
 	const {
 		cursor,
-		weeks,
-		nextMonth,
-		prevMonth,
+		weekDays,
+		start,
+		end,
+		nextWeek,
+		prevWeek,
 		selectDate,
 		isSelected,
-		goToMonth
+		goToDate
 	} = useCalendar();
-	const start = startOfMonth(cursor);
-	const end = endOfMonth(cursor);
 
 	const { data: postCountByDate } = usePostCountByDate({
 		userId,
@@ -43,8 +45,8 @@ export default function Calendar({ value, onChange, userId }: props) {
 		}
 
 		selectDate(value);
-		goToMonth(value);
-	}, [value, selectDate, goToMonth]);
+		goToDate(value);
+	}, [value, selectDate, goToDate]);
 
 	const postCount = useMemo(() => {
 		const countMap: Record<string, number> = {};
@@ -58,62 +60,67 @@ export default function Calendar({ value, onChange, userId }: props) {
 	}, [postCountByDate]);
 
 	return (
-		<div className="bg-muted w-[360px] rounded-xl border p-4 shadow-sm">
-			{/* Header */}
-			<header className="mb-4 flex items-center justify-between">
-				<button
-					onClick={prevMonth}
-					className="text-muted-foreground hover:bg-muted-foreground hover:text-muted rounded-md px-2 py-1 text-sm">
-					◀
-				</button>
-
-				<span className="text-muted-foreground text-sm font-semibold">
-					{format(cursor, 'yyyy.MM')}
-				</span>
-
-				<button
-					onClick={nextMonth}
-					className="text-muted-foreground hover:bg-muted-foreground hover:text-muted rounded-md px-2 py-1 text-sm">
-					▶
-				</button>
-			</header>
-
-			{/* Days */}
-			<div className="text-muted-foreground mb-2 grid grid-cols-7 text-center text-xs font-medium">
-				{['일', '월', '화', '수', '목', '금', '토'].map(d => (
-					<span key={d}>{d}</span>
-				))}
+		<div className="bg-muted flex w-full flex-col gap-4 rounded-xl border p-4 shadow-sm">
+			<div className="text-muted-foreground text-sm font-semibold">
+				{format(cursor, 'yyyy.MM')}
 			</div>
 
-			{/* Dates */}
-			<div className="space-y-1">
-				{weeks.map((week, wi) => (
-					<div key={wi} className="grid grid-cols-7 gap-1">
-						{week.map(day => {
-							return (
-								<button
-									onClick={() => handleSelect(day)}
-									key={day.toISOString()}
-									className={[
-										'hover:bg-muted-foreground hover:text-muted flex h-9 w-9 items-center justify-center rounded-md text-sm transition',
-										isSelected(day)
-											? 'bg-muted-foreground text-primary-foreground'
-											: isSameMonth(day, cursor)
-												? 'text-muted-foreground'
-												: 'text-muted-foreground/30'
-									].join(' ')}>
-									<div className="flex flex-col items-center justify-center gap-1">
-										{format(day, 'd')}
+			<div className="flex items-center gap-2">
+				<button
+					type="button"
+					onClick={prevWeek}
+					className="text-muted-foreground hover:bg-muted-foreground hover:text-muted flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-sm transition">
+					<ChevronLeft />
+				</button>
 
-										<CircleIcon
-											className={`h-2 w-2 rounded-full ${getBgColorByPostCount(postCount[format(day, 'yyyy-MM-dd')] || 0)}`}
-										/>
-									</div>
-								</button>
-							);
-						})}
-					</div>
-				))}
+				<div className="grid flex-1 grid-cols-7 gap-2">
+					{weekDays.map(day => {
+						const dateKey = format(day, 'yyyy-MM-dd');
+						const isCurrentMonth = isSameMonth(day, cursor);
+
+						return (
+							<button
+								type="button"
+								onClick={() => handleSelect(day)}
+								key={day.toISOString()}
+								className={cn(
+									'hover:bg-muted-foreground/80 flex min-w-0 flex-col items-center justify-center rounded-lg px-1 py-3 text-center transition',
+									isSelected(day)
+										? 'bg-muted-foreground text-primary-foreground'
+										: isCurrentMonth
+											? 'text-foreground'
+											: 'text-muted-foreground'
+								)}>
+								<span
+									className={cn(
+										'text-[11px] font-medium',
+										isSelected(day)
+											? 'text-primary-foreground/80'
+											: 'text-muted-foreground'
+									)}>
+									{weekDayLabels[getDay(day)]}
+								</span>
+								<span className="mt-1 text-sm font-semibold">
+									{format(day, 'dd')}
+								</span>
+								<CircleIcon
+									className={cn(
+										'mt-2 h-2 w-2 rounded-full',
+										getBgColorByPostCount(postCount[dateKey] || 0),
+										isSelected(day) && 'opacity-90'
+									)}
+								/>
+							</button>
+						);
+					})}
+				</div>
+
+				<button
+					type="button"
+					onClick={nextWeek}
+					className="text-muted-foreground hover:bg-muted-foreground hover:text-muted flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-sm transition">
+					<ChevronRight />
+				</button>
 			</div>
 		</div>
 	);

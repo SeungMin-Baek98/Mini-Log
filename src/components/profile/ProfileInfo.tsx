@@ -30,21 +30,22 @@ export default function ProfileInfo({
 	const isMine = session?.user.id === userId;
 
 	return (
-		<div className="flex items-center justify-center gap-2 max-sm:flex-col">
-			<div className="flex flex-1 flex-col items-center justify-center gap-5">
-				<img
-					src={profile.avatar_url || defaultAvatar}
-					className="h-30 w-30 rounded-full object-cover"
-				/>
+		<div className="flex flex-col gap-8">
+			<div className="flex items-center justify-center gap-5 max-sm:flex-col">
+				<div className="flex flex-1 flex-col items-center justify-center gap-5">
+					<img
+						src={profile.avatar_url || defaultAvatar}
+						className="h-30 w-30 rounded-full object-cover"
+					/>
 
-				<div className="flex flex-col items-center gap-2">
-					<div className="text-xl font-bold">{profile.nickname}</div>
-					<div className="text-muted-foreground">{profile.bio}</div>
+					<div className="flex flex-col items-center gap-2">
+						<div className="text-xl font-bold">{profile.nickname}</div>
+						<div className="text-muted-foreground">{profile.bio}</div>
+					</div>
+
+					{isMine && <EditProfileButton />}
 				</div>
-
-				{isMine && <EditProfileButton />}
 			</div>
-			<div className="invisible border-b max-sm:visible max-sm:w-full"></div>
 			<Calendar userId={userId} onChange={onDateChange} value={selectedDate} />
 		</div>
 	);

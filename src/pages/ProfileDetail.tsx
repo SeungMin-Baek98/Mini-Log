@@ -31,13 +31,12 @@ export default function ProfileDetailPage() {
 	if (!userId) return <Navigate to={'/'} replace />;
 
 	return (
-		<div className="flex flex-col gap-3">
+		<div className="flex flex-col gap-8">
 			<ProfileInfo
 				userId={userId}
 				onDateChange={date => setSelectedDate(date, currentUserId)}
 				selectedDate={selectedDate}
 			/>
-			<div className="visible border-b max-sm:invisible"></div>
 			{selectedDate && <PostFeed authorId={userId} date={selectedDate} />}
 		</div>
 	);
