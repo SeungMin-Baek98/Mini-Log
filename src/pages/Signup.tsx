@@ -3,8 +3,13 @@ import { Link } from 'react-router';
 import { toast } from 'sonner';
 
 import { generateErrorMessage } from '@/lib/error';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import {
+	AuthFieldGroup,
+	AuthFormLayout,
+	AuthLinkList,
+	AuthSubmitButton
+} from '@/components/auth';
 import { useSignUp } from '@/hooks/mutations/auth/useSignup';
 
 export default function SignUpPage() {
@@ -26,9 +31,8 @@ export default function SignUpPage() {
 	};
 
 	return (
-		<div className="flex flex-col gap-8">
-			<div className="text-xl font-bold">회원가입</div>
-			<div className="flex flex-col gap-2">
+		<AuthFormLayout title="회원가입">
+			<AuthFieldGroup>
 				<Input
 					disabled={isSignUpPending}
 					value={email}
@@ -49,21 +53,21 @@ export default function SignUpPage() {
 					type="password"
 					placeholder="password"
 				/>
-			</div>
+			</AuthFieldGroup>
 			<div>
-				<Button
+				<AuthSubmitButton
 					disabled={isSignUpPending}
-					onClick={handleSignUpClick}
-					className="w-full">
+					type="button"
+					onClick={handleSignUpClick}>
 					회원가입
-				</Button>
+				</AuthSubmitButton>
 			</div>
 
-			<div>
+			<AuthLinkList>
 				<Link className="text-muted-foreground hover:underline" to={'/sign-in'}>
 					이미 계정이 있다면? 로그인
 				</Link>
-			</div>
-		</div>
+			</AuthLinkList>
+		</AuthFormLayout>
 	);
 }

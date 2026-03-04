@@ -2,8 +2,14 @@ import { useState } from 'react';
 import { Link } from 'react-router';
 import { toast } from 'sonner';
 
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import {
+	AuthFieldGroup,
+	AuthFormLayout,
+	AuthLinkList,
+	AuthSubmitButton,
+	SocialLoginButton
+} from '@/components/auth';
 import { generateErrorMessage } from '@/lib/error';
 import { useSignInWithPassword } from '@/hooks/mutations/auth/useSignInWithPassword';
 import { useSignInWithOAuth } from '@/hooks/mutations/auth/useSignInWithOAuth';
@@ -68,14 +74,15 @@ export default function SignUpPage() {
 
 	const isPending = isSignInWithPasswordPending || isSignInWithOAuthPending;
 	return (
-		<form
-			className="flex flex-col gap-9"
+		<AuthFormLayout
+			title="로그인"
+			className="gap-9"
+			contentClassName="gap-0"
 			onSubmit={e => {
 				e.preventDefault();
 				handleSignInWithPassword();
 			}}>
-			<div className="text-xl font-bold">로그인</div>
-			<div className="flex flex-col gap-2">
+			<AuthFieldGroup>
 				<Input
 					disabled={isPending}
 					value={email}
@@ -96,50 +103,47 @@ export default function SignUpPage() {
 					type="password"
 					placeholder="password"
 				/>
-			</div>
-			<div className="flex flex-col gap-2">
-				<Button
+			</AuthFieldGroup>
+			<AuthFieldGroup>
+				<AuthSubmitButton
 					disabled={isPending}
-					className="w-full"
 					type="submit"
 					onKeyDown={handleKeyDown}
-					onClick={handleSignInWithPassword}>
+					onClick={handleSignInWithPassword}
+					className="mt-10">
 					로그인
-				</Button>
+				</AuthSubmitButton>
 				<div className="flex flex-col gap-9">
 					<div className="border-t border-solid border-gray-400 pt-4 text-xl font-bold">
 						소셜 로그인
 					</div>
-					<div className="flex flex-col gap-2">
-						<Button
+					<AuthFieldGroup>
+						<SocialLoginButton
 							disabled={isPending}
-							className="w-full truncate"
-							variant={'outline'}
+							type="button"
 							onClick={handleSignInWithGithubClick}>
 							<img src={gitHubLogo} className="h-4 w-4" />
 							Github 계정으로 로그인
-						</Button>
-						<Button
+						</SocialLoginButton>
+						<SocialLoginButton
 							disabled={isPending}
-							className="w-full truncate"
-							variant={'outline'}
+							type="button"
 							onClick={handleSignInWithGoogleClick}>
 							<img src={googleLogo} className="h-4 w-4" />
 							Google 계정으로 로그인
-						</Button>
-						<Button
+						</SocialLoginButton>
+						<SocialLoginButton
 							disabled={isPending}
-							className="w-full truncate"
-							variant={'outline'}
+							type="button"
 							onClick={handleSignInWithKakaoClick}>
 							<img src={kakaoLogo} className="h-4 w-4" />
 							Kakao 계정으로 로그인
-						</Button>
-					</div>
+						</SocialLoginButton>
+					</AuthFieldGroup>
 				</div>
-			</div>
+			</AuthFieldGroup>
 
-			<div className="flex flex-col gap-2">
+			<AuthLinkList>
 				<Link className="text-muted-foreground hover:underline" to={'/sign-up'}>
 					계정이 없으시다면? 회원가입
 				</Link>
@@ -148,7 +152,7 @@ export default function SignUpPage() {
 					to={'/forget-password'}>
 					비밀번호를 잊으셨나요?
 				</Link>
-			</div>
-		</form>
+			</AuthLinkList>
+		</AuthFormLayout>
 	);
 }

@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { AuthFormLayout, AuthSubmitButton } from '@/components/auth';
 import { useRequestPasswordResetEmail } from '@/hooks/mutations/auth/useRequestPasswordResetEmail';
 
 import { generateErrorMessage } from '@/lib/error';
@@ -32,13 +32,9 @@ export default function ForgetPasswordPage() {
 		requestPasswordResetEmail(email);
 	};
 	return (
-		<div className="flex flex-col gap-8">
-			<div className="flex flex-col gap-2">
-				<div className="text-xl font-bold">비밀번호를 잊으셨나요?</div>
-				<div className="text-muted-foreground">
-					이메일로 비밀번호를 재설정 할 수 있는 인증 링크를 보내드립니다.
-				</div>
-			</div>
+		<AuthFormLayout
+			title="비밀번호를 잊으셨나요?"
+			description="이메일로 비밀번호를 재설정 할 수 있는 인증 링크를 보내드립니다.">
 			<Input
 				value={email}
 				onChange={e => {
@@ -48,12 +44,12 @@ export default function ForgetPasswordPage() {
 				className="py-6"
 				placeholder="example@abc.com"
 			/>
-			<Button
-				className="w-full"
+			<AuthSubmitButton
 				disabled={isRequestPasswordEmailPending}
+				type="button"
 				onClick={handleSendEmailClick}>
 				인증 메일 요청하기
-			</Button>
-		</div>
+			</AuthSubmitButton>
+		</AuthFormLayout>
 	);
 }
