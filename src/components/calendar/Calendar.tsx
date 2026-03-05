@@ -60,7 +60,7 @@ export default function Calendar({ value, onChange, userId }: props) {
 	}, [postCountByDate]);
 
 	return (
-		<div className="bg-muted flex w-full flex-col gap-4 rounded-xl border p-4 shadow-sm">
+		<div className="bg-muted flex w-full flex-col gap-4 rounded-xl border py-4 shadow-sm sm:p-4">
 			<div className="text-muted-foreground text-center text-sm font-semibold">
 				{format(cursor, 'yyyy.MM')}
 			</div>
