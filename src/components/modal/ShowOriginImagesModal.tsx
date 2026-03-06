@@ -39,12 +39,12 @@ export default function ShowOriginImagesModal() {
 					}}>
 					<CarouselContent>
 						{store.images.map((url, index) => (
-							<CarouselItem className="basis-full" key={`${url}-${index}`}>
-								<div className="flex items-center justify-center">
+							<CarouselItem key={`${url}-${index}`}>
+								<div className="relative flex w-full items-center justify-center">
 									<img
 										src={url}
 										alt={`원본 게시 이미지 ${index + 1}`}
-										className="w-full rounded-lg object-cover"
+										className="w-full object-cover"
 									/>
 								</div>
 							</CarouselItem>
