@@ -102,6 +102,71 @@ export type Database = {
 					}
 				];
 			};
+			notification: {
+				Row: {
+					actor_id: string | null;
+					comment_id: number | null;
+					created_at: string;
+					id: number;
+					payload: Json;
+					post_id: number | null;
+					read_at: string | null;
+					type: string;
+					user_id: string;
+				};
+				Insert: {
+					actor_id?: string | null;
+					comment_id?: number | null;
+					created_at?: string;
+					id?: number;
+					payload?: Json;
+					post_id?: number | null;
+					read_at?: string | null;
+					type: string;
+					user_id: string;
+				};
+				Update: {
+					actor_id?: string | null;
+					comment_id?: number | null;
+					created_at?: string;
+					id?: number;
+					payload?: Json;
+					post_id?: number | null;
+					read_at?: string | null;
+					type?: string;
+					user_id?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'notification_actor_fk';
+						columns: ['actor_id'];
+						isOneToOne: false;
+						referencedRelation: 'profile';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'notification_comment_fk';
+						columns: ['comment_id'];
+						isOneToOne: false;
+						referencedRelation: 'comment';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'notification_post_fk';
+						columns: ['post_id'];
+						isOneToOne: false;
+						referencedRelation: 'post';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'notification_user_fk';
+						columns: ['user_id'];
+						isOneToOne: false;
+						referencedRelation: 'profile';
+						referencedColumns: ['id'];
+					}
+				];
+			};
 			post: {
 				Row: {
 					author_id: string;
@@ -169,54 +234,29 @@ export type Database = {
 			[_ in never]: never;
 		};
 		Functions: {
-			add_comment_with_count:
-				| {
-						Args: {
-							p_author_id: string;
-							p_content: string;
-							p_parent_comment_id?: number;
-							p_post_id: number;
-							p_root_comment_id?: number;
-						};
-						Returns: {
-							author_id: string;
-							content: string;
-							created_at: string;
-							id: number;
-							parent_comment_id: number | null;
-							post_id: number;
-							root_comment_id: number | null;
-						};
-						SetofOptions: {
-							from: '*';
-							to: 'comment';
-							isOneToOne: true;
-							isSetofReturn: false;
-						};
-				  }
-				| {
-						Args: {
-							p_content: string;
-							p_parent_comment_id?: number;
-							p_post_id: number;
-							p_root_comment_id?: number;
-						};
-						Returns: {
-							author_id: string;
-							content: string;
-							created_at: string;
-							id: number;
-							parent_comment_id: number | null;
-							post_id: number;
-							root_comment_id: number | null;
-						};
-						SetofOptions: {
-							from: '*';
-							to: 'comment';
-							isOneToOne: true;
-							isSetofReturn: false;
-						};
-				  };
+			add_comment_with_count: {
+				Args: {
+					p_content: string;
+					p_parent_comment_id?: number;
+					p_post_id: number;
+					p_root_comment_id?: number;
+				};
+				Returns: {
+					author_id: string;
+					content: string;
+					created_at: string;
+					id: number;
+					parent_comment_id: number | null;
+					post_id: number;
+					root_comment_id: number | null;
+				};
+				SetofOptions: {
+					from: '*';
+					to: 'comment';
+					isOneToOne: true;
+					isSetofReturn: false;
+				};
+			};
 			delete_comment_with_count: {
 				Args: { p_comment_id: number };
 				Returns: {

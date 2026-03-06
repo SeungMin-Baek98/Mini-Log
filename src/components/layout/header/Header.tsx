@@ -1,8 +1,9 @@
 import { Link } from 'react-router';
 
 import logo from '@/assets/logo.png';
-import ProfileButton from './ProfileButton';
 import ThemeButton from './ThemeButton';
+import ProfileButton from './ProfileButton';
+import NotificationButton from './NotificationButton';
 
 export default function Header() {
 	return (
@@ -16,8 +17,9 @@ export default function Header() {
 					/>
 					<div className="font-bold">미니 로그</div>
 				</Link>
-				<div className="flex items-center gap-5">
+				<div className="flex items-center gap-4">
 					<ThemeButton />
+					<NotificationButton />
 					<ProfileButton />
 				</div>
 			</div>
