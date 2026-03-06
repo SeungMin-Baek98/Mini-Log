@@ -64,7 +64,9 @@ export default function PostItem({
 							{post.author.nickname}
 						</div>
 						<div className="text-muted-foreground text-sm">
-							{formatTimeAgo(post.created_at)}
+							{type === 'FEED'
+								? formatTimeAgo(post.created_at)
+								: new Date(post.created_at).toLocaleDateString()}
 						</div>
 					</div>
 				</div>
