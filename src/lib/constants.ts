@@ -23,7 +23,8 @@ export const QUERY_KEYS = {
 	notification: {
 		all: ['notification'],
 		list: ['notification', 'list'],
-		listByUser: (userId: string) => ['notification', 'list', userId]
+		listByUser: (userId: string) => ['notification', 'list', userId],
+		unreadCountByUser: (userId: string) => ['notification', 'unreadCount', userId]
 	}
 };
 

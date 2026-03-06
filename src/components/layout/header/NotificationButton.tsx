@@ -1,7 +1,10 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Bell } from 'lucide-react';
 
-import { useNotificationsData } from '@/hooks/queries/useNotificationsData';
+import {
+	useNotificationsData,
+	useUnreadNotificationCountData
+} from '@/hooks/queries/useNotificationsData';
 import { useSession } from '@/store/session';
 import supabase from '@/utils/supabase';
 import { QUERY_KEYS } from '@/lib/constants';
@@ -25,14 +28,14 @@ export default function NotificationButton() {
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 	const [open, setOpen] = useState(false);
-	const notificationQueryKey = QUERY_KEYS.notification.listByUser(session?.user?.id ?? '');
+	const userId = session?.user?.id ?? '';
+	const notificationQueryKey = QUERY_KEYS.notification.listByUser(
+		userId
+	);
+	const unreadCountQueryKey = QUERY_KEYS.notification.unreadCountByUser(userId);
 
 	const { data: notifications = [] } = useNotificationsData();
-
-	const unreadCount = useMemo(
-		() => notifications.filter(notification => !notification.read_at).length,
-		[notifications]
-	);
+	const { data: unreadCount = 0 } = useUnreadNotificationCountData();
 
 	useEffect(() => {
 		if (!session?.user.id) return;
@@ -55,6 +58,11 @@ export default function NotificationButton() {
 						prev =>
 							prev ? [newNotification, ...prev].slice(0, 20) : [newNotification]
 					);
+					if (!newNotification.read_at) {
+						queryClient.setQueryData<number>(unreadCountQueryKey, prev =>
+							(prev ?? 0) + 1
+						);
+					}
 				}
 			)
 			.subscribe();
@@ -72,18 +80,21 @@ export default function NotificationButton() {
 				notification.id,
 				session.user.id
 			);
-			if (updatedNotification) {
-				queryClient.setQueryData<NotificationRow[] | undefined>(
-					notificationQueryKey,
+				if (updatedNotification) {
+					queryClient.setQueryData<NotificationRow[] | undefined>(
+						notificationQueryKey,
 					prev =>
 						prev?.map(item =>
 							item.id === notification.id
 								? { ...item, read_at: new Date().toISOString() }
 								: item
 						)
-				);
+					);
+					queryClient.setQueryData<number>(unreadCountQueryKey, prev =>
+						Math.max((prev ?? 0) - 1, 0)
+					);
+				}
 			}
-		}
 
 		if (notification.post_id) {
 			setOpen(false);
@@ -114,9 +125,9 @@ export default function NotificationButton() {
 							variant="ghost"
 							size="sm"
 							className="h-7 px-2 text-xs"
-							onClick={async () => {
-								await markAllNotificationsAsRead(session.user.id);
-								queryClient.setQueryData<NotificationRow[] | undefined>(
+								onClick={async () => {
+									await markAllNotificationsAsRead(session.user.id);
+									queryClient.setQueryData<NotificationRow[] | undefined>(
 									notificationQueryKey,
 									prev =>
 										prev?.map(item =>
@@ -124,8 +135,9 @@ export default function NotificationButton() {
 												? item
 												: { ...item, read_at: new Date().toISOString() }
 										)
-								);
-							}}>
+									);
+									queryClient.setQueryData<number>(unreadCountQueryKey, 0);
+								}}>
 							모두 읽음
 						</Button>
 					)}

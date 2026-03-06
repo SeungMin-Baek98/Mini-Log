@@ -27,6 +27,17 @@ export async function fetchNotifications({
 	})[];
 }
 
+export async function fetchUnreadNotificationCount(userId: string) {
+	const { count, error } = await supabase
+		.from('notification')
+		.select('*', { count: 'exact', head: true })
+		.eq('user_id', userId)
+		.is('read_at', null);
+
+	if (error) throw error;
+	return count ?? 0;
+}
+
 export async function markNotificationAsRead(id: number, userId: string) {
 	const { data, error } = await supabase
 		.from('notification')
