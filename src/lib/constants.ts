@@ -19,6 +19,10 @@ export const QUERY_KEYS = {
 	comment: {
 		all: ['comment'],
 		post: (postId: number) => ['comment', 'post', postId]
+	},
+	notification: {
+		all: ['notification'],
+		list: ['notification', 'list']
 	}
 };
 
