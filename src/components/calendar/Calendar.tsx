@@ -1,6 +1,7 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ChevronLeft, ChevronRight, CircleIcon } from 'lucide-react';
 import { format, getDay, isSameMonth } from 'date-fns';
+import { AnimatePresence, motion } from 'motion/react';
 
 import { useCalendar } from '@/hooks/useCalendar';
 import { getBgColorByPostCount } from '@/lib/color';
@@ -15,6 +16,7 @@ type props = {
 
 export default function Calendar({ value, onChange, userId }: props) {
 	const weekDayLabels = ['일', '월', '화', '수', '목', '금', '토'];
+	const [direction, setDirection] = useState<'PREV' | 'NEXT'>('NEXT');
 	const {
 		cursor,
 		weekDays,
@@ -36,6 +38,14 @@ export default function Calendar({ value, onChange, userId }: props) {
 	const handleSelect = (day: Date) => {
 		selectDate(day);
 		onChange?.(day);
+	};
+	const handlePrevWeekClick = () => {
+		setDirection('PREV');
+		prevWeek();
+	};
+	const handleNextWeekClick = () => {
+		setDirection('NEXT');
+		nextWeek();
 	};
 
 	useEffect(() => {
@@ -68,57 +78,73 @@ export default function Calendar({ value, onChange, userId }: props) {
 			<div className="flex items-center gap-2">
 				<button
 					type="button"
-					onClick={prevWeek}
+					onClick={handlePrevWeekClick}
 					aria-label="이전 주"
 					className="text-muted-foreground hover:bg-muted-foreground hover:text-muted flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-sm transition">
 					<ChevronLeft />
 				</button>
 
-				<div className="grid flex-1 grid-cols-7 gap-2">
-					{weekDays.map(day => {
-						const dateKey = format(day, 'yyyy-MM-dd');
-						const isCurrentMonth = isSameMonth(day, cursor);
+				<div className="relative flex-1 overflow-hidden">
+					<AnimatePresence mode="wait" initial={false}>
+						<motion.div
+							key={format(start, 'yyyy-MM-dd')}
+							className="grid grid-cols-7 gap-2"
+							initial={{
+								opacity: 0,
+								x: direction === 'NEXT' ? 24 : -24
+							}}
+							animate={{ opacity: 1, x: 0 }}
+							exit={{
+								opacity: 0,
+								x: direction === 'NEXT' ? -24 : 24
+							}}
+							transition={{ duration: 0.2, ease: 'easeOut' }}>
+							{weekDays.map(day => {
+								const dateKey = format(day, 'yyyy-MM-dd');
+								const isCurrentMonth = isSameMonth(day, cursor);
 
-						return (
-							<button
-								type="button"
-								onClick={() => handleSelect(day)}
-								key={day.toISOString()}
-								className={cn(
-									'hover:bg-muted-foreground/80 flex min-w-0 flex-col items-center justify-center rounded-lg px-1 py-3 text-center transition',
-									isSelected(day)
-										? 'bg-muted-foreground text-primary-foreground'
-										: isCurrentMonth
-											? 'text-foreground'
-											: 'text-muted-foreground'
-								)}>
-								<span
-									className={cn(
-										'text-[11px] font-medium',
-										isSelected(day)
-											? 'text-primary-foreground/80'
-											: 'text-muted-foreground'
-									)}>
-									{weekDayLabels[getDay(day)]}
-								</span>
-								<span className="mt-1 text-sm font-semibold">
-									{format(day, 'dd')}
-								</span>
-								<CircleIcon
-									className={cn(
-										'mt-2 h-2 w-2 rounded-full',
-										getBgColorByPostCount(postCount[dateKey] || 0),
-										isSelected(day) && 'opacity-90'
-									)}
-								/>
-							</button>
-						);
-					})}
+								return (
+									<button
+										type="button"
+										onClick={() => handleSelect(day)}
+										key={day.toISOString()}
+										className={cn(
+											'hover:bg-muted-foreground/80 flex min-w-0 flex-col items-center justify-center rounded-lg px-1 py-3 text-center transition',
+											isSelected(day)
+												? 'bg-muted-foreground text-primary-foreground'
+												: isCurrentMonth
+													? 'text-foreground'
+													: 'text-muted-foreground'
+										)}>
+										<span
+											className={cn(
+												'text-[11px] font-medium',
+												isSelected(day)
+													? 'text-primary-foreground/80'
+													: 'text-muted-foreground'
+											)}>
+											{weekDayLabels[getDay(day)]}
+										</span>
+										<span className="mt-1 text-sm font-semibold">
+											{format(day, 'dd')}
+										</span>
+										<CircleIcon
+											className={cn(
+												'mt-2 h-2 w-2 rounded-full',
+												getBgColorByPostCount(postCount[dateKey] || 0),
+												isSelected(day) && 'opacity-90'
+											)}
+										/>
+									</button>
+								);
+							})}
+						</motion.div>
+					</AnimatePresence>
 				</div>
 
 				<button
 					type="button"
-					onClick={nextWeek}
+					onClick={handleNextWeekClick}
 					aria-label="다음 주"
 					className="text-muted-foreground hover:bg-muted-foreground hover:text-muted flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-sm transition">
 					<ChevronRight />
