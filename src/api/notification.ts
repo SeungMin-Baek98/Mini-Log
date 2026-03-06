@@ -3,12 +3,19 @@ import supabase from '@/utils/supabase';
 
 export type NotificationRow = Tables<'notification'>;
 
-export async function fetchNotifications(limit = 20) {
+export async function fetchNotifications({
+	userId,
+	limit = 20
+}: {
+	userId: string;
+	limit?: number;
+}) {
 	const { data, error } = await supabase
 		.from('notification')
 		.select(
 			'*, actor: profile!notification_actor_fk (*), post: post!notification_post_fk (*), comment: comment!notification_comment_fk (*)'
 		)
+		.eq('user_id', userId)
 		.order('created_at', { ascending: false })
 		.limit(limit);
 
@@ -20,16 +27,18 @@ export async function fetchNotifications(limit = 20) {
 	})[];
 }
 
-export async function markNotificationAsRead(id: number) {
+export async function markNotificationAsRead(id: number, userId: string) {
 	const { data, error } = await supabase
 		.from('notification')
 		.update({ read_at: new Date().toISOString() })
 		.eq('id', id)
+		.eq('user_id', userId)
+		.is('read_at', null)
 		.select()
-		.single();
+		.maybeSingle();
 
 	if (error) throw error;
-	return data as NotificationRow;
+	return (data as NotificationRow | null) ?? null;
 }
 
 export async function markAllNotificationsAsRead(userId: string) {

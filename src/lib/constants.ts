@@ -22,7 +22,8 @@ export const QUERY_KEYS = {
 	},
 	notification: {
 		all: ['notification'],
-		list: ['notification', 'list']
+		list: ['notification', 'list'],
+		listByUser: (userId: string) => ['notification', 'list', userId]
 	}
 };
 

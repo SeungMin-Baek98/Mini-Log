@@ -25,6 +25,7 @@ export default function NotificationButton() {
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 	const [open, setOpen] = useState(false);
+	const notificationQueryKey = QUERY_KEYS.notification.listByUser(session?.user?.id ?? '');
 
 	const { data: notifications = [] } = useNotificationsData();
 
@@ -50,7 +51,7 @@ export default function NotificationButton() {
 					const newNotification = payload.new as NotificationRow;
 
 					queryClient.setQueryData<NotificationRow[] | undefined>(
-						QUERY_KEYS.notification.list,
+						notificationQueryKey,
 						prev =>
 							prev ? [newNotification, ...prev].slice(0, 20) : [newNotification]
 					);
@@ -67,16 +68,21 @@ export default function NotificationButton() {
 
 	const handleClickNotification = async (notification: NotificationRow) => {
 		if (!notification.read_at) {
-			await markNotificationAsRead(notification.id);
-			queryClient.setQueryData<NotificationRow[] | undefined>(
-				QUERY_KEYS.notification.list,
-				prev =>
-					prev?.map(item =>
-						item.id === notification.id
-							? { ...item, read_at: new Date().toISOString() }
-							: item
-					)
+			const updatedNotification = await markNotificationAsRead(
+				notification.id,
+				session.user.id
 			);
+			if (updatedNotification) {
+				queryClient.setQueryData<NotificationRow[] | undefined>(
+					notificationQueryKey,
+					prev =>
+						prev?.map(item =>
+							item.id === notification.id
+								? { ...item, read_at: new Date().toISOString() }
+								: item
+						)
+				);
+			}
 		}
 
 		if (notification.post_id) {
@@ -111,7 +117,7 @@ export default function NotificationButton() {
 							onClick={async () => {
 								await markAllNotificationsAsRead(session.user.id);
 								queryClient.setQueryData<NotificationRow[] | undefined>(
-									QUERY_KEYS.notification.list,
+									notificationQueryKey,
 									prev =>
 										prev?.map(item =>
 											item.read_at
@@ -132,19 +138,21 @@ export default function NotificationButton() {
 					) : (
 						<ul className="divide-y text-sm">
 							{notifications.map(notification => (
-								<li
-									key={notification.id}
-									className={`hover:bg-accent cursor-pointer px-4 py-3 ${
-										!notification.read_at ? 'bg-accent/40' : ''
-									}`}
-									onClick={() => handleClickNotification(notification)}>
-									<p className="text-muted-foreground mb-1 text-xs">
-										{formatNotificationTitle(notification)}
-									</p>
-									{renderNotificationBody(notification)}
-									<p className="text-muted-foreground mt-1 text-[10px]">
-										{new Date(notification.created_at).toLocaleString()}
-									</p>
+								<li key={notification.id}>
+									<button
+										type="button"
+										className={`hover:bg-accent w-full cursor-pointer px-4 py-3 text-left ${
+											!notification.read_at ? 'bg-accent/40' : ''
+										}`}
+										onClick={() => handleClickNotification(notification)}>
+										<p className="text-muted-foreground mb-1 text-xs">
+											{formatNotificationTitle(notification)}
+										</p>
+										{renderNotificationBody(notification)}
+										<p className="text-muted-foreground mt-1 text-[10px]">
+											{new Date(notification.created_at).toLocaleString()}
+										</p>
+									</button>
 								</li>
 							))}
 						</ul>

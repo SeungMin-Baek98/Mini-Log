@@ -5,9 +5,15 @@ import { useQuery } from '@tanstack/react-query';
 
 export function useNotificationsData() {
 	const session = useSession();
+	const userId = session?.user?.id;
 	return useQuery({
-		queryKey: QUERY_KEYS.notification.list,
-		queryFn: () => fetchNotifications(),
-		enabled: !!session?.user?.id
+		queryKey: userId
+			? QUERY_KEYS.notification.listByUser(userId)
+			: QUERY_KEYS.notification.list,
+		queryFn: () => {
+			if (!userId) throw new Error('로그인 유저가 없습니다.');
+			return fetchNotifications({ userId });
+		},
+		enabled: !!userId
 	});
 }
