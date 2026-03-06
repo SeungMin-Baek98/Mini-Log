@@ -19,7 +19,7 @@ export default function ShowOriginImagesModal() {
 
 	return (
 		<Dialog open={store.isOpen} onOpenChange={handleOpenChange}>
-			<DialogContent className="border-none p-10">
+			<DialogContent className="border-none">
 				<DialogTitle className="sr-only">
 					게시 이미지 {store.images.length}개 보기
 				</DialogTitle>
@@ -44,7 +44,7 @@ export default function ShowOriginImagesModal() {
 									<img
 										src={url}
 										alt={`원본 게시 이미지 ${index + 1}`}
-										className="w-full object-cover"
+										className="h-auto max-h-[calc(100vh-8rem)] w-auto max-w-full object-contain"
 									/>
 								</div>
 							</CarouselItem>
