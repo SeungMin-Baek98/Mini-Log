@@ -11,7 +11,7 @@ function FloatingButton() {
 	return (
 		<div
 			onClick={openCreatePostModal}
-			className="group bg-muted fixed right-5 bottom-5 flex cursor-pointer items-center rounded-full text-white transition-all hover:px-4">
+			className="group bg-muted fixed right-5 bottom-5 z-50 flex cursor-pointer items-center rounded-full text-white transition-all hover:px-4">
 			<span className="text-muted-foreground max-w-0 overflow-hidden whitespace-nowrap opacity-0 transition-all group-hover:max-w-sm group-hover:opacity-100">
 				게시글 만들기
 			</span>
