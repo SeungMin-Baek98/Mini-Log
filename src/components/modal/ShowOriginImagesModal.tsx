@@ -37,7 +37,7 @@ export default function ShowOriginImagesModal() {
 						startIndex: store.initialIndex,
 						loop: store.images.length > 1
 					}}>
-					<CarouselContent>
+					<CarouselContent className="p-4">
 						{store.images.map((url, index) => (
 							<CarouselItem key={`${url}-${index}`}>
 								<div className="relative flex w-full items-center justify-center">
