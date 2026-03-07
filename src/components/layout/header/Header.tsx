@@ -8,7 +8,7 @@ import NotificationButton from './NotificationButton';
 export default function Header() {
 	return (
 		<header className="h-15 border-b">
-			<div className="m-auto flex h-full w-full max-w-175 justify-between px-4">
+			<div className="m-auto flex h-full w-full max-w-175 justify-between">
 				<Link to={'/'} className="flex items-center gap-2">
 					<img
 						src={logo}

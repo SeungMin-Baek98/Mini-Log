@@ -4,7 +4,7 @@ import { PopoverClose } from '@radix-ui/react-popover';
 import type { Theme } from '@/types';
 import { useSetTheme, useThemme } from '@/store/theme';
 
-const THEME: Theme[] = ['system', 'dark', 'light'];
+const THEME: Theme[] = ['dark', 'light'];
 
 export default function ThemeButton() {
 	const currentTheme = useThemme();
@@ -13,7 +13,7 @@ export default function ThemeButton() {
 	return (
 		<Popover>
 			<PopoverTrigger>
-				<div className="hover:bg-muted cursor-pointer rounded-full p-2">
+				<div className="hover:bg-muted cursor-pointer rounded-full">
 					{currentTheme === 'dark' ? <MoonIcon /> : <SunIcon />}
 				</div>
 			</PopoverTrigger>

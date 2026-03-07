@@ -29,9 +29,7 @@ export default function NotificationButton() {
 	const queryClient = useQueryClient();
 	const [open, setOpen] = useState(false);
 	const userId = session?.user?.id ?? '';
-	const notificationQueryKey = QUERY_KEYS.notification.listByUser(
-		userId
-	);
+	const notificationQueryKey = QUERY_KEYS.notification.listByUser(userId);
 	const unreadCountQueryKey = QUERY_KEYS.notification.unreadCountByUser(userId);
 
 	const { data: notifications = [] } = useNotificationsData();
@@ -59,8 +57,9 @@ export default function NotificationButton() {
 							prev ? [newNotification, ...prev].slice(0, 20) : [newNotification]
 					);
 					if (!newNotification.read_at) {
-						queryClient.setQueryData<number>(unreadCountQueryKey, prev =>
-							(prev ?? 0) + 1
+						queryClient.setQueryData<number>(
+							unreadCountQueryKey,
+							prev => (prev ?? 0) + 1
 						);
 					}
 				}
@@ -80,21 +79,21 @@ export default function NotificationButton() {
 				notification.id,
 				session.user.id
 			);
-				if (updatedNotification) {
-					queryClient.setQueryData<NotificationRow[] | undefined>(
-						notificationQueryKey,
+			if (updatedNotification) {
+				queryClient.setQueryData<NotificationRow[] | undefined>(
+					notificationQueryKey,
 					prev =>
 						prev?.map(item =>
 							item.id === notification.id
 								? { ...item, read_at: new Date().toISOString() }
 								: item
 						)
-					);
-					queryClient.setQueryData<number>(unreadCountQueryKey, prev =>
-						Math.max((prev ?? 0) - 1, 0)
-					);
-				}
+				);
+				queryClient.setQueryData<number>(unreadCountQueryKey, prev =>
+					Math.max((prev ?? 0) - 1, 0)
+				);
 			}
+		}
 
 		if (notification.post_id) {
 			setOpen(false);
@@ -111,23 +110,28 @@ export default function NotificationButton() {
 					aria-label="알림">
 					<Bell className="h-4 w-4" />
 					{unreadCount > 0 && (
-						<span className="bg-destructive text-destructive-foreground absolute -top-1 -right-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-bold">
+						<span className="bg-destructive absolute -top-1 -right-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-bold text-white">
 							{unreadCount > 9 ? '9+' : unreadCount}
 						</span>
 					)}
 				</button>
 			</PopoverTrigger>
-			<PopoverContent align="end" className="w-80 p-0">
+			<PopoverContent align="end" className="max-w-80 p-0">
 				<div className="flex items-center justify-between border-b px-3 py-2">
-					<p className="text-sm font-semibold">알림</p>
+					<div className="flex flex-col items-start">
+						<p className="text-sm font-semibold">알림</p>
+						<p className="text-muted-foreground text-[10px]">
+							최대 20개의 최근 알림이 표시됩니다.
+						</p>
+					</div>
 					{unreadCount > 0 && (
 						<Button
 							variant="ghost"
 							size="sm"
-							className="h-7 px-2 text-xs"
-								onClick={async () => {
-									await markAllNotificationsAsRead(session.user.id);
-									queryClient.setQueryData<NotificationRow[] | undefined>(
+							className="h-7 self-start px-2 text-xs"
+							onClick={async () => {
+								await markAllNotificationsAsRead(session.user.id);
+								queryClient.setQueryData<NotificationRow[] | undefined>(
 									notificationQueryKey,
 									prev =>
 										prev?.map(item =>
@@ -135,9 +139,9 @@ export default function NotificationButton() {
 												? item
 												: { ...item, read_at: new Date().toISOString() }
 										)
-									);
-									queryClient.setQueryData<number>(unreadCountQueryKey, 0);
-								}}>
+								);
+								queryClient.setQueryData<number>(unreadCountQueryKey, 0);
+							}}>
 							모두 읽음
 						</Button>
 					)}
@@ -154,12 +158,19 @@ export default function NotificationButton() {
 									<button
 										type="button"
 										className={`hover:bg-accent w-full cursor-pointer px-4 py-3 text-left ${
-											!notification.read_at ? 'bg-accent/40' : ''
+											!notification.read_at ? 'bg-accent' : ''
 										}`}
 										onClick={() => handleClickNotification(notification)}>
-										<p className="text-muted-foreground mb-1 text-xs">
-											{formatNotificationTitle(notification)}
-										</p>
+										<div className="flex justify-between">
+											<p className="text-muted-foreground mb-1 text-xs">
+												{formatNotificationTitle(notification)}
+											</p>
+											{!notification.read_at && (
+												<div className="bg-chart-2/40 flex size-4 animate-pulse items-center justify-center rounded-full">
+													<div className="bg-chart-2 size-2 rounded-full" />
+												</div>
+											)}
+										</div>
 										{renderNotificationBody(notification)}
 										<p className="text-muted-foreground mt-1 text-[10px]">
 											{new Date(notification.created_at).toLocaleString()}
@@ -175,6 +186,12 @@ export default function NotificationButton() {
 	);
 }
 
+/**
+ *	알림 제목을 유형에 따라 포맷팅하는 함수
+ *	각 알림 유형에 대해 사용자에게 보여줄 메시지를 반환
+ *	알림 유형에 따라 다른 메시지를 반환하여 사용자가 알림의 내용을 빠르게 이해할 수 있도록 도와줌
+ *
+ */
 function formatNotificationTitle(notification: NotificationRow) {
 	switch (notification.type) {
 		case 'post_commented':
@@ -188,6 +205,13 @@ function formatNotificationTitle(notification: NotificationRow) {
 	}
 }
 
+/**
+ *
+ *	알림 본문을 렌더링하는 함수
+ *	알림의 payload에서 미리보기 텍스트를 추출하여 표시
+ *	댓글 미리보기 또는 메시지 미리보기를 보여줌으로써 사용자가 알림의 내용을 빠르게 파악할 수 있도록 도와줌
+ *	알림 유형에 따라 적절한 본문을 렌더링하여 사용자 경험을 향상시킴
+ */
 function renderNotificationBody(notification: NotificationRow) {
 	if (notification.payload && typeof notification.payload === 'object') {
 		const preview =
