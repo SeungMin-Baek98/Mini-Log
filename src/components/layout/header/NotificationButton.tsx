@@ -158,7 +158,7 @@ export default function NotificationButton() {
 									<button
 										type="button"
 										className={`hover:bg-accent w-full cursor-pointer px-4 py-3 text-left ${
-											!notification.read_at ? 'bg-accent/40' : ''
+											!notification.read_at ? 'bg-accent' : ''
 										}`}
 										onClick={() => handleClickNotification(notification)}>
 										<div className="flex justify-between">
@@ -166,7 +166,9 @@ export default function NotificationButton() {
 												{formatNotificationTitle(notification)}
 											</p>
 											{!notification.read_at && (
-												<div className="bg-chart-2 size-2 animate-pulse rounded-full" />
+												<div className="bg-chart-2/40 flex size-4 animate-pulse items-center justify-center rounded-full">
+													<div className="bg-chart-2 size-2 rounded-full" />
+												</div>
 											)}
 										</div>
 										{renderNotificationBody(notification)}
