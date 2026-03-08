@@ -1,14 +1,17 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Navigate, useParams } from 'react-router';
 
 import ProfileInfo from '@/components/profile/ProfileInfo';
 import PostFeed from '@/components/post/PostFeed';
 import { useProfileSelectedDate } from '@/store/profileSelectedDate';
+import Tab, { type TabCategory } from '@/components/tab/Tab';
+import Calendar from '@/components/calendar/Calendar';
 
 export default function ProfileDetailPage() {
 	const params = useParams();
 	const userId = params.userId;
 	const currentUserId = userId ?? null;
+	const [selectedTab, setSelectedTab] = useState<TabCategory>('all');
 	const {
 		selectedDate,
 		selectedUserId,
@@ -36,8 +39,21 @@ export default function ProfileDetailPage() {
 				userId={userId}
 				onDateChange={date => setSelectedDate(date, currentUserId)}
 				selectedDate={selectedDate}
+				showCalendar={false}
 			/>
-			{selectedDate && <PostFeed authorId={userId} date={selectedDate} />}
+			<Tab value={selectedTab} onChange={setSelectedTab} />
+			{selectedTab === 'all' && <PostFeed authorId={userId} />}
+
+			{selectedTab === 'date' && (
+				<Calendar
+					userId={userId}
+					onChange={date => setSelectedDate(date, currentUserId)}
+					value={selectedDate}
+				/>
+			)}
+			{selectedTab === 'date' && selectedDate && (
+				<PostFeed authorId={userId} date={selectedDate} />
+			)}
 		</div>
 	);
 }
