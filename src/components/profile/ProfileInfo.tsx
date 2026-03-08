@@ -10,11 +10,13 @@ import Calendar from '../calendar/Calendar';
 export default function ProfileInfo({
 	userId,
 	onDateChange,
-	selectedDate
+	selectedDate,
+	showCalendar = true
 }: {
 	userId: string;
 	onDateChange?: (date: Date | null) => void;
 	selectedDate?: Date | null;
+	showCalendar?: boolean;
 }) {
 	const session = useSession();
 
@@ -51,7 +53,13 @@ export default function ProfileInfo({
 					{isMine && <EditProfileButton />}
 				</div>
 			</div>
-			<Calendar userId={userId} onChange={onDateChange} value={selectedDate} />
+			{showCalendar && (
+				<Calendar
+					userId={userId}
+					onChange={onDateChange}
+					value={selectedDate}
+				/>
+			)}
 		</div>
 	);
 }
