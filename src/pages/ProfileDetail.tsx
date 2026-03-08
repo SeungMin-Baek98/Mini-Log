@@ -4,10 +4,11 @@ import { Navigate, useParams } from 'react-router';
 import ProfileInfo from '@/components/profile/ProfileInfo';
 import PostFeed from '@/components/post/PostFeed';
 import { useProfileSelectedDate } from '@/store/profileSelectedDate';
-import Tab, { type TabCategory } from '@/components/tab/Tab';
+
 import Calendar from '@/components/calendar/Calendar';
 import { Select, type SelectOption } from '@/components/ui/select';
 import type { PostSortOrder } from '@/types';
+import { Tab, type TabCategory } from '@/components/ui/tab';
 
 const POST_SORT_OPTIONS: SelectOption<PostSortOrder>[] = [
 	{ label: '최신순', value: 'latest' },
