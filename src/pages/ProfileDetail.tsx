@@ -37,6 +37,7 @@ export default function ProfileDetailPage() {
 		// 다른 유저 프로필로 이동 시 선택 날짜 초기화
 		if (selectedUserId && selectedUserId !== currentUserId) {
 			clear();
+			setSortOrder('latest');
 		}
 	}, [selectedUserId, currentUserId, clear]);
 
