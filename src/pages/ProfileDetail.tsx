@@ -6,12 +6,20 @@ import PostFeed from '@/components/post/PostFeed';
 import { useProfileSelectedDate } from '@/store/profileSelectedDate';
 import Tab, { type TabCategory } from '@/components/tab/Tab';
 import Calendar from '@/components/calendar/Calendar';
+import { Select, type SelectOption } from '@/components/ui/select';
+import type { PostSortOrder } from '@/types';
+
+const POST_SORT_OPTIONS: SelectOption<PostSortOrder>[] = [
+	{ label: '최신순', value: 'latest' },
+	{ label: '오래된순', value: 'oldest' }
+];
 
 export default function ProfileDetailPage() {
 	const params = useParams();
 	const userId = params.userId;
 	const currentUserId = userId ?? null;
 	const [selectedTab, setSelectedTab] = useState<TabCategory>('all');
+	const [sortOrder, setSortOrder] = useState<PostSortOrder>('latest');
 	const {
 		selectedDate,
 		selectedUserId,
@@ -42,7 +50,20 @@ export default function ProfileDetailPage() {
 				showCalendar={false}
 			/>
 			<Tab value={selectedTab} onChange={setSelectedTab} />
-			{selectedTab === 'all' && <PostFeed authorId={userId} />}
+			{selectedTab === 'all' && (
+				<div className="flex flex-col gap-6">
+					<div className="flex justify-start">
+						<Select
+							options={POST_SORT_OPTIONS}
+							value={sortOrder}
+							onChange={setSortOrder}
+							containerClassName="w-28"
+							aria-label="게시글 정렬"
+						/>
+					</div>
+					<PostFeed authorId={userId} sortOrder={sortOrder} />
+				</div>
+			)}
 
 			{selectedTab === 'date' && (
 				<Calendar

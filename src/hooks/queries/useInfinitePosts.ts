@@ -1,6 +1,7 @@
 import { fetchPosts } from '@/api/post';
 import { QUERY_KEYS } from '@/lib/constants';
 import { useSession } from '@/store/session';
+import type { PostSortOrder } from '@/types';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { endOfDay, format, startOfDay } from 'date-fns';
 
@@ -9,11 +10,13 @@ const PAGE_SIZE = 5; // 한 번에 불러올 포스트 개수
 type Options = {
 	authorId?: string;
 	date?: Date | null;
+	sortOrder?: PostSortOrder;
 };
 
 export function useInfinitePostsData(options?: Options) {
 	const authorId = options?.authorId;
 	const date = options?.date ? new Date(options.date) : null;
+	const sortOrder = options?.sortOrder ?? 'latest';
 	const dateKey = date ? format(date, 'yyyy-MM-dd') : undefined;
 	const dateRange = date
 		? { start: startOfDay(date), end: endOfDay(date) }
@@ -25,7 +28,9 @@ export function useInfinitePostsData(options?: Options) {
 	const baseKey = !authorId
 		? QUERY_KEYS.post.list
 		: QUERY_KEYS.post.userList(authorId);
-	const queryKey = dateKey ? [...baseKey, 'date', dateKey] : baseKey;
+	const queryKey = dateKey
+		? [...baseKey, 'sort', sortOrder, 'date', dateKey]
+		: [...baseKey, 'sort', sortOrder];
 
 	return useInfiniteQuery({
 		queryKey,
@@ -38,7 +43,8 @@ export function useInfinitePostsData(options?: Options) {
 				to,
 				userId: session!.user.id,
 				authorId,
-				dateRange
+				dateRange,
+				sortOrder
 			});
 
 			posts.forEach(post => {
