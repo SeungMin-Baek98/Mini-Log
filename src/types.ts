@@ -11,6 +11,7 @@ export type NestedComment = Comment & {
 	parentComment?: Comment;
 	children: NestedComment[];
 };
+export type PostSortOrder = 'latest' | 'oldest';
 
 /** useMutation 콜백 타입 정의 */
 export type UseMutationCallback = {

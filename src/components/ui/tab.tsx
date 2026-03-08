@@ -6,7 +6,7 @@ const TAB_CATEGORIES: { type: TabCategory; label: string }[] = [
 	{ type: 'all', label: '전체 게시글' },
 	{ type: 'date', label: '날짜별 게시글' }
 ];
-export default function Tab({
+function Tab({
 	value,
 	onChange
 }: {
@@ -52,3 +52,5 @@ export default function Tab({
 		</div>
 	);
 }
+
+export { Tab };

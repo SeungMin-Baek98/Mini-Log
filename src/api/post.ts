@@ -1,5 +1,5 @@
 import { uploadImage } from './image';
-import type { PostEntity } from '@/types';
+import type { PostEntity, PostSortOrder } from '@/types';
 
 import supabase from '@/utils/supabase';
 
@@ -8,19 +8,21 @@ export async function fetchPosts({
 	to,
 	userId,
 	authorId,
-	dateRange
+	dateRange,
+	sortOrder = 'latest'
 }: {
 	from: number;
 	to: number;
 	userId: string;
 	authorId?: string;
 	dateRange?: { start: Date; end: Date };
+	sortOrder?: PostSortOrder;
 }) {
 	const request = supabase
 		.from('post')
 		.select('*, author: profile!author_id (*), myLiked: like!post_id (*)')
 		.eq('like.user_id', userId)
-		.order('created_at', { ascending: false })
+		.order('created_at', { ascending: sortOrder === 'oldest' })
 		.range(from, to);
 
 	// authorId가 주어지면 author_id로 필터링

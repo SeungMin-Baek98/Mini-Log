@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useInfinitePostsData } from '@/hooks/queries/useInfinitePosts';
+import type { PostSortOrder } from '@/types';
 
 import Fallback from '../Fallback';
 import Loader from '../Loader';
@@ -9,20 +10,22 @@ import Nodata from '../Nodata';
 
 export default function PostFeed({
 	authorId,
-	date
+	date,
+	sortOrder = 'latest'
 }: {
 	authorId?: string;
 	date?: Date | null;
+	sortOrder?: PostSortOrder;
 }) {
 	const { data, error, isPending, fetchNextPage, isFetchingNextPage } =
-		useInfinitePostsData({ authorId, date });
+		useInfinitePostsData({ authorId, date, sortOrder });
 	const { ref, inView } = useInView();
 
 	useEffect(() => {
 		if (inView) {
 			fetchNextPage();
 		}
-	}, [inView]);
+	}, [inView, fetchNextPage]);
 
 	if (error) return <Fallback />;
 	if (isPending) return <Loader />;
