@@ -148,12 +148,12 @@ export default function PostEditorModal() {
 					{postEditorModal.isOpen && postEditorModal.type === 'CREATE' ? (
 						'포스트 작성'
 					) : (
-						<div className="flex flex-col justify-start gap-2">
-							포스트 수정
+						<span className="flex flex-col justify-start gap-2">
+							<span>포스트 수정</span>
 							<span className="text-muted-foreground/70 text-sm">
 								게시글 이미지는 수정할 수 없습니다
 							</span>
-						</div>
+						</span>
 					)}
 				</DialogTitle>
 				<textarea
