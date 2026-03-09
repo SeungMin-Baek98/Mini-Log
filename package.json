@@ -7,6 +7,8 @@
 		"dev": "vite",
 		"build": "tsc -b && vite build",
 		"lint": "eslint .",
+		"test": "vitest run",
+		"test:watch": "vitest",
 		"preview": "vite preview",
 		"type-gen": "npx supabase gen types typescript --project-id \"foofrvxwlptijommcmel\" --schema public > src/database.types.ts",
 		"storybook": "storybook dev -p 6006",
@@ -58,6 +60,7 @@
 		"tw-animate-css": "^1.3.5",
 		"typescript": "~5.8.3",
 		"typescript-eslint": "^8.30.1",
-		"vite": "^6.3.5"
+		"vite": "^6.3.5",
+		"vitest": "^4.0.18"
 	}
 }
