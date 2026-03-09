@@ -1,6 +1,6 @@
 import { Input } from '@/components/ui/input';
-import { AuthFormLayout, AuthSubmitButton } from '@/components/auth';
-import { useRequestPasswordResetEmail } from '@/hooks/mutations/auth/useRequestPasswordResetEmail';
+import { AuthFormLayout, AuthSubmitButton } from '@/features/auth/components';
+import { useRequestPasswordResetEmail } from '@/features/auth/hooks/mutations/useRequestPasswordResetEmail';
 
 import { generateErrorMessage } from '@/lib/error';
 import { useState } from 'react';

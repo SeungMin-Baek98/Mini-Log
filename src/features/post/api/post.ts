@@ -1,0 +1,187 @@
+import { uploadImage } from '@/features/image/api/image';
+import type { PostEntity, PostSortOrder } from '@/types';
+
+import supabase from '@/utils/supabase';
+
+export async function fetchPosts({
+	from,
+	to,
+	userId,
+	authorId,
+	dateRange,
+	sortOrder = 'latest'
+}: {
+	from: number;
+	to: number;
+	userId: string;
+	authorId?: string;
+	dateRange?: { start: Date; end: Date };
+	sortOrder?: PostSortOrder;
+}) {
+	const request = supabase
+		.from('post')
+		.select('*, author: profile!author_id (*), myLiked: like!post_id (*)')
+		.eq('like.user_id', userId)
+		.order('created_at', { ascending: sortOrder === 'oldest' })
+		.range(from, to);
+
+	// authorId가 주어지면 author_id로 필터링
+	if (authorId) request.eq('author_id', authorId);
+	if (dateRange) {
+		request
+			.gte('created_at', dateRange.start.toISOString())
+			.lte('created_at', dateRange.end.toISOString());
+	}
+
+	const { data, error } = await request;
+
+	if (error) throw error;
+
+	return data.map(post => ({
+		...post,
+		isLiked: post.myLiked && post.myLiked.length > 0
+	}));
+}
+
+export async function fetchPostById({
+	postId,
+	userId
+}: {
+	postId: number;
+	userId: string;
+}) {
+	const { data, error } = await supabase
+		.from('post')
+		.select('*, author: profile!author_id (*), myLiked: like!post_id (*)')
+		.eq('like.user_id', userId)
+		.eq('id', postId)
+		.single();
+
+	if (error) throw error;
+
+	return {
+		...data,
+		isLiked: data.myLiked && data.myLiked.length > 0
+	};
+}
+
+export async function fetchPostsByDate({
+	userId,
+	start,
+	end
+}: {
+	userId: string;
+	start: Date;
+	end: Date;
+}) {
+	const { data, error } = await supabase
+		.from('post')
+		.select('*, author: profile!author_id (*), myLiked: like!post_id (*)')
+		.eq('author_id', userId)
+		.gte('created_at', start.toISOString())
+		.lte('created_at', end.toISOString());
+
+	if (error) throw error;
+
+	return data;
+}
+
+/** 게시글 POST 요청 */
+export async function createPost(content: string) {
+	const { data, error } = await supabase
+		.from('post')
+		.insert({ content })
+		.select()
+		.single();
+
+	if (error) throw error;
+	return data;
+}
+
+/** 게시글과 이미지를 함께 생성하는 함수
+ *
+ * 1. 게시글 생성
+ * 2. 이미지 업로드
+ * 3. 이미지 URL을 게시글에 연결
+ *
+ */
+export async function createPostWithImages({
+	content,
+	images,
+	userId
+}: {
+	content: string;
+	images: File[];
+	userId: string;
+}) {
+	// 1. 새로운 포스트 생성
+	const post = await createPost(content);
+	if (images.length === 0) return post;
+
+	try {
+		// 2. 이미지 업로드
+		const imagesUrls = await Promise.all(
+			images.map(image => {
+				const fileExtension = image.name.split('.').pop() || 'webp';
+				const fileName = `${Date.now()}-${crypto.randomUUID()}.${fileExtension}`;
+				const filePath = `${userId}/${post.id}/${fileName}`;
+
+				return uploadImage({
+					file: image,
+					filePath
+				});
+			})
+		);
+
+		// 3. 포스트 테이블 업데이트
+		const updatedPost = await updatePost({
+			id: post.id,
+			image_urls: imagesUrls
+		});
+
+		return updatedPost;
+	} catch (error) {
+		await deletePost(post.id);
+		throw error;
+	}
+}
+
+export async function updatePost(post: Partial<PostEntity> & { id: number }) {
+	const { data, error } = await supabase
+		.from('post')
+		.update(post)
+		.eq('id', post.id)
+		.select()
+		.single();
+
+	if (error) throw error;
+	return data;
+}
+
+export async function deletePost(id: number) {
+	const { data, error } = await supabase
+		.from('post')
+		.delete()
+		.eq('id', id)
+		.select()
+		.single();
+
+	if (error) throw error;
+	return data;
+}
+
+export async function togglePostLike({
+	postId,
+	userId
+}: {
+	postId: number;
+	userId: string;
+}) {
+	const { data, error } = await supabase.rpc('toggle_post_like', {
+		p_post_id: postId,
+		p_user_id: userId
+	});
+
+	if (error) throw error;
+	return data;
+}

@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Navigate, useParams } from 'react-router';
 
-import ProfileInfo from '@/components/profile/ProfileInfo';
-import PostFeed from '@/components/post/PostFeed';
+import ProfileInfo from '@/features/profile/components/ProfileInfo';
+import PostFeed from '@/features/post/components/PostFeed';
 import { useProfileSelectedDate } from '@/store/profileSelectedDate';
 
-import Calendar from '@/components/calendar/Calendar';
+import Calendar from '@/features/calendar/components/Calendar';
 import { Select, type SelectOption } from '@/components/ui/select';
 import type { PostSortOrder } from '@/types';
 import { Tab, type TabCategory } from '@/components/ui/tab';

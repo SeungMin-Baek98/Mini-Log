@@ -1,5 +1,5 @@
 import { useSession } from '@/store/session';
-import { useProfileData } from '@/hooks/queries/useProfileData';
+import { useProfileData } from '@/features/profile/hooks/queries/useProfileData';
 import { useProfileEditorModal } from '@/store/profileEditorModal';
 
 import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
@@ -10,7 +10,7 @@ import Fallback from '../Fallback';
 import Loader from '../Loader';
 import defaultAvatar from '@/assets/default-avatar.jpg';
 import { useEffect, useRef, useState, type ChangeEvent } from 'react';
-import { useUpdateProfile } from '@/hooks/mutations/profile/useUpdateProfile';
+import { useUpdateProfile } from '@/features/profile/hooks/mutations/useUpdateProfile';
 import { toast } from 'sonner';
 
 type Image = {

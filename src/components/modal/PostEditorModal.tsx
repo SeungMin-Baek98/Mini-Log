@@ -2,14 +2,14 @@ import { ImageIcon, XIcon } from 'lucide-react';
 import { toast } from 'sonner';
 import { usePostEditorModal } from '@/store/postEditorModal';
 import { useEffect, useRef, useState, type ChangeEvent } from 'react';
-import { useCreatePost } from '@/hooks/mutations/post/useCreatePost';
+import { useCreatePost } from '@/features/post/hooks/mutations/useCreatePost';
 import { Carousel, CarouselContent, CarouselItem } from '../ui/carousel';
 import { useSession } from '@/store/session';
 import { useOpenAlertModal } from '@/store/alertModal';
 
 import { Button } from '../ui/button';
 import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
-import { useUpdatePost } from '@/hooks/mutations/post/useUpdatePost';
+import { useUpdatePost } from '@/features/post/hooks/mutations/useUpdatePost';
 
 type Image = {
 	file: File;

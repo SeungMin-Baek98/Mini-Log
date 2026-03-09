@@ -1,11 +1,11 @@
-import { useProfileData } from '@/hooks/queries/useProfileData';
+import { useProfileData } from '@/features/profile/hooks/queries/useProfileData';
 import { useSession } from '@/store/session';
 import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover';
 
 import defaultAvatar from '@/assets/default-avatar.jpg';
 import { PopoverClose } from '@radix-ui/react-popover';
 import { Link } from 'react-router';
-import { signOut } from '@/api/auth';
+import { signOut } from '@/features/auth/api/auth';
 
 export default function ProfileButton() {
 	const session = useSession();

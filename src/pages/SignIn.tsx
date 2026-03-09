@@ -9,10 +9,10 @@ import {
 	AuthLinkList,
 	AuthSubmitButton,
 	SocialLoginButton
-} from '@/components/auth';
+} from '@/features/auth/components';
 import { generateErrorMessage } from '@/lib/error';
-import { useSignInWithPassword } from '@/hooks/mutations/auth/useSignInWithPassword';
-import { useSignInWithOAuth } from '@/hooks/mutations/auth/useSignInWithOAuth';
+import { useSignInWithPassword } from '@/features/auth/hooks/mutations/useSignInWithPassword';
+import { useSignInWithOAuth } from '@/features/auth/hooks/mutations/useSignInWithOAuth';
 
 import gitHubLogo from '@/assets/github-mark.svg';
 import googleLogo from '@/assets/google-icon.png';
