@@ -4,7 +4,7 @@ import { Bell } from 'lucide-react';
 import {
 	useNotificationsData,
 	useUnreadNotificationCountData
-} from '@/hooks/queries/useNotificationsData';
+} from '@/features/notification/hooks/queries/useNotificationsData';
 import { useSession } from '@/store/session';
 import supabase from '@/utils/supabase';
 import { QUERY_KEYS } from '@/lib/constants';
@@ -20,7 +20,7 @@ import {
 	markAllNotificationsAsRead,
 	markNotificationAsRead,
 	type NotificationRow
-} from '@/api/notification';
+} from '@/features/notification/api/notification';
 import { useNavigate } from 'react-router';
 
 export default function NotificationButton() {

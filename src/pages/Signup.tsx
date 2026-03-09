@@ -9,8 +9,8 @@ import {
 	AuthFormLayout,
 	AuthLinkList,
 	AuthSubmitButton
-} from '@/components/auth';
-import { useSignUp } from '@/hooks/mutations/auth/useSignup';
+} from '@/features/auth/components';
+import { useSignUp } from '@/features/auth/hooks/mutations/useSignup';
 
 export default function SignUpPage() {
 	const [email, setEmail] = useState('');
