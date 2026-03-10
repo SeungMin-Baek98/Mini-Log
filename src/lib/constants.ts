@@ -25,6 +25,10 @@ export const QUERY_KEYS = {
 		list: ['notification', 'list'],
 		listByUser: (userId: string) => ['notification', 'list', userId],
 		unreadCountByUser: (userId: string) => ['notification', 'unreadCount', userId]
+	},
+	insight: {
+		all: ['insight'],
+		latestByUser: (userId: string) => ['insight', 'latest', userId]
 	}
 };
 
