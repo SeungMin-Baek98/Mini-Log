@@ -5,8 +5,9 @@ import { AnimatePresence, motion } from 'motion/react';
 
 import { useCalendar } from '@/features/calendar/hooks/useCalendar';
 import { getBgColorByPostCount } from '@/lib/color';
-import { usePostCountByDate } from '@/features/profile/hooks/queries/usePostCountByDate';
+
 import { cn } from '@/lib/utils';
+import { usePostCountByDate } from '@/features/post/hooks/queries/usePostCountByDate';
 
 type props = {
 	value?: Date | null;
