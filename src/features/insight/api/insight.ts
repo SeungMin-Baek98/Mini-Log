@@ -15,7 +15,37 @@ function isWeeklyRecapData(data: unknown): data is WeeklyRecapData {
 	)
 		return false;
 	if (!value.counts || typeof value.counts !== 'object') return false;
-	if (!Array.isArray(value.steps)) return false;
+
+	const counts = value.counts as Record<string, unknown>;
+	if (
+		typeof counts.posts !== 'number' ||
+		typeof counts.comments !== 'number' ||
+		typeof counts.likes !== 'number' ||
+		typeof counts.total !== 'number'
+	)
+		return false;
+
+	if (
+		!Array.isArray(value.steps) ||
+		!value.steps.every(step => {
+			if (!step || typeof step !== 'object') return false;
+			const s = step as Record<string, unknown>;
+			return (
+				typeof s.step === 'number' &&
+				typeof s.type === 'string' &&
+				typeof s.message === 'string'
+			);
+		})
+	)
+		return false;
+
+	if (value.cta !== undefined) {
+		if (!value.cta || typeof value.cta !== 'object') return false;
+		const cta = value.cta as Record<string, unknown>;
+		if (typeof cta.label !== 'string' || typeof cta.href !== 'string')
+			return false;
+	}
+
 	return true;
 }
 
