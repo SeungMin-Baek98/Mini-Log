@@ -253,7 +253,9 @@ function renderNotificationBody(notification: NotificationRow) {
 			const totalActivity = payload.total_activity as number | undefined;
 			if (typeof totalActivity === 'number') {
 				return (
-					<p className="text-foreground text-xs">지난 주 회고를 해볼까요?</p>
+					<p className="text-foreground text-xs">
+						이번 주 활동을 한눈에 확인해보세요.
+					</p>
 				);
 			}
 		}
