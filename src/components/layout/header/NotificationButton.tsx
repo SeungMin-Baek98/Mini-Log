@@ -22,11 +22,16 @@ import {
 	type NotificationRow
 } from '@/features/notification/api/notification';
 import { useNavigate } from 'react-router';
+import { toast } from 'sonner';
+import { generateErrorMessage } from '@/lib/error';
+import { fetchLatestWeeklyInsight } from '@/features/insight/api/insight';
+import { useWeeklyRecapModalActions } from '@/store/weeklyRecapModal';
 
 export default function NotificationButton() {
 	const session = useSession();
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
+	const weeklyRecapModalActions = useWeeklyRecapModalActions();
 	const [open, setOpen] = useState(false);
 	const userId = session?.user?.id ?? '';
 	const notificationQueryKey = QUERY_KEYS.notification.listByUser(userId);
@@ -93,6 +98,31 @@ export default function NotificationButton() {
 					Math.max((prev ?? 0) - 1, 0)
 				);
 			}
+		}
+
+		if (notification.type === 'weekly_recap_ready') {
+			try {
+				const insight = await queryClient.fetchQuery({
+					queryKey: QUERY_KEYS.insight.latestByUser(userId),
+					queryFn: () => fetchLatestWeeklyInsight(userId)
+				});
+
+				if (!insight) {
+					toast.error('주간 회고 데이터를 불러오지 못했어요.', {
+						position: 'top-center'
+					});
+					return;
+				}
+
+				weeklyRecapModalActions.open(insight);
+				setOpen(false);
+			} catch (error) {
+				toast.error(generateErrorMessage(error), {
+					position: 'top-center'
+				});
+			}
+
+			return;
 		}
 
 		if (notification.post_id) {
@@ -194,6 +224,8 @@ export default function NotificationButton() {
  */
 function formatNotificationTitle(notification: NotificationRow) {
 	switch (notification.type) {
+		case 'weekly_recap_ready':
+			return '주간 회고가 도착했어요';
 		case 'post_commented':
 			return '내 게시글에 새로운 댓글이 달렸어요';
 		case 'comment_replied':
@@ -214,10 +246,20 @@ function formatNotificationTitle(notification: NotificationRow) {
  */
 function renderNotificationBody(notification: NotificationRow) {
 	if (notification.payload && typeof notification.payload === 'object') {
+		const payload = notification.payload as any;
 		const preview =
-			(notification.payload as any).comment_preview ??
-			(notification.payload as any).message ??
-			null;
+			payload.comment_preview ?? payload.message ?? null;
+
+		if (notification.type === 'weekly_recap_ready') {
+			const totalActivity = payload.total_activity as number | undefined;
+			if (typeof totalActivity === 'number') {
+				return (
+					<p className="text-foreground text-xs">
+						지난 주에 총 {totalActivity}개의 활동이 있었어요.
+					</p>
+				);
+			}
+		}
 
 		if (preview) {
 			return <p className="text-foreground line-clamp-2 text-xs">{preview}</p>;
