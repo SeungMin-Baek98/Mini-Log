@@ -247,15 +247,14 @@ function formatNotificationTitle(notification: NotificationRow) {
 function renderNotificationBody(notification: NotificationRow) {
 	if (notification.payload && typeof notification.payload === 'object') {
 		const payload = notification.payload as any;
-		const preview =
-			payload.comment_preview ?? payload.message ?? null;
+		const preview = payload.comment_preview ?? payload.message ?? null;
 
 		if (notification.type === 'weekly_recap_ready') {
 			const totalActivity = payload.total_activity as number | undefined;
 			if (typeof totalActivity === 'number') {
 				return (
 					<p className="text-foreground text-xs">
-						지난 주에 총 {totalActivity}개의 활동이 있었어요.
+						지난 주 어떠한 활동이 있었는지 확인해볼까요?
 					</p>
 				);
 			}
