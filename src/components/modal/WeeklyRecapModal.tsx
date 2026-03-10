@@ -88,7 +88,7 @@ export default function WeeklyRecapModal() {
 									Step {currentStep.step} / {steps.length} ·{' '}
 									{getStepTitle(currentStep.type)}{' '}
 									{currentStep.type === 'keywords' &&
-										'(게시글을 기반으로 알려드려요)'}
+										'(여기서부턴 게시글을 기반으로 알려드려요)'}
 								</p>
 								<p className="text-sm leading-relaxed">{currentStep.message}</p>
 							</motion.div>
@@ -102,10 +102,7 @@ export default function WeeklyRecapModal() {
 					</div>
 
 					<div className="flex items-center justify-between gap-2">
-						<Button
-							variant="outline"
-							onClick={handlePrev}
-							disabled={isFirst}>
+						<Button variant="outline" onClick={handlePrev} disabled={isFirst}>
 							이전
 						</Button>
 						{isLast ? (
