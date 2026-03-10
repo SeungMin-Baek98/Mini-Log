@@ -66,13 +66,10 @@ export default function WeeklyRecapModal() {
 						<div className="bg-muted/50 flex flex-col gap-2 rounded-lg p-4">
 							<p className="text-muted-foreground text-xs">
 								Step {currentStep.step} / {steps.length} ·{' '}
-								{getStepTitle(currentStep.type)}
+								{getStepTitle(currentStep.type)}{' '}
+								{currentStep.type === 'keywords' &&
+									'(게시글을 기반으로 알려드려요)'}
 							</p>
-							{currentStep.type === 'keywords' && (
-								<p className="text-primary text-xs font-medium">
-									이번 주 게시글을 토대로 알려드려요!
-								</p>
-							)}
 							<p className="text-sm leading-relaxed">{currentStep.message}</p>
 						</div>
 					)}
@@ -81,7 +78,6 @@ export default function WeeklyRecapModal() {
 						<p>
 							집계 기간: {periodStart} ~ {periodEnd}
 						</p>
-						<p>총 활동 {counts.total}개</p>
 					</div>
 
 					<div className="flex items-center justify-between gap-2">
@@ -98,14 +94,14 @@ export default function WeeklyRecapModal() {
 						)}
 					</div>
 
-					{mode === 'empty' && isLast && cta && (
+					{/* 게시글 작성하기 버튼 임시 삭제 */}
+					{/* {mode === 'empty' && isLast && cta && (
 						<Button asChild>
 							<a href={cta.href}>{cta.label}</a>
 						</Button>
-					)}
+					)} */}
 				</div>
 			</DialogContent>
 		</Dialog>
 	);
 }
-

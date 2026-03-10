@@ -114,7 +114,7 @@ export default function NotificationButton() {
 					return;
 				}
 
-				weeklyRecapModalActions.open(insight);
+				weeklyRecapModalActions.open(insight.recap);
 				setOpen(false);
 			} catch (error) {
 				toast.error(generateErrorMessage(error), {
@@ -253,9 +253,7 @@ function renderNotificationBody(notification: NotificationRow) {
 			const totalActivity = payload.total_activity as number | undefined;
 			if (typeof totalActivity === 'number') {
 				return (
-					<p className="text-foreground text-xs">
-						지난 주 어떠한 활동이 있었는지 확인해볼까요?
-					</p>
+					<p className="text-foreground text-xs">지난 주 회고를 해볼까요?</p>
 				);
 			}
 		}

@@ -1,5 +1,9 @@
 import supabase from '@/utils/supabase';
-import type { InsightSummaryRow, WeeklyRecapData } from '@/types';
+import type {
+	InsightSummaryRow,
+	WeeklyRecapData,
+	WeeklyRecapRecord
+} from '@/types';
 
 function isWeeklyRecapData(data: unknown): data is WeeklyRecapData {
 	if (!data || typeof data !== 'object') return false;
@@ -31,7 +35,7 @@ export async function generateWeeklyInsight() {
 export async function fetchLatestWeeklyInsight(userId: string) {
 	const { data, error } = await supabase
 		.from('insight_summary')
-		.select('*')
+		.select('period_end, summary_json')
 		.eq('user_id', userId)
 		.eq('period_type', 'week')
 		.order('period_end', { ascending: false })
@@ -43,5 +47,8 @@ export async function fetchLatestWeeklyInsight(userId: string) {
 
 	const summaryJson = (data as InsightSummaryRow).summary_json;
 	if (!isWeeklyRecapData(summaryJson)) return null;
-	return summaryJson;
+	return {
+		periodEnd: data.period_end,
+		recap: summaryJson
+	} as WeeklyRecapRecord;
 }

@@ -42,6 +42,11 @@ export type WeeklyRecapData = {
 	};
 };
 
+export type WeeklyRecapRecord = {
+	periodEnd: string;
+	recap: WeeklyRecapData;
+};
+
 export type Post = PostEntity & { author: ProfileEntity; isLiked: boolean };
 export type Comment = CommentEntity & { author: ProfileEntity };
 export type NestedComment = Comment & {

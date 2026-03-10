@@ -11,13 +11,18 @@ export function useGenerateWeeklyInsight(callbacks?: UseMutationCallback) {
 
 	return useMutation({
 		mutationFn: generateWeeklyInsight,
-		onSuccess: async response => {
+		onSuccess: async () => {
 			if (callbacks?.onSuccess) callbacks.onSuccess();
 			if (!userId) return;
 
-			queryClient.setQueryData(QUERY_KEYS.insight.latestByUser(userId), response);
 			await queryClient.invalidateQueries({
 				queryKey: QUERY_KEYS.insight.latestByUser(userId)
+			});
+			await queryClient.invalidateQueries({
+				queryKey: QUERY_KEYS.notification.listByUser(userId)
+			});
+			await queryClient.invalidateQueries({
+				queryKey: QUERY_KEYS.notification.unreadCountByUser(userId)
 			});
 		},
 		onError: error => {
