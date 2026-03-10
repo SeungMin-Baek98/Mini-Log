@@ -8,6 +8,8 @@ import {
 } from '@/components/ui/dialog';
 import { useWeeklyRecapModal } from '@/store/weeklyRecapModal';
 import type { WeeklyRecapStep } from '@/types';
+import { AnimatePresence, motion } from 'motion/react';
+import { useState } from 'react';
 
 function getStepTitle(step: WeeklyRecapStep['type']) {
 	switch (step) {
@@ -38,6 +40,7 @@ function getStepTitle(step: WeeklyRecapStep['type']) {
 
 export default function WeeklyRecapModal() {
 	const { isOpen, data, currentStepIndex, actions } = useWeeklyRecapModal();
+	const [direction, setDirection] = useState<1 | -1>(1);
 
 	if (!data) return null;
 
@@ -51,6 +54,16 @@ export default function WeeklyRecapModal() {
 		actions.reset();
 	};
 
+	const handlePrev = () => {
+		setDirection(-1);
+		actions.prevStep();
+	};
+
+	const handleNext = () => {
+		setDirection(1);
+		actions.nextStep();
+	};
+
 	return (
 		<Dialog open={isOpen} onOpenChange={open => !open && handleClose()}>
 			<DialogContent>
@@ -62,17 +75,25 @@ export default function WeeklyRecapModal() {
 				</DialogHeader>
 
 				<div className="flex flex-col gap-4">
-					{currentStep && (
-						<div className="bg-muted/50 flex flex-col gap-2 rounded-lg p-4">
-							<p className="text-muted-foreground text-xs">
-								Step {currentStep.step} / {steps.length} ·{' '}
-								{getStepTitle(currentStep.type)}{' '}
-								{currentStep.type === 'keywords' &&
-									'(게시글을 기반으로 알려드려요)'}
-							</p>
-							<p className="text-sm leading-relaxed">{currentStep.message}</p>
-						</div>
-					)}
+					<AnimatePresence mode="wait" initial={false}>
+						{currentStep && (
+							<motion.div
+								key={`${currentStepIndex}-${currentStep.type}`}
+								initial={{ opacity: 0, x: direction > 0 ? 24 : -24 }}
+								animate={{ opacity: 1, x: 0 }}
+								exit={{ opacity: 0, x: direction > 0 ? -24 : 24 }}
+								transition={{ duration: 0.22, ease: 'easeOut' }}
+								className="bg-muted/50 flex flex-col gap-2 rounded-lg p-4">
+								<p className="text-muted-foreground text-xs">
+									Step {currentStep.step} / {steps.length} ·{' '}
+									{getStepTitle(currentStep.type)}{' '}
+									{currentStep.type === 'keywords' &&
+										'(게시글을 기반으로 알려드려요)'}
+								</p>
+								<p className="text-sm leading-relaxed">{currentStep.message}</p>
+							</motion.div>
+						)}
+					</AnimatePresence>
 
 					<div className="text-muted-foreground flex items-center justify-between text-xs">
 						<p>
@@ -83,14 +104,18 @@ export default function WeeklyRecapModal() {
 					<div className="flex items-center justify-between gap-2">
 						<Button
 							variant="outline"
-							onClick={actions.prevStep}
+							onClick={handlePrev}
 							disabled={isFirst}>
 							이전
 						</Button>
 						{isLast ? (
-							<Button onClick={handleClose}>닫기</Button>
+							<motion.div whileTap={{ scale: 0.97 }}>
+								<Button onClick={handleClose}>닫기</Button>
+							</motion.div>
 						) : (
-							<Button onClick={actions.nextStep}>다음</Button>
+							<motion.div whileTap={{ scale: 0.97 }}>
+								<Button onClick={handleNext}>다음</Button>
+							</motion.div>
 						)}
 					</div>
 
