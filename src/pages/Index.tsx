@@ -78,11 +78,11 @@ export default function IndexPage() {
 					<div className="text-muted-foreground relative flex flex-wrap items-center gap-3 text-sm">
 						<Chip
 							text="사진과 짧은 글을 함께 기록"
-							description={`하루의 장면을 사진과 짧은 문장으로 남기고\n시간이 지난 뒤에도 그 순간의 감정을 다시 꺼내볼 수 있어요.`}
+							description={`하루의 장면을 사진과 짧은 문장으로 남기고\n시간이 지난 뒤에도 그 순간의 감정을 다시 꺼내볼 수 있어요`}
 						/>
 						<Chip
 							text="AI기반 주간 회고로 한 주를 정리"
-							description={`한 주 동안 쌓인 기록을 바탕으로 AI가 흐름을 정리해줘서\n내가 어떤 시간을 보냈는지 더 쉽게 돌아볼 수 있어요.`}
+							description={`한 주 동안 쌓인 기록을 바탕으로 AI가 흐름을 정리해줘서\n내가 어떤 시간을 보냈는지 더 쉽게 돌아볼 수 있어요`}
 						/>
 					</div>
 				</div>
