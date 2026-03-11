@@ -36,7 +36,7 @@ export default function PostFeed({
 	}
 
 	return (
-		<div className="flex flex-col gap-10">
+		<div className="flex flex-col gap-6 sm:gap-8">
 			{data.pages.map(page =>
 				page.map(postId => (
 					<PostItem key={postId} postId={postId} type="FEED" />

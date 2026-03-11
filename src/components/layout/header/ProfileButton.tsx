@@ -21,7 +21,7 @@ export default function ProfileButton() {
 					className="h-6 w-6 cursor-pointer rounded-full object-cover"
 				/>
 			</PopoverTrigger>
-			<PopoverContent className="flex w-40 flex-col p-0">
+			<PopoverContent className="flex w-40 flex-col overflow-hidden p-0">
 				<PopoverClose asChild>
 					<Link to={`profile/${session.user.id}`}>
 						<div className="hover:bg-muted cursor-pointer px-4 py-3 text-sm">

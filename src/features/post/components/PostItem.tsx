@@ -1,6 +1,10 @@
 import { Link } from 'react-router';
 
-import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
+import {
+	Carousel,
+	CarouselContent,
+	CarouselItem
+} from '@/components/ui/carousel';
 
 import { formatTimeAgo } from '@/lib/time';
 import { MAX_IMAGE_WIDTH_PX } from '@/lib/constants';
@@ -47,20 +51,22 @@ export default function PostItem({
 
 	return (
 		<div
-			className={`flex flex-col gap-4 pb-8 ${type === 'FEED' && 'border-b'}`}>
+			className={`border-border/80 bg-card/95 flex flex-col gap-5 overflow-hidden rounded-[1.75rem] border p-5 shadow-[0_18px_40px_rgba(96,76,48,0.06)] sm:p-6 ${
+				type === 'DETAIL' ? 'sm:p-7' : ''
+			}`}>
 			{/* 1. 유저 정보, 수정/삭제 버튼 */}
-			<div className="flex justify-between">
+			<div className="flex justify-between gap-4">
 				{/* 1-1. 유저 정보 */}
 				<div className="flex items-start gap-4">
-					<Link to={`profile/${post.author_id}`}>
+					<Link to={`/profile/${post.author_id}`}>
 						<img
 							src={post.author.avatar_url || defaultAvatar}
 							alt={`${post.author.nickname}의 프로필 이미지`}
-							className="h-10 w-10 rounded-full object-cover"
+							className="h-12 w-12 rounded-full border border-white/80 object-cover shadow-[0_10px_24px_rgba(96,76,48,0.12)]"
 						/>
 					</Link>
-					<div>
-						<div className="font-bold hover:underline">
+					<div className="space-y-1">
+						<div className="font-semibold hover:underline">
 							{post.author.nickname}
 						</div>
 						<div className="text-muted-foreground text-sm">
@@ -88,12 +94,14 @@ export default function PostItem({
 				{/* 2-1. 컨텐츠 */}
 				{type === 'FEED' ? (
 					<Link to={`/post/${post.id}`}>
-						<div className="line-clamp-2 break-words whitespace-pre-wrap">
+						<div className="line-clamp-3 text-[15px] leading-7 break-words whitespace-pre-wrap sm:text-base">
 							{post.content}
 						</div>
 					</Link>
 				) : (
-					<div className="break-words whitespace-pre-wrap">{post.content}</div>
+					<div className="text-[15px] leading-7 break-words whitespace-pre-wrap sm:text-base">
+						{post.content}
+					</div>
 				)}
 
 				{/* 2-2. 이미지 캐러셀 */}
@@ -102,13 +110,13 @@ export default function PostItem({
 						{post.image_urls?.map((url, index) => (
 							<CarouselItem className="basis-full sm:basis-1/3" key={index}>
 								<div
-									className="relative mx-auto aspect-square w-full overflow-hidden rounded-xl bg-neutral-100"
+									className="bg-muted/70 relative mx-auto aspect-square w-full overflow-hidden rounded-[1.35rem]"
 									style={{ maxWidth: `${MAX_IMAGE_WIDTH_PX}px` }}>
 									<img
 										src={url}
 										onClick={() => handleShowOriginImagesModal(index)}
 										alt={`게시 이미지 ${index + 1}`}
-										className="h-full w-full object-cover"
+										className="h-full w-full object-cover transition-transform duration-500 hover:scale-[1.03]"
 									/>
 								</div>
 							</CarouselItem>
@@ -118,7 +126,7 @@ export default function PostItem({
 			</div>
 
 			{/* 3. 좋아요, 댓글 버튼 */}
-			<div className="flex gap-2">
+			<div className="border-border/70 flex gap-2 border-t pt-4">
 				{/* 3-1. 좋아요 버튼 */}
 				<LikePostButton
 					id={post.id}
