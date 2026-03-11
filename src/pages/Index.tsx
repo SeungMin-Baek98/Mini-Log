@@ -2,6 +2,7 @@ import CreatePostButton from '@/features/post/components/CreatePostButton';
 import PostFeed from '@/features/post/components/PostFeed';
 import WeeklyInsightCard from '@/features/insight/components/WeeklyInsightCard';
 import { useEffect, useState } from 'react';
+import { cn } from '@/lib/utils';
 
 function Chip({
 	text,
@@ -28,7 +29,10 @@ function Chip({
 
 	return (
 		<div
-			className={`group relative whitespace-pre-line sm:whitespace-normal ${className}`}>
+			className={cn(
+				'group relative whitespace-pre-line sm:whitespace-normal',
+				className
+			)}>
 			<button
 				type="button"
 				onClick={() => setIsOpen(prev => !prev)}
@@ -36,9 +40,10 @@ function Chip({
 				<span>{text}</span>
 			</button>
 			<div
-				className={`text-muted-foreground overflow-hidden pl-2 text-xs leading-6 transition-all duration-300 sm:hidden ${
+				className={cn(
+					'text-muted-foreground overflow-hidden pl-2 text-xs leading-6 transition-all duration-300 sm:hidden',
 					isOpen ? 'mt-2 max-h-24 opacity-100' : 'max-h-0 opacity-0'
-				}`}>
+				)}>
 				{description}
 			</div>
 			<div className="bg-background/95 border-border/80 text-muted-foreground pointer-events-none absolute top-full left-1/2 z-50 mt-3 hidden w-64 -translate-x-1/2 translate-y-1 rounded-2xl border px-4 py-3 text-xs leading-6 opacity-0 shadow-[0_18px_40px_rgba(15,23,42,0.12)] backdrop-blur-md transition-all duration-200 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 sm:block">
