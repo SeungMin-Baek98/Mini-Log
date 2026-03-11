@@ -1,5 +1,6 @@
 import { useOpenProfileEditorModal } from '@/store/profileEditorModal';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 export default function EditProfileButton({
 	className
@@ -11,7 +12,7 @@ export default function EditProfileButton({
 	return (
 		<Button
 			variant="secondary"
-			className={`cursor-pointer ${className}`}
+			className={cn('cursor-pointer', className)}
 			onClick={openProfileEditorModal}>
 			프로필 수정
 		</Button>
