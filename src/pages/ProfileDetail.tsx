@@ -51,7 +51,15 @@ export default function ProfileDetailPage() {
 				selectedDate={selectedDate}
 				showCalendar={false}
 			/>
-			<Tab value={selectedTab} onChange={setSelectedTab} />
+			<div className="space-y-4">
+				<div className="space-y-2">
+					<p className="text-primary/70 text-xs font-medium tracking-[0.22em] uppercase">
+						Archive view
+					</p>
+					<h2 className="text-2xl font-semibold">기록 둘러보기</h2>
+				</div>
+				<Tab value={selectedTab} onChange={setSelectedTab} />
+			</div>
 			{selectedTab === 'all' && (
 				<div className="flex flex-col gap-6">
 					<div className="flex justify-start">
@@ -59,7 +67,7 @@ export default function ProfileDetailPage() {
 							options={POST_SORT_OPTIONS}
 							value={sortOrder}
 							onChange={setSortOrder}
-							containerClassName="w-28"
+							containerClassName="w-32"
 							aria-label="게시글 정렬"
 						/>
 					</div>
@@ -68,11 +76,13 @@ export default function ProfileDetailPage() {
 			)}
 
 			{selectedTab === 'date' && (
-				<Calendar
-					userId={userId}
-					onChange={date => setSelectedDate(date, currentUserId)}
-					value={selectedDate}
-				/>
+				<div className="border-border/80 bg-card/90 rounded-[1.75rem] border p-5 shadow-[0_18px_40px_rgba(96,76,48,0.05)] dark:bg-card/80 dark:shadow-[0_18px_40px_rgba(0,0,0,0.24)]">
+					<Calendar
+						userId={userId}
+						onChange={date => setSelectedDate(date, currentUserId)}
+						value={selectedDate}
+					/>
+				</div>
 			)}
 			{selectedTab === 'date' && selectedDate && (
 				<PostFeed authorId={userId} date={selectedDate} />

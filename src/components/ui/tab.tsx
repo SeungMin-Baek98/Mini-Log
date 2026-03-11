@@ -14,7 +14,7 @@ function Tab({
 	onChange: (tab: TabCategory) => void;
 }) {
 	return (
-		<div className="bg-muted grid w-full grid-cols-2 gap-2 rounded-xl p-1">
+		<div className="border-border/80 bg-secondary/70 grid w-full grid-cols-2 gap-2 rounded-[1.35rem] border p-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
 			{TAB_CATEGORIES.map(tab => {
 				const isSelected = value === tab.type;
 
@@ -24,7 +24,7 @@ function Tab({
 						key={tab.type}
 						aria-pressed={isSelected}
 						onClick={() => onChange(tab.type)}
-						className={`relative flex items-center justify-center overflow-hidden rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+						className={`relative flex items-center justify-center overflow-hidden rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
 							isSelected
 								? 'text-foreground'
 								: 'text-muted-foreground hover:text-foreground'
@@ -32,7 +32,7 @@ function Tab({
 						{isSelected && (
 							<motion.span
 								layoutId="tab-slide-indicator"
-								className="bg-background border-border absolute inset-0 rounded-lg border shadow-sm"
+								className="bg-card absolute inset-0 rounded-xl border border-white/70 shadow-[0_8px_20px_rgba(96,76,48,0.08)]"
 								transition={{
 									type: 'spring',
 									stiffness: 420,

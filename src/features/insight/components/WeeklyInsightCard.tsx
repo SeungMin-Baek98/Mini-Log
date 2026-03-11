@@ -57,15 +57,22 @@ export default function WeeklyInsightCard() {
 	if (isHidden) return null;
 
 	return (
-		<section className="bg-card flex flex-col gap-4 rounded-xl border p-5">
-			<div className="flex items-center justify-between gap-3">
+		<section className="border-border/80 relative overflow-hidden rounded-[1.75rem] border bg-[linear-gradient(135deg,rgba(255,253,249,0.92),rgba(243,234,220,0.88))] p-5 shadow-[0_18px_40px_rgba(96,76,48,0.06)] sm:p-6">
+			<div className="bg-primary/10 absolute top-0 right-0 h-28 w-28 rounded-full blur-3xl" />
+			<div className="relative flex items-center justify-between gap-4 max-sm:flex-col max-sm:items-start">
 				<div>
-					<h2 className="text-base font-semibold">AI 주간 회고</h2>
-					<p className="text-muted-foreground text-xs">
-						버튼을 누르면 주간 회고를 생성하고 알림으로 알려드려요.
+					<p className="text-primary/70 mb-2 text-xs font-medium tracking-[0.22em] uppercase">
+						Weekly letter
+					</p>
+					<h2 className="text-2xl font-semibold">AI 주간 회고</h2>
+					<p className="text-muted-foreground mt-2 text-sm leading-6">
+						지난 한 주의 기록을 차분하게 정리해서 알림으로 보내드려요.
 					</p>
 				</div>
-				<Button onClick={handleGenerateInsight} disabled={isPending}>
+				<Button
+					onClick={handleGenerateInsight}
+					disabled={isPending}
+					className="rounded-full px-5">
 					{isPending ? '생성 중...' : '회고 생성'}
 				</Button>
 			</div>
