@@ -28,7 +28,7 @@ export default function IndexPage() {
 							사진과 짧은 글을 함께 기록
 						</span>
 						<span className="border-border/70 bg-background/55 dark:bg-card/55 rounded-full border px-4 py-2 backdrop-blur-sm">
-							주간 회고로 한 주를 정리
+							AI기반 주간 회고로 한 주를 정리
 						</span>
 					</div>
 				</div>
