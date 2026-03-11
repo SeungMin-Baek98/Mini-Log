@@ -17,7 +17,7 @@ export default function ThemeButton() {
 					{currentTheme === 'dark' ? <MoonIcon /> : <SunIcon />}
 				</div>
 			</PopoverTrigger>
-			<PopoverContent className="w-35 p-0">
+			<PopoverContent className="w-35 overflow-hidden p-0">
 				{THEME.map(theme => (
 					<PopoverClose key={`theme-button-${theme}`} asChild>
 						<div
