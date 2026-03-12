@@ -143,7 +143,7 @@ export default function SignUpPage() {
 				</div>
 			</AuthFieldGroup>
 
-			<AuthLinkList>
+			<AuthLinkList className="mt-4">
 				<Link className="text-muted-foreground hover:underline" to={'/sign-up'}>
 					계정이 없으시다면? 회원가입
 				</Link>

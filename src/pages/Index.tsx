@@ -4,7 +4,7 @@ import WeeklyInsightCard from '@/features/insight/components/WeeklyInsightCard';
 
 export default function IndexPage() {
 	return (
-		<div className="flex flex-col gap-8 sm:gap-10">
+		<div className="flex flex-col gap-6">
 			<CreatePostButton />
 			<WeeklyInsightCard />
 			<PostFeed />

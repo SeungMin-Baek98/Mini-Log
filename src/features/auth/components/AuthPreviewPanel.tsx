@@ -46,7 +46,7 @@ function Chip({
 
 	useEffect(() => {
 		const handleResize = () => {
-			if (window.innerWidth >= 640) {
+			if (window.innerWidth >= 1024) {
 				setIsOpen(false);
 			}
 		};
@@ -63,13 +63,19 @@ function Chip({
 			)}>
 			<button
 				type="button"
-				onClick={() => setIsOpen(prev => !prev)}
-				className="border-border/70 bg-background/55 group-hover:bg-background/70 dark:bg-card/55 cursor-pointer rounded-full border px-4 py-2 text-left backdrop-blur-sm transition-colors">
+				onClick={() => {
+					if (window.innerWidth >= 1024) return;
+					setIsOpen(prev => !prev);
+				}}
+				className={cn(
+					'border-border/70 bg-background/55 dark:bg-card/55 lg:group-hover:bg-background/70 cursor-pointer rounded-full border px-4 py-2 text-left backdrop-blur-sm transition-colors',
+					isOpen && 'bg-background/72'
+				)}>
 				<span>{text}</span>
 			</button>
 			<div
 				className={cn(
-					'text-muted-foreground overflow-hidden pl-2 text-xs leading-6 transition-all duration-300 sm:hidden',
+					'text-muted-foreground overflow-hidden pl-2 text-xs leading-6 transition-all duration-300 md:hidden',
 					isOpen ? 'mt-2 max-h-24 opacity-100' : 'max-h-0 opacity-0'
 				)}>
 				<div className="flex flex-col gap-2">
@@ -77,7 +83,14 @@ function Chip({
 					{description && <p className="text-[10px]">{description}</p>}
 				</div>
 			</div>
-			<div className="bg-background/95 border-border/80 text-muted-foreground pointer-events-none absolute top-full left-1/2 z-50 mt-3 hidden w-64 -translate-x-1/2 translate-y-1 rounded-2xl border px-4 py-3 text-xs leading-6 opacity-0 shadow-[0_18px_40px_rgba(15,23,42,0.12)] backdrop-blur-md transition-all duration-200 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 sm:block">
+			<div
+				className={cn(
+					'bg-background/95 border-border/80 text-muted-foreground pointer-events-none absolute top-full left-1/2 z-50 mt-3 hidden w-64 -translate-x-1/2 rounded-2xl border px-4 py-3 text-xs leading-6 shadow-[0_18px_40px_rgba(15,23,42,0.12)] backdrop-blur-md transition-all duration-200 md:block',
+					isOpen &&
+						'pointer-events-auto translate-y-0 opacity-100 lg:pointer-events-none',
+					!isOpen && 'translate-y-1 opacity-0',
+					'lg:group-hover:pointer-events-auto lg:group-hover:translate-y-0 lg:group-hover:opacity-100'
+				)}>
 				<div className="bg-background/95 border-border/80 absolute -top-2 left-1/2 h-4 w-4 -translate-x-1/2 rotate-45 border-t border-l" />
 				<div className="flex flex-col gap-2">
 					<span>{subTitle}</span>
@@ -101,7 +114,7 @@ export default function AuthPreviewPanel() {
 						Daily moments
 					</p>
 					<div className="space-y-3">
-						<h1 className="max-w-md text-3xl leading-tight font-semibold sm:text-4xl">
+						<h1 className="max-w-md text-2xl leading-tight font-semibold sm:text-4xl">
 							흘러가는 하루를
 							<br />
 							차분히 남겨두는 기록장
@@ -121,7 +134,7 @@ export default function AuthPreviewPanel() {
 							<p className="text-primary/70 text-[11px] font-semibold tracking-[0.24em] uppercase">
 								{item.label}
 							</p>
-							<h2 className="mt-3 text-lg leading-7 font-semibold">
+							<h2 className="mt-3 text-base leading-7 font-semibold">
 								{item.title}
 							</h2>
 							<p className="text-muted-foreground mt-2 text-sm leading-6">

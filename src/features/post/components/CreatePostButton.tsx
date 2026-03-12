@@ -53,7 +53,7 @@ function NormalButton({
 				type="button"
 				onClick={onClick}
 				variant="outline"
-				className="bg-muted text-muted-foreground hover:bg-muted flex h-auto w-full cursor-pointer rounded-xl px-6 py-4">
+				className="bg-muted text-muted-foreground hover:bg-muted flex h-auto w-full cursor-pointer rounded-sm px-6 py-4">
 				<div className="flex w-full items-center justify-between">
 					<span>나누고 싶은 이야기가 있나요?</span>
 					<PlusCircleIcon />
