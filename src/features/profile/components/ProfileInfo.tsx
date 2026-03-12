@@ -7,22 +7,18 @@ import defaultAvatar from '@/assets/default-avatar.jpg';
 import EditProfileButton from './EditProfileButton';
 import Calendar from '@/features/calendar/components/Calendar';
 import { cn } from '@/lib/utils';
-
-const STATS = [
-	{ category: 'Mood', content: '잔잔한 기록' },
-	{ category: 'Archive', content: '사진과 글' },
-	{ category: 'Style', content: 'Warm lifelog' }
-];
+import { useProfilePostStats } from '@/features/profile/hooks/queries/useProfilePostStats';
+import { formatTimeAgo } from '@/lib/time';
 
 function MinistatCard({
 	category,
-	content
+	content,
+	isLast
 }: {
 	category: string;
 	content: string;
+	isLast?: boolean;
 }) {
-	const isLast = STATS[STATS.length - 1].category === category;
-
 	return (
 		<div
 			className={cn(
@@ -55,18 +51,37 @@ export default function ProfileInfo({
 		error: fetchProfileError,
 		isPending: isFetchingProfilePending
 	} = useProfileData(userId);
+	const { data: profileStats, isPending: isFetchingProfileStats } =
+		useProfilePostStats(userId);
 
 	if (fetchProfileError) return <Fallback />;
 	if (isFetchingProfilePending) return <Loader />;
+	if (isFetchingProfileStats) return <Loader />;
 
 	const isMine = session?.user.id === userId;
+	const stats = [
+		{
+			category: '남긴 이야기',
+			content: `${profileStats?.totalPosts ?? 0}개`
+		},
+		{
+			category: '사진이 담긴 기록',
+			content: `${profileStats?.imagePostCount ?? 0}개`
+		},
+		{
+			category: '마지막 기록',
+			content: profileStats?.latestPostCreatedAt
+				? formatTimeAgo(profileStats.latestPostCreatedAt)
+				: '아직 없어요'
+		}
+	];
 
 	return (
 		<div className="flex flex-col gap-8">
 			<div className="border-border/70 relative overflow-hidden rounded-[2rem] border bg-[linear-gradient(135deg,color-mix(in_oklab,var(--card)_94%,white)_0%,color-mix(in_oklab,var(--secondary)_78%,white)_100%)] p-6 shadow-[0_22px_50px_rgba(96,76,48,0.07)] sm:p-8 dark:bg-[linear-gradient(135deg,color-mix(in_oklab,var(--card)_92%,black)_0%,color-mix(in_oklab,var(--secondary)_66%,black)_100%)] dark:shadow-[0_24px_52px_rgba(0,0,0,0.3)]">
 				<div className="bg-primary/10 dark:bg-primary/16 absolute top-0 right-0 h-32 w-32 rounded-full blur-3xl" />
 				<div className="bg-accent/10 dark:bg-accent/14 absolute bottom-0 left-0 h-24 w-24 rounded-full blur-2xl" />
-				<div className="flex items-center justify-center gap-6 max-sm:flex-col">
+				<div className="flex flex-col items-center justify-center gap-6 sm:flex-row">
 					<div className="relative flex flex-1 flex-col items-center justify-center gap-5">
 						<img
 							src={profile.avatar_url || defaultAvatar}
@@ -88,20 +103,20 @@ export default function ProfileInfo({
 									'아직 소개가 없어요. 이 공간에 하루의 분위기를 남겨보세요.'}
 							</div>
 						</div>
-
-						<div className="grid w-full max-w-md grid-cols-2 gap-3 text-center sm:grid-cols-3">
-							{STATS.map(stat => (
-								<MinistatCard
-									key={stat.category}
-									category={stat.category}
-									content={stat.content}
-								/>
-							))}
-						</div>
-
 						{isMine && (
 							<EditProfileButton className="max-sm:w-full max-sm:flex-1" />
 						)}
+					</div>
+
+					<div className="grid w-full max-w-md grid-cols-2 gap-3 self-start text-center sm:grid-cols-3">
+						{stats.map((stat, index) => (
+							<MinistatCard
+								key={stat.category}
+								category={stat.category}
+								content={stat.content}
+								isLast={index === stats.length - 1}
+							/>
+						))}
 					</div>
 				</div>
 			</div>

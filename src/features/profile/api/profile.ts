@@ -70,3 +70,20 @@ export async function updateProfile({
 	if (error) throw error;
 	return data;
 }
+
+export async function fetchProfilePostStats(userId: string) {
+	const { data, error } = await supabase
+		.from('post')
+		.select('created_at, image_urls')
+		.eq('author_id', userId)
+		.order('created_at', { ascending: false });
+
+	if (error) throw error;
+
+	return {
+		totalPosts: data.length,
+		imagePostCount: data.filter(post => (post.image_urls?.length ?? 0) > 0)
+			.length,
+		latestPostCreatedAt: data[0]?.created_at ?? null
+	};
+}
