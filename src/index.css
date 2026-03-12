@@ -6,7 +6,7 @@
 @layer base {
 	:root {
 		font-family:
-			'SUITE Variable', 'Pretendard Variable', 'Pretendard',
+			'SUITE Variable', 'Pretendard Variable', Pretendard,
 			'Apple SD Gothic Neo', sans-serif;
 	}
 }
@@ -127,6 +127,7 @@
 	}
 	body {
 		@apply bg-background text-foreground min-h-screen antialiased;
+
 		background-image:
 			radial-gradient(
 				circle at top,
