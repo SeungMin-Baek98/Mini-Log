@@ -24,7 +24,7 @@ function Tab({
 						key={tab.type}
 						aria-pressed={isSelected}
 						onClick={() => onChange(tab.type)}
-						className={`relative flex items-center justify-center overflow-hidden rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
+						className={`relative flex cursor-pointer items-center justify-center overflow-hidden rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
 							isSelected
 								? 'text-foreground'
 								: 'text-muted-foreground hover:text-foreground'
