@@ -31,7 +31,9 @@ export default function AuthFormLayout({
 					</div>
 				)}
 			</div>
-			<div className={cn('flex flex-col gap-8', contentClassName)}>{children}</div>
+			<div className={cn('flex flex-col gap-8', contentClassName)}>
+				{children}
+			</div>
 		</form>
 	);
 }

@@ -1,3 +1,7 @@
+import { useEffect, useState } from 'react';
+
+import { cn } from '@/lib/utils';
+
 const previewItems = [
 	{
 		label: '오늘의 기록',
@@ -13,13 +17,84 @@ const previewItems = [
 	}
 ];
 
-const featureChips = ['사진과 짧은 글', '캘린더 복기', 'AI 주간 회고'];
+const featureChips = [
+	{
+		text: '사진과 짧은 글을 함께 기록',
+		subTitle:
+			'하루의 장면을 사진과 짧은 문장으로 남기고\n시간이 지난 뒤에도 그 순간의 감정을 다시 꺼내볼 수 있어요'
+	},
+	{
+		text: 'AI기반 주간 회고로 한 주를 정리',
+		subTitle:
+			'한 주 동안 쌓인 기록을 바탕으로 AI가 흐름을 정리해줘서\n내가 어떤 시간을 보냈는지 더 쉽게 돌아볼 수 있어요',
+		description: '(단 가입 후 7일이 지나야 이용할 수 있어요)'
+	}
+];
+
+function Chip({
+	text,
+	subTitle,
+	description,
+	className = ''
+}: {
+	text: string;
+	subTitle: string;
+	description?: string;
+	className?: string;
+}) {
+	const [isOpen, setIsOpen] = useState(false);
+
+	useEffect(() => {
+		const handleResize = () => {
+			if (window.innerWidth >= 640) {
+				setIsOpen(false);
+			}
+		};
+
+		window.addEventListener('resize', handleResize);
+		return () => window.removeEventListener('resize', handleResize);
+	}, []);
+
+	return (
+		<div
+			className={cn(
+				'group relative whitespace-pre-line sm:whitespace-normal',
+				className
+			)}>
+			<button
+				type="button"
+				onClick={() => setIsOpen(prev => !prev)}
+				className="border-border/70 bg-background/55 group-hover:bg-background/70 dark:bg-card/55 cursor-pointer rounded-full border px-4 py-2 text-left backdrop-blur-sm transition-colors">
+				<span>{text}</span>
+			</button>
+			<div
+				className={cn(
+					'text-muted-foreground overflow-hidden pl-2 text-xs leading-6 transition-all duration-300 sm:hidden',
+					isOpen ? 'mt-2 max-h-24 opacity-100' : 'max-h-0 opacity-0'
+				)}>
+				<div className="flex flex-col gap-2">
+					<span>{subTitle}</span>
+					{description && <p className="text-[10px]">{description}</p>}
+				</div>
+			</div>
+			<div className="bg-background/95 border-border/80 text-muted-foreground pointer-events-none absolute top-full left-1/2 z-50 mt-3 hidden w-64 -translate-x-1/2 translate-y-1 rounded-2xl border px-4 py-3 text-xs leading-6 opacity-0 shadow-[0_18px_40px_rgba(15,23,42,0.12)] backdrop-blur-md transition-all duration-200 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 sm:block">
+				<div className="bg-background/95 border-border/80 absolute -top-2 left-1/2 h-4 w-4 -translate-x-1/2 rotate-45 border-t border-l" />
+				<div className="flex flex-col gap-2">
+					<span>{subTitle}</span>
+					{description && <p className="text-[10px]">{description}</p>}
+				</div>
+			</div>
+		</div>
+	);
+}
 
 export default function AuthPreviewPanel() {
 	return (
-		<section className="relative overflow-hidden rounded-[2rem] border border-border/70 bg-[linear-gradient(145deg,color-mix(in_oklab,var(--card)_86%,white)_0%,color-mix(in_oklab,var(--secondary)_72%,white)_55%,color-mix(in_oklab,var(--accent)_26%,white)_100%)] p-6 shadow-[0_24px_60px_rgba(96,76,48,0.10)] sm:p-8 dark:bg-[linear-gradient(145deg,color-mix(in_oklab,var(--card)_88%,black)_0%,color-mix(in_oklab,var(--secondary)_62%,black)_55%,color-mix(in_oklab,var(--accent)_18%,black)_100%)] dark:shadow-[0_24px_60px_rgba(0,0,0,0.28)]">
-			<div className="bg-primary/12 absolute top-0 right-0 h-40 w-40 rounded-full blur-3xl" />
-			<div className="bg-accent/18 absolute bottom-0 left-0 h-32 w-32 rounded-full blur-2xl" />
+		<section className="border-border/70 relative overflow-visible rounded-[2rem] border bg-[linear-gradient(145deg,color-mix(in_oklab,var(--card)_86%,white)_0%,color-mix(in_oklab,var(--secondary)_72%,white)_55%,color-mix(in_oklab,var(--accent)_26%,white)_100%)] p-6 shadow-[0_24px_60px_rgba(96,76,48,0.10)] sm:p-8 dark:bg-[linear-gradient(145deg,color-mix(in_oklab,var(--card)_88%,black)_0%,color-mix(in_oklab,var(--secondary)_62%,black)_55%,color-mix(in_oklab,var(--accent)_18%,black)_100%)] dark:shadow-[0_24px_60px_rgba(0,0,0,0.28)]">
+			<div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[2rem]">
+				<div className="bg-primary/12 absolute top-0 right-0 h-40 w-40 rounded-full blur-3xl" />
+				<div className="bg-accent/18 absolute bottom-0 left-0 h-32 w-32 rounded-full blur-2xl" />
+			</div>
 			<div className="relative flex h-full flex-col justify-between gap-8">
 				<div className="space-y-4">
 					<p className="text-primary/75 text-xs font-semibold tracking-[0.28em] uppercase">
@@ -46,7 +121,9 @@ export default function AuthPreviewPanel() {
 							<p className="text-primary/70 text-[11px] font-semibold tracking-[0.24em] uppercase">
 								{item.label}
 							</p>
-							<h2 className="mt-3 text-lg leading-7 font-semibold">{item.title}</h2>
+							<h2 className="mt-3 text-lg leading-7 font-semibold">
+								{item.title}
+							</h2>
 							<p className="text-muted-foreground mt-2 text-sm leading-6">
 								{item.description}
 							</p>
@@ -54,13 +131,14 @@ export default function AuthPreviewPanel() {
 					))}
 				</div>
 
-				<div className="flex flex-wrap gap-3">
+				<div className="text-muted-foreground relative flex flex-wrap items-center gap-3 text-sm">
 					{featureChips.map(chip => (
-						<span
-							key={chip}
-							className="border-border/80 bg-background/70 text-muted-foreground rounded-full border px-4 py-2 text-sm backdrop-blur-sm">
-							{chip}
-						</span>
+						<Chip
+							key={chip.text}
+							text={chip.text}
+							subTitle={chip.subTitle}
+							description={chip.description}
+						/>
 					))}
 				</div>
 			</div>
