@@ -146,7 +146,7 @@ export default function NotificationButton() {
 					)}
 				</button>
 			</PopoverTrigger>
-			<PopoverContent align="end" className="max-w-80 p-0">
+			<PopoverContent align="end" className="max-w-80 overflow-hidden p-0">
 				<div className="flex items-center justify-between border-b px-3 py-2">
 					<div className="flex flex-col items-start">
 						<p className="text-sm font-semibold">알림</p>
