@@ -71,7 +71,7 @@ export default function ProfileDetailPage() {
 							aria-label="게시글 정렬"
 						/>
 					</div>
-					<PostFeed authorId={userId} sortOrder={sortOrder} />
+					<PostFeed authorId={userId} sortOrder={sortOrder} mode="paged" />
 				</div>
 			)}
 
@@ -85,7 +85,7 @@ export default function ProfileDetailPage() {
 				</div>
 			)}
 			{selectedTab === 'date' && selectedDate && (
-				<PostFeed authorId={userId} date={selectedDate} />
+				<PostFeed authorId={userId} date={selectedDate} mode="paged" />
 			)}
 		</div>
 	);
