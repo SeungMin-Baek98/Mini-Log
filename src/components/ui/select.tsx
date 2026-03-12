@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ChevronDown } from 'lucide-react';
+import { CheckIcon, ChevronDown } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
@@ -26,29 +26,63 @@ function Select<T extends string>({
 	onChange,
 	...props
 }: SelectProps<T>) {
+	const [open, setOpen] = React.useState(false);
+	const rootRef = React.useRef<HTMLDivElement>(null);
+
+	const selectedOption = options.find(option => option.value === value);
+
+	React.useEffect(() => {
+		function handleClickOutside(event: MouseEvent) {
+			if (!rootRef.current?.contains(event.target as Node)) {
+				setOpen(false);
+			}
+		}
+
+		document.addEventListener('mousedown', handleClickOutside);
+		return () => document.removeEventListener('mousedown', handleClickOutside);
+	}, []);
+
 	return (
-		<div className={cn('relative inline-flex', containerClassName)}>
-			<select
-				data-slot="select"
-				value={value}
-				onChange={event => onChange(event.target.value as T)}
-				className={cn(
-					'border-input bg-card/95 text-foreground h-11 w-full min-w-28 appearance-none rounded-full border px-4 py-1 pr-10 text-sm shadow-[0_10px_24px_rgba(96,76,48,0.05)] transition-[color,box-shadow] outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50',
-					'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
-					'aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive',
-					className
-				)}
-				{...props}>
-				{options.map(option => (
-					<option key={option.value} value={option.value}>
-						{option.label}
-					</option>
-				))}
-			</select>
-			<ChevronDown
-				className="text-muted-foreground pointer-events-none absolute top-1/2 right-4 size-4 -translate-y-1/2"
-				aria-hidden
-			/>
+		<div ref={rootRef} className={cn('relative w-32', className)}>
+			<button
+				type="button"
+				onClick={() => setOpen(prev => !prev)}
+				className="border-input bg-card text-foreground flex h-11 w-full items-center justify-between rounded-full border px-4 text-sm">
+				<span>{selectedOption?.label ?? '선택해주세요'}</span>
+				<ChevronDown
+					className={cn('size-4 transition', open && 'rotate-180')}
+				/>
+			</button>
+
+			{open && (
+				<ul
+					role="listbox"
+					className="bg-card absolute top-full z-50 mt-2 w-full overflow-hidden rounded-2xl border shadow-lg">
+					{options.map(option => {
+						const isSelected = option.value === value;
+
+						return (
+							<li key={option.value}>
+								<button
+									type="button"
+									role="option"
+									aria-selected={isSelected}
+									onClick={() => {
+										onChange(option.value);
+										setOpen(false);
+									}}
+									className={cn(
+										'hover:bg-muted-foreground/60 flex w-full items-center justify-between px-4 py-3 text-left text-sm',
+										isSelected && 'font-semibold'
+									)}>
+									<span>{option.label}</span>
+									{isSelected && <CheckIcon className="size-4" />}
+								</button>
+							</li>
+						);
+					})}
+				</ul>
+			)}
 		</div>
 	);
 }
