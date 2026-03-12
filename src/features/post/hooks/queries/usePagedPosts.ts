@@ -5,7 +5,7 @@ import type { PostSortOrder } from '@/types';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { endOfDay, format, startOfDay } from 'date-fns';
 
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 4;
 
 type Options = {
 	authorId?: string;
