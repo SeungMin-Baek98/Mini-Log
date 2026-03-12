@@ -76,7 +76,7 @@ export default function ProfileDetailPage() {
 			)}
 
 			{selectedTab === 'date' && (
-				<div className="border-border/80 bg-card/90 rounded-[1.75rem] border p-5 shadow-[0_18px_40px_rgba(96,76,48,0.05)] dark:bg-card/80 dark:shadow-[0_18px_40px_rgba(0,0,0,0.24)]">
+				<div className="border-border/80 bg-card/90 dark:bg-card/80 rounded-[1.75rem] border p-5 shadow-[0_18px_40px_rgba(96,76,48,0.05)] dark:shadow-[0_18px_40px_rgba(0,0,0,0.24)]">
 					<Calendar
 						userId={userId}
 						onChange={date => setSelectedDate(date, currentUserId)}
@@ -85,7 +85,7 @@ export default function ProfileDetailPage() {
 				</div>
 			)}
 			{selectedTab === 'date' && selectedDate && (
-				<PostFeed authorId={userId} date={selectedDate} mode="paged" />
+				<PostFeed authorId={userId} date={selectedDate} />
 			)}
 		</div>
 	);
