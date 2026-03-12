@@ -25,7 +25,7 @@ function FloatingButton({ onClick }: ButtonProps) {
 				onClick={onClick}
 				variant="outline"
 				size="lg"
-				className="group bg-background/92 text-foreground border-border/80 hover:bg-background flex h-12 overflow-hidden rounded-full px-4 backdrop-blur-sm transition-[padding] duration-200 hover:pl-5">
+				className="group bg-background/92 text-foreground border-border/80 hover:bg-background flex h-12 cursor-pointer overflow-hidden rounded-full px-4 backdrop-blur-sm transition-[padding] duration-200 hover:pl-5">
 				<span className="text-muted-foreground max-w-0 overflow-hidden whitespace-nowrap opacity-0 transition-all group-hover:max-w-sm group-hover:opacity-100">
 					게시글 만들기
 				</span>
@@ -53,7 +53,7 @@ function NormalButton({
 				type="button"
 				onClick={onClick}
 				variant="outline"
-				className="bg-muted text-muted-foreground hover:bg-muted flex h-auto w-full rounded-xl px-6 py-4">
+				className="bg-muted text-muted-foreground hover:bg-muted flex h-auto w-full cursor-pointer rounded-xl px-6 py-4">
 				<div className="flex w-full items-center justify-between">
 					<span>나누고 싶은 이야기가 있나요?</span>
 					<PlusCircleIcon />
