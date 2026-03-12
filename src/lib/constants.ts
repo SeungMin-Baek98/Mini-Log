@@ -2,7 +2,8 @@ export const QUERY_KEYS = {
 	profile: {
 		all: ['profile'],
 		list: ['profile', 'list'],
-		byId: (userId: string) => ['profile', 'id', userId]
+		byId: (userId: string) => ['profile', 'id', userId],
+		stats: (userId: string) => ['profile', 'stats', userId]
 	},
 	post: {
 		all: ['post'],

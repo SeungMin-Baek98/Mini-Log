@@ -24,6 +24,10 @@ export default function useDeletePost(callbacks?: UseMutationCallback) {
 			await queryClient.invalidateQueries({
 				queryKey: QUERY_KEYS.post.all
 			});
+
+			await queryClient.invalidateQueries({
+				queryKey: QUERY_KEYS.profile.stats(deletedPost.author_id)
+			});
 		},
 		onError: error => {
 			if (callbacks?.onError) callbacks.onError(error);
