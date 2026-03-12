@@ -43,6 +43,50 @@ export async function fetchPosts({
 	}));
 }
 
+export async function fetchPostsPage({
+	from,
+	to,
+	userId,
+	authorId,
+	dateRange,
+	sortOrder = 'latest'
+}: {
+	from: number;
+	to: number;
+	userId: string;
+	authorId?: string;
+	dateRange?: { start: Date; end: Date };
+	sortOrder?: PostSortOrder;
+}) {
+	const request = supabase
+		.from('post')
+		.select('*, author: profile!author_id (*), myLiked: like!post_id (*)', {
+			count: 'exact'
+		})
+		.eq('like.user_id', userId)
+		.order('created_at', { ascending: sortOrder === 'oldest' })
+		.range(from, to);
+
+	if (authorId) request.eq('author_id', authorId);
+	if (dateRange) {
+		request
+			.gte('created_at', dateRange.start.toISOString())
+			.lte('created_at', dateRange.end.toISOString());
+	}
+
+	const { data, error, count } = await request;
+
+	if (error) throw error;
+
+	return {
+		posts: data.map(post => ({
+			...post,
+			isLiked: post.myLiked && post.myLiked.length > 0
+		})),
+		totalCount: count ?? 0
+	};
+}
+
 export async function fetchPostById({
 	postId,
 	userId

@@ -1,23 +1,25 @@
-import { fetchPosts } from '@/features/post/api/post';
+import { fetchPostsPage } from '@/features/post/api/post';
 import { QUERY_KEYS } from '@/lib/constants';
 import { useSession } from '@/store/session';
 import type { PostSortOrder } from '@/types';
-import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { endOfDay, format, startOfDay } from 'date-fns';
 
-const PAGE_SIZE = 5; // 한 번에 불러올 포스트 개수
+const PAGE_SIZE = 5;
 
 type Options = {
 	authorId?: string;
 	date?: Date | null;
 	sortOrder?: PostSortOrder;
+	page?: number;
 	enabled?: boolean;
 };
 
-export function useInfinitePostsData(options?: Options) {
+export function usePagedPostsData(options?: Options) {
 	const authorId = options?.authorId;
 	const date = options?.date ? new Date(options.date) : null;
 	const sortOrder = options?.sortOrder ?? 'latest';
+	const page = options?.page ?? 1;
 	const enabled = options?.enabled ?? true;
 	const dateKey = date ? format(date, 'yyyy-MM-dd') : undefined;
 	const dateRange = date
@@ -26,22 +28,20 @@ export function useInfinitePostsData(options?: Options) {
 
 	const queryClient = useQueryClient();
 	const session = useSession();
-
 	const baseKey = !authorId
 		? QUERY_KEYS.post.list
 		: QUERY_KEYS.post.userList(authorId);
 	const queryKey = dateKey
-		? [...baseKey, 'sort', sortOrder, 'date', dateKey]
-		: [...baseKey, 'sort', sortOrder];
+		? [...baseKey, 'sort', sortOrder, 'date', dateKey, 'page', page]
+		: [...baseKey, 'sort', sortOrder, 'page', page];
 
-	return useInfiniteQuery({
+	return useQuery({
 		queryKey,
 		enabled,
-		queryFn: async ({ pageParam }) => {
-			const from = pageParam * PAGE_SIZE;
+		queryFn: async () => {
+			const from = (page - 1) * PAGE_SIZE;
 			const to = from + PAGE_SIZE - 1;
-
-			const posts = await fetchPosts({
+			const { posts, totalCount } = await fetchPostsPage({
 				from,
 				to,
 				userId: session!.user.id,
@@ -54,17 +54,12 @@ export function useInfinitePostsData(options?: Options) {
 				queryClient.setQueryData(QUERY_KEYS.post.byId(post.id), post);
 			});
 
-			return posts.map(post => post.id);
+			return {
+				postIds: posts.map(post => post.id),
+				totalCount,
+				pageSize: PAGE_SIZE
+			};
 		},
-
-		initialPageParam: 0,
-		// 새로운 페이지를 불러올 때 다음 페이지의 번호가 필요할때 호출된다.
-		getNextPageParam: (lastPage, allPages) => {
-			if (lastPage.length < PAGE_SIZE) return undefined; // 더이상 불러올 데이터가 없음
-			return allPages.length;
-		},
-
-		// 데이터를 무한정 캐싱
 		staleTime: Infinity
 	});
 }
