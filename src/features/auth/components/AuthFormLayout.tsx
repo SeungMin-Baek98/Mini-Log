@@ -20,11 +20,15 @@ export default function AuthFormLayout({
 	onSubmit
 }: Props) {
 	return (
-		<form className={cn('flex flex-col gap-8', className)} onSubmit={onSubmit}>
+		<form
+			className={cn('flex w-full flex-col gap-8', className)}
+			onSubmit={onSubmit}>
 			<div className="flex flex-col gap-2">
-				<div className="text-xl font-bold">{title}</div>
+				<div className="text-2xl font-bold">{title}</div>
 				{description && (
-					<div className="text-muted-foreground">{description}</div>
+					<div className="text-muted-foreground text-sm leading-6">
+						{description}
+					</div>
 				)}
 			</div>
 			<div className={cn('flex flex-col gap-8', contentClassName)}>{children}</div>
