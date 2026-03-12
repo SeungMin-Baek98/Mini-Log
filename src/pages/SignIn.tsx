@@ -18,7 +18,7 @@ import gitHubLogo from '@/assets/github-mark.svg';
 import googleLogo from '@/assets/google-icon.png';
 import kakaoLogo from '@/assets/kakaotalk_sharing_btn_small.png';
 
-export default function SignUpPage() {
+export default function SignInPage() {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const { mutate: signInWithPassword, isPending: isSignInWithPasswordPending } =
