@@ -49,6 +49,19 @@ export default function PostFeed({
 		}
 	}, [inView, mode, fetchNextPage]);
 
+	const totalCount = pagedQuery.data?.totalCount ?? 0;
+	const totalPages = pagedQuery.data
+		? Math.ceil(totalCount / pagedQuery.data.pageSize)
+		: 0;
+
+	useEffect(() => {
+		if (mode !== 'paged') return;
+		if (!pagedQuery.data) return;
+		if (page > totalPages) {
+			setPage(Math.max(1, totalPages || 1));
+		}
+	}, [mode, page, totalPages, pagedQuery.data]);
+
 	if (mode === 'infinite') {
 		if (infiniteQuery.error) return <Fallback />;
 		if (infiniteQuery.isPending) return <Loader />;
@@ -73,14 +86,14 @@ export default function PostFeed({
 	if (pagedQuery.isPending) return <Loader />;
 
 	const postIds = pagedQuery.data.postIds;
-	if (postIds.length === 0) {
+
+	if (totalCount === 0) {
 		return <Nodata />;
 	}
 
-	const totalPages = Math.max(
-		1,
-		Math.ceil(pagedQuery.data.totalCount / pagedQuery.data.pageSize)
-	);
+	if (page > totalPages) {
+		return <Loader />;
+	}
 
 	return (
 		<div className="flex flex-col gap-6 sm:gap-8">
@@ -91,7 +104,7 @@ export default function PostFeed({
 				className="pt-2"
 				currentPage={page}
 				onPageChange={setPage}
-				totalPages={totalPages}
+				totalPages={Math.max(1, totalPages)}
 			/>
 		</div>
 	);

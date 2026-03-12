@@ -57,7 +57,7 @@ function Pagination({
 	const showNext = currentPage < totalPages;
 
 	const navButtonStyle =
-		'text-input-text hover:bg-primary-100 focus-visible:ring-ring/50 flex size-9 cursor-pointer items-center justify-center rounded-full outline-none focus-visible:ring-2 md:size-10';
+		'text-input-text focus-visible:ring-ring/50 flex size-9 cursor-pointer items-center justify-center rounded-full outline-none focus-visible:ring-2 md:size-10';
 
 	if (pageItems === null) return null;
 
@@ -101,7 +101,9 @@ function Pagination({
 						onClick={() => onPageChange(item)}
 						className={cn(
 							navButtonStyle,
-							isActive && 'bg-primary hover:bg-unset cursor-default text-white'
+							isActive
+								? 'bg-primary cursor-default text-white'
+								: 'hover:bg-primary-100'
 						)}>
 						{item}
 					</button>
