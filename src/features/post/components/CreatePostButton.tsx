@@ -3,42 +3,69 @@ import {
 	SCROLL_DOWN_THRESHOLD_PX,
 	SCROLL_UP_THRESHOLD_PX
 } from '@/lib/constants';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { PlusCircleIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
 
-function FloatingButton() {
-	const openCreatePostModal = useOpenCreatePostModal();
+type ButtonProps = {
+	onClick: () => void;
+};
+
+function FloatingButton({ onClick }: ButtonProps) {
 	return (
-		<div
-			onClick={openCreatePostModal}
-			className="group bg-muted fixed right-5 bottom-5 z-50 flex cursor-pointer items-center rounded-full text-white transition-all hover:pl-4">
-			<span className="text-muted-foreground max-w-0 overflow-hidden whitespace-nowrap opacity-0 transition-all group-hover:max-w-sm group-hover:opacity-100">
-				게시글 만들기
-			</span>
-			<div className="text-muted-foreground flex size-12 items-center justify-center">
-				<PlusCircleIcon className="h-6 w-6" />
-			</div>
-		</div>
+		<motion.div
+			className="fixed right-5 bottom-5 z-50"
+			initial={{ opacity: 0, y: 16, scale: 0.96 }}
+			animate={{ opacity: 1, y: 0, scale: 1 }}
+			exit={{ opacity: 0, y: 16, scale: 0.96 }}>
+			<Button
+				type="button"
+				onClick={onClick}
+				variant="outline"
+				size="lg"
+				className="group bg-background/92 text-foreground border-border/80 hover:bg-background flex h-12 overflow-hidden rounded-full px-4 backdrop-blur-sm transition-[padding] duration-200 hover:pl-5">
+				<span className="text-muted-foreground max-w-0 overflow-hidden whitespace-nowrap opacity-0 transition-all group-hover:max-w-sm group-hover:opacity-100">
+					게시글 만들기
+				</span>
+				<PlusCircleIcon className="mr-2 group-hover:mr-0" />
+			</Button>
+		</motion.div>
 	);
 }
 
-function NormalButton() {
-	const openCreatePostModal = useOpenCreatePostModal();
-
+function NormalButton({
+	onClick,
+	isHidden
+}: ButtonProps & { isHidden: boolean }) {
 	return (
-		<div
-			onClick={openCreatePostModal}
-			className="bg-muted text-muted-foreground cursor-pointer rounded-xl px-6 py-4">
-			<div className="flex items-center justify-between">
-				<div>나누고 싶은 이야기가 있나요?</div>
-				<PlusCircleIcon className="h-5 w-5" />
-			</div>
-		</div>
+		<motion.div
+			initial={false}
+			animate={{
+				opacity: isHidden ? 0 : 1,
+				y: isHidden ? -10 : 0,
+				scale: isHidden ? 0.98 : 1
+			}}
+			transition={{ duration: 0.2, ease: 'easeOut' }}
+			className={cn(isHidden && 'pointer-events-none')}>
+			<Button
+				type="button"
+				onClick={onClick}
+				variant="outline"
+				className="bg-muted text-muted-foreground hover:bg-muted flex h-auto w-full rounded-xl px-6 py-4">
+				<div className="flex w-full items-center justify-between">
+					<span>나누고 싶은 이야기가 있나요?</span>
+					<PlusCircleIcon />
+				</div>
+			</Button>
+		</motion.div>
 	);
 }
 
 export default function CreatePostButton() {
 	const [isScrollDown, setIsScrollDown] = useState(false);
+	const openCreatePostModal = useOpenCreatePostModal();
 
 	useEffect(() => {
 		const handleScroll = () => {
@@ -60,5 +87,14 @@ export default function CreatePostButton() {
 		};
 	}, []);
 
-	return isScrollDown ? <FloatingButton /> : <NormalButton />;
+	return (
+		<>
+			<div className="min-h-[72px]">
+				<NormalButton onClick={openCreatePostModal} isHidden={isScrollDown} />
+			</div>
+			<AnimatePresence>
+				{isScrollDown ? <FloatingButton onClick={openCreatePostModal} /> : null}
+			</AnimatePresence>
+		</>
+	);
 }
