@@ -6,11 +6,8 @@
 @layer base {
 	:root {
 		font-family:
-			'SUITE Variable',
-			'Pretendard Variable',
-			'Pretendard',
-			'Apple SD Gothic Neo',
-			sans-serif;
+			'SUITE Variable', 'Pretendard Variable', Pretendard,
+			'Apple SD Gothic Neo', sans-serif;
 	}
 }
 
@@ -130,9 +127,18 @@
 	}
 	body {
 		@apply bg-background text-foreground min-h-screen antialiased;
+
 		background-image:
-			radial-gradient(circle at top, color-mix(in oklab, var(--accent) 16%, transparent) 0%, transparent 32%),
-			linear-gradient(180deg, color-mix(in oklab, var(--background) 92%, white) 0%, var(--background) 100%);
+			radial-gradient(
+				circle at top,
+				color-mix(in oklab, var(--accent) 16%, transparent) 0%,
+				transparent 32%
+			),
+			linear-gradient(
+				180deg,
+				color-mix(in oklab, var(--background) 92%, white) 0%,
+				var(--background) 100%
+			);
 	}
 	#root {
 		@apply min-h-screen;
@@ -146,5 +152,9 @@
 	}
 	::selection {
 		background: color-mix(in oklab, var(--accent) 45%, white);
+	}
+
+	.dark ::selection {
+		background: color-mix(in oklab, var(--primary) 45%, black);
 	}
 }
