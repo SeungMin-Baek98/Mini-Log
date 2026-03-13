@@ -74,7 +74,9 @@ export default function PostFeed({
 		return (
 			<div className="flex flex-col gap-6 sm:gap-8">
 				{infiniteQuery.data.pages.map(page =>
-					page.map(postId => <PostItem key={postId} postId={postId} type="FEED" />)
+					page.map(postId => (
+						<PostItem key={postId} postId={postId} type="FEED" />
+					))
 				)}
 				{isFetchingNextPage && <Loader />}
 				<div ref={ref}></div>

@@ -7,6 +7,7 @@ import IndexPage from './pages/Index';
 import ProfileDetailPage from './pages/ProfileDetail';
 import PostDetailPage from './pages/PostDetail';
 import ResetPasswordPage from './pages/ResetPassword';
+import PrivacyPolicyPage from './pages/PrivacyPolicy';
 import GlobalLayout from './components/layout/GlobalLayout';
 import GuestOnlyLayout from './components/layout/GuestOnlyLayout';
 import MemberOnlyLayout from './components/layout/MemberOnlyLayout';
@@ -15,6 +16,7 @@ export default function RooteRoute() {
 	return (
 		<Routes>
 			<Route element={<GlobalLayout />}>
+				<Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
 				<Route element={<GuestOnlyLayout />}>
 					<Route path="/sign-in" element={<SigninPage />} />
 					<Route path="/sign-up" element={<SignUpPage />} />
