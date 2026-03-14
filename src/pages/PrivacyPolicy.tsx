@@ -146,11 +146,11 @@ export default function PrivacyPolicyPage() {
 							{section.title}
 						</AccordionTrigger>
 						<AccordionContent className="pb-5">
-							<a className="text-muted-foreground space-y-2 text-sm leading-7 sm:text-[15px]">
+							<div className="text-muted-foreground space-y-2 text-sm leading-7 sm:text-[15px]">
 								{section.body.map(paragraph => (
 									<p key={paragraph}>{paragraph}</p>
 								))}
-							</a>
+							</div>
 						</AccordionContent>
 					</AccordionItem>
 				))}
