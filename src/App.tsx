@@ -1,12 +1,12 @@
 import ModalProvider from './provider/ModalProvider';
 import SessionProvider from './provider/SessionProvider';
-import RooteRoute from './RooteRoute';
+import RootRoute from './RootRoute';
 
 export default function App() {
 	return (
 		<SessionProvider>
 			<ModalProvider>
-				<RooteRoute />
+				<RootRoute />
 			</ModalProvider>
 		</SessionProvider>
 	);
