@@ -50,13 +50,6 @@ export default function SignInPage() {
 		signInWithPassword({ email, password });
 	};
 
-	/** 엔터키 누를시 로그인 처리 */
-	const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
-		if (e.key === 'Enter') {
-			handleSignInWithPassword();
-		}
-	};
-
 	/** 깃허브 로그인 */
 	const handleSignInWithGithubClick = () => {
 		signInWithOAuth('github');
@@ -108,8 +101,6 @@ export default function SignInPage() {
 				<AuthSubmitButton
 					disabled={isPending}
 					type="submit"
-					onKeyDown={handleKeyDown}
-					onClick={handleSignInWithPassword}
 					className="mt-10">
 					로그인
 				</AuthSubmitButton>
