@@ -12,7 +12,7 @@ import GlobalLayout from './components/layout/GlobalLayout';
 import GuestOnlyLayout from './components/layout/GuestOnlyLayout';
 import MemberOnlyLayout from './components/layout/MemberOnlyLayout';
 
-export default function RooteRoute() {
+export default function RootRoute() {
 	return (
 		<Routes>
 			<Route element={<GlobalLayout />}>
