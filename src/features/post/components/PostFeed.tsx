@@ -9,6 +9,7 @@ import Loader from '@/components/Loader';
 import PostItem from './PostItem';
 import Nodata from '@/components/Nodata';
 import { Pagination } from '@/components/ui/pagination';
+import FeedSkeleton from '@/components/skeleton/FeedSkeleton';
 
 export default function PostFeed({
 	authorId,
@@ -64,7 +65,7 @@ export default function PostFeed({
 
 	if (mode === 'infinite') {
 		if (infiniteQuery.error) return <Fallback />;
-		if (infiniteQuery.isPending) return <Loader />;
+		if (infiniteQuery.isPending) return <FeedSkeleton count={5} />;
 
 		const hasPosts = infiniteQuery.data.pages.some(page => page.length > 0);
 		if (!hasPosts) {
@@ -85,7 +86,7 @@ export default function PostFeed({
 	}
 
 	if (pagedQuery.error) return <Fallback />;
-	if (pagedQuery.isPending) return <Loader />;
+	if (pagedQuery.isPending) return <FeedSkeleton count={4} />;
 
 	const postIds = pagedQuery.data.postIds;
 

@@ -12,10 +12,11 @@ export function usePostCountByDate({
 	start: Date;
 	end: Date;
 }) {
-	const monthKey = format(start, 'yyyy-MM');
+	const startKey = format(start, 'yyyy-MM-dd');
+	const endKey = format(end, 'yyyy-MM-dd');
 
 	return useQuery({
-		queryKey: QUERY_KEYS.post.calendar(userId, monthKey),
+		queryKey: QUERY_KEYS.post.calendar(userId, `${startKey}_${endKey}`),
 		queryFn: () => fetchPostsByDate({ userId, start, end }),
 		enabled: !!userId && !!start && !!end
 	});
