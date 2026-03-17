@@ -28,7 +28,7 @@ export default function RootRoute() {
 					<Route path="/profile/:userId" element={<ProfileDetailPage />} />
 					<Route path="/reset-password" element={<ResetPasswordPage />} />
 				</Route>
-				/** 위의 경로 이외에 경로 접속시 Index페이지로 Redirect */
+				{/* 위의 경로 이외에 경로 접속시 Index페이지로 Redirect */}
 				<Route path="*" element={<Navigate to={'/'} />} />
 			</Route>
 		</Routes>

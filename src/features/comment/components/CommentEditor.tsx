@@ -28,6 +28,9 @@ type ReplyMode = {
 type Props = CreateMode | EditMode | ReplyMode;
 
 export default function CommentEditor(props: Props) {
+	const initialEditContent =
+		props.type === 'EDIT' ? props.initialContent : undefined;
+
 	const { mutate: createComment, isPending: isCreateCommentPending } =
 		useCreateComment({
 			onSuccess: () => {
@@ -54,9 +57,9 @@ export default function CommentEditor(props: Props) {
 
 	useEffect(() => {
 		if (props.type === 'EDIT') {
-			setContent(props.initialContent);
+			setContent(initialEditContent ?? '');
 		}
-	}, []);
+	}, [initialEditContent, props.type]);
 
 	const handleSubmitClick = () => {
 		if (content.trim() === '') return;
@@ -91,15 +94,14 @@ export default function CommentEditor(props: Props) {
 				}}
 			/>
 			<div className="flex justify-end gap-2">
-				{props.type === 'EDIT' ||
-					(props.type === 'REPLY' && (
-						<Button
-							disabled={isPending}
-							variant={'outline'}
-							onClick={() => props.onClose()}>
-							취소
-						</Button>
-					))}
+				{(props.type === 'EDIT' || props.type === 'REPLY') && (
+					<Button
+						disabled={isPending}
+						variant={'outline'}
+						onClick={() => props.onClose()}>
+						취소
+					</Button>
+				)}
 				<Button disabled={isPending} onClick={handleSubmitClick}>
 					작성
 				</Button>

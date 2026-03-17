@@ -54,7 +54,7 @@ export default function ProfileEditorModal() {
 		if (!isOpen) {
 			if (avatarImage) URL.revokeObjectURL(avatarImage.previewUrl);
 		}
-	}, [isOpen]);
+	}, [avatarImage, isOpen]);
 
 	// 서버에서 프로필 데이터를 불러오거나 모달이 열릴 때 상태 초기화
 	useEffect(() => {

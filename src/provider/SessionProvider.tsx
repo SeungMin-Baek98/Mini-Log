@@ -6,7 +6,7 @@ import { useIsSessionLoaded, useSession, useSetSession } from '@/store/session';
 import supabase from '@/utils/supabase';
 import GlobalLoader from '@/components/GlobalLoader';
 
-export default function SessionProvder({
+export default function SessionProvider({
 	children
 }: {
 	children: React.ReactNode;
@@ -20,10 +20,16 @@ export default function SessionProvder({
 	);
 
 	useEffect(() => {
-		supabase.auth.onAuthStateChange((event, session) => {
+		const {
+			data: { subscription }
+		} = supabase.auth.onAuthStateChange((event, session) => {
 			setSession(session);
 		});
-	}, []);
+
+		return () => {
+			subscription.unsubscribe();
+		};
+	}, [setSession]);
 
 	if (!isSessionLoaded) return <GlobalLoader />;
 	if (isProfileLoading) return <GlobalLoader />;
