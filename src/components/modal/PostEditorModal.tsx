@@ -19,6 +19,11 @@ type Image = {
 export default function PostEditorModal() {
 	const session = useSession();
 	const postEditorModal = usePostEditorModal();
+	const modalType = postEditorModal.isOpen ? postEditorModal.type : null;
+	const editContent =
+		postEditorModal.isOpen && postEditorModal.type === 'EDIT'
+			? postEditorModal.content
+			: '';
 
 	const openAlertModal = useOpenAlertModal();
 
@@ -59,22 +64,26 @@ export default function PostEditorModal() {
 	}, [content]);
 
 	useEffect(() => {
-		if (!postEditorModal.isOpen) {
-			// 메모리 누수를 막기위해 생성된 이미지 URL 해제
-			images.forEach(image => URL.revokeObjectURL(image.previewURL));
-			return;
-		}
-		if (postEditorModal.type === 'CREATE') {
+		if (!postEditorModal.isOpen) return;
+
+		if (modalType === 'CREATE') {
 			setContent('');
 			setImages([]);
 		} else {
 			// EDIT 모드일 때 기존 데이터 세팅
-			setContent(postEditorModal.content);
+			setContent(editContent);
 			setImages([]);
 		}
 
 		textareaRef.current?.focus();
-	}, [postEditorModal.isOpen]);
+	}, [editContent, modalType, postEditorModal.isOpen]);
+
+	useEffect(() => {
+		if (postEditorModal.isOpen) return;
+
+		// 메모리 누수를 막기위해 생성된 이미지 URL 해제
+		images.forEach(image => URL.revokeObjectURL(image.previewURL));
+	}, [images, postEditorModal.isOpen]);
 
 	const handleCloseModal = () => {
 		if (content !== '' || images.length > 0) {

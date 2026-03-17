@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Bell } from 'lucide-react';
 
 import {
@@ -34,8 +34,14 @@ export default function NotificationButton() {
 	const weeklyRecapModalActions = useWeeklyRecapModalActions();
 	const [open, setOpen] = useState(false);
 	const userId = session?.user?.id ?? '';
-	const notificationQueryKey = QUERY_KEYS.notification.listByUser(userId);
-	const unreadCountQueryKey = QUERY_KEYS.notification.unreadCountByUser(userId);
+	const notificationQueryKey = useMemo(
+		() => QUERY_KEYS.notification.listByUser(userId),
+		[userId]
+	);
+	const unreadCountQueryKey = useMemo(
+		() => QUERY_KEYS.notification.unreadCountByUser(userId),
+		[userId]
+	);
 
 	const { data: notifications = [] } = useNotificationsData();
 	const { data: unreadCount = 0 } = useUnreadNotificationCountData();
@@ -74,7 +80,7 @@ export default function NotificationButton() {
 		return () => {
 			channel.unsubscribe();
 		};
-	}, [session?.user.id, queryClient]);
+	}, [notificationQueryKey, queryClient, session?.user.id, unreadCountQueryKey]);
 
 	if (!session?.user) return null;
 
