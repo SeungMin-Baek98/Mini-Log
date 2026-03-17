@@ -8,7 +8,7 @@ const AUTH_ERROR_MESSAGE_MAP: Record<string, string> = {
 	session_expired: '세션이 만료되었습니다. 다시 로그인해주세요.',
 	email_not_confirmed: '이메일 인증이 필요합니다.',
 	phone_not_confirmed: '전화번호 인증이 필요합니다.',
-	weak_password: '비밀번호가 너무 약합니다.',
+	weak_password: '비밀번호는 최소 6자 이상이어야 합니다.',
 	signup_disabled: '현재 회원가입이 불가능한 상태입니다.',
 	user_already_exists: '이미 가입된 사용자입니다.',
 	captcha_failed: '보안 인증에 실패했습니다. 다시 시도해주세요.',
