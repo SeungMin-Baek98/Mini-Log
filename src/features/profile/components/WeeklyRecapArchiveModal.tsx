@@ -135,9 +135,9 @@ export default function WeeklyRecapArchiveModal({
 						아직 받은 주간 회고가 없어요.
 					</div>
 				) : (
-					<div className="flex flex-col gap-4">
+					<div className="flex flex-col gap-4 overflow-x-auto">
 						<div className="max-h-[56vh] overflow-y-auto rounded-md border">
-							<Table className="min-w-[760px]">
+							<Table>
 								<TableHeader>
 									<TableRow>
 										<TableHead className="min-w-[170px]">집계 기간</TableHead>
