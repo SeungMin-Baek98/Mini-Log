@@ -1,5 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
 
+vi.mock('@/features/post/api/post', () => ({
+	createPostWithImages: vi.fn()
+}));
+
 import { QUERY_KEYS } from '@/lib/constants';
 
 import { invalidatePostCreationQueries } from './useCreatePost';
