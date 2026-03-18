@@ -31,7 +31,9 @@ export default function SignUpPage() {
 	};
 
 	return (
-		<AuthFormLayout title="회원가입">
+		<AuthFormLayout
+			title="회원가입"
+			description="추후 비밀번호 재설정에 사용할 수 있도록 실제 이메일을 입력해 주세요.">
 			<AuthFieldGroup>
 				<Input
 					disabled={isSignUpPending}
