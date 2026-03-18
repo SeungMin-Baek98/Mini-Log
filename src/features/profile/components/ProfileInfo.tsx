@@ -1,14 +1,17 @@
 import { useSession } from '@/store/session';
 import { useProfileData } from '@/features/profile/hooks/queries/useProfileData';
+import { useState } from 'react';
 
 import Fallback from '@/components/Fallback';
 import Loader from '@/components/Loader';
 import defaultAvatar from '@/assets/default-avatar.jpg';
 import EditProfileButton from './EditProfileButton';
+import WeeklyRecapArchiveModal from './WeeklyRecapArchiveModal';
 import Calendar from '@/features/calendar/components/Calendar';
 import { cn } from '@/lib/utils';
 import { useProfilePostStats } from '@/features/profile/hooks/queries/useProfilePostStats';
 import { formatTimeAgo } from '@/lib/time';
+import { Button } from '@/components/ui/button';
 
 function MinistatCard({
 	category,
@@ -45,6 +48,7 @@ export default function ProfileInfo({
 	showCalendar?: boolean;
 }) {
 	const session = useSession();
+	const [isRecapArchiveOpen, setIsRecapArchiveOpen] = useState(false);
 
 	const {
 		data: profile,
@@ -81,7 +85,7 @@ export default function ProfileInfo({
 			<div className="border-border/70 relative overflow-hidden rounded-[2rem] border bg-[linear-gradient(135deg,color-mix(in_oklab,var(--card)_94%,white)_0%,color-mix(in_oklab,var(--secondary)_78%,white)_100%)] p-6 shadow-[0_22px_50px_rgba(96,76,48,0.07)] sm:p-8 dark:bg-[linear-gradient(135deg,color-mix(in_oklab,var(--card)_92%,black)_0%,color-mix(in_oklab,var(--secondary)_66%,black)_100%)] dark:shadow-[0_24px_52px_rgba(0,0,0,0.3)]">
 				<div className="bg-primary/10 dark:bg-primary/16 absolute top-0 right-0 h-32 w-32 rounded-full blur-3xl" />
 				<div className="bg-accent/10 dark:bg-accent/14 absolute bottom-0 left-0 h-24 w-24 rounded-full blur-2xl" />
-				<div className="flex flex-col items-center justify-center gap-6 sm:flex-row">
+				<div className="flex flex-col items-center justify-center gap-6 sm:flex-row sm:items-stretch">
 					<div className="relative flex flex-1 flex-col items-center justify-center gap-5">
 						<img
 							src={profile.avatar_url || defaultAvatar}
@@ -108,18 +112,33 @@ export default function ProfileInfo({
 						)}
 					</div>
 
-					<div className="grid w-full max-w-md grid-cols-2 gap-3 self-start text-center sm:grid-cols-3">
-						{stats.map((stat, index) => (
-							<MinistatCard
-								key={stat.category}
-								category={stat.category}
-								content={stat.content}
-								isLast={index === stats.length - 1}
-							/>
-						))}
+					<div className="flex w-full flex-1 flex-col justify-between gap-4 sm:self-stretch">
+						<div className="grid w-full max-w-md grid-cols-2 gap-3 self-start text-center sm:grid-cols-3">
+							{stats.map((stat, index) => (
+								<MinistatCard
+									key={stat.category}
+									category={stat.category}
+									content={stat.content}
+									isLast={index === stats.length - 1}
+								/>
+							))}
+						</div>
+
+						{isMine && (
+							<Button onClick={() => setIsRecapArchiveOpen(true)}>
+								주간 회고 모아보기
+							</Button>
+						)}
 					</div>
 				</div>
 			</div>
+			{isMine && (
+				<WeeklyRecapArchiveModal
+					userId={userId}
+					open={isRecapArchiveOpen}
+					onOpenChange={setIsRecapArchiveOpen}
+				/>
+			)}
 			{showCalendar && (
 				<Calendar
 					userId={userId}

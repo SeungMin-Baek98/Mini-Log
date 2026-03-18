@@ -2,6 +2,7 @@ import supabase from '@/utils/supabase';
 import type {
 	InsightSummaryRow,
 	WeeklyRecapData,
+	WeeklyRecapHistoryRecord,
 	WeeklyRecapRecord
 } from '@/types';
 
@@ -81,4 +82,35 @@ export async function fetchLatestWeeklyInsight(userId: string) {
 		periodEnd: data.period_end,
 		recap: summaryJson
 	} as WeeklyRecapRecord;
+}
+
+export async function fetchWeeklyInsightHistory(userId: string) {
+	const { data, error } = await supabase
+		.from('insight_summary')
+		.select('id, created_at, period_start, period_end, summary_json')
+		.eq('user_id', userId)
+		.eq('period_type', 'week')
+		.order('period_end', { ascending: false });
+
+	if (error) throw error;
+	if (!data) return [];
+
+	const insightRows = data as Pick<
+		InsightSummaryRow,
+		'id' | 'created_at' | 'period_start' | 'period_end' | 'summary_json'
+	>[];
+
+	return insightRows.reduce<WeeklyRecapHistoryRecord[]>((records, row) => {
+		if (!isWeeklyRecapData(row.summary_json)) return records;
+
+		records.push({
+			id: row.id,
+			createdAt: row.created_at,
+			periodStart: row.period_start,
+			periodEnd: row.period_end,
+			recap: row.summary_json
+		});
+
+		return records;
+	}, []);
 }
