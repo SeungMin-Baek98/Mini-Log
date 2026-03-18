@@ -163,7 +163,7 @@ export default function WeeklyRecapArchiveModal({
 											<TableCell className="text-sm whitespace-normal">
 												<p>게시글 {record.recap.counts.posts}개</p>
 												<p className="text-muted-foreground text-xs">
-													댓글 {record.recap.counts.comments} · 좋아요
+													댓글 {record.recap.counts.comments} · 좋아요{' '}
 													{record.recap.counts.likes}
 												</p>
 											</TableCell>

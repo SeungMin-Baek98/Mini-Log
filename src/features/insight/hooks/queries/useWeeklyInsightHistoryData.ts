@@ -9,7 +9,7 @@ export function useWeeklyInsightHistoryData(
 	return useQuery({
 		queryKey: userId
 			? QUERY_KEYS.insight.historyByUser(userId)
-			: QUERY_KEYS.insight.all,
+			: QUERY_KEYS.insight.historyAnonymous,
 		queryFn: () => {
 			if (!userId) throw new Error('로그인 유저가 없습니다.');
 			return fetchWeeklyInsightHistory(userId);

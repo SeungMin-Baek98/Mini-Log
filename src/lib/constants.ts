@@ -33,7 +33,9 @@ export const QUERY_KEYS = {
 	},
 	insight: {
 		all: ['insight'],
+		latestAnonymous: ['insight', 'latest', 'anonymous'],
 		latestByUser: (userId: string) => ['insight', 'latest', userId],
+		historyAnonymous: ['insight', 'history', 'anonymous'],
 		historyByUser: (userId: string) => ['insight', 'history', userId]
 	}
 };

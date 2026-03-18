@@ -10,7 +10,7 @@ export function useWeeklyInsightData() {
 	return useQuery({
 		queryKey: userId
 			? QUERY_KEYS.insight.latestByUser(userId)
-			: QUERY_KEYS.insight.all,
+			: QUERY_KEYS.insight.latestAnonymous,
 		queryFn: () => {
 			if (!userId) throw new Error('로그인 유저가 없습니다.');
 			return fetchLatestWeeklyInsight(userId);
