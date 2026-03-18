@@ -27,6 +27,12 @@ import { generateErrorMessage } from '@/lib/error';
 import { fetchLatestWeeklyInsight } from '@/features/insight/api/insight';
 import { useWeeklyRecapModalActions } from '@/store/weeklyRecapModal';
 
+type NotificationListItem = NotificationRow & {
+	actor?: unknown;
+	post?: unknown;
+	comment?: unknown;
+};
+
 export default function NotificationButton() {
 	const session = useSession();
 	const navigate = useNavigate();
@@ -61,13 +67,30 @@ export default function NotificationButton() {
 				},
 				payload => {
 					const newNotification = payload.new as NotificationRow;
-
-					queryClient.setQueryData<NotificationRow[] | undefined>(
-						notificationQueryKey,
-						prev =>
-							prev ? [newNotification, ...prev].slice(0, 20) : [newNotification]
+					const existingNotifications =
+						queryClient.getQueryData<NotificationListItem[]>(
+							notificationQueryKey
+						) ?? [];
+					const alreadyExists = existingNotifications.some(
+						item => item.id === newNotification.id
 					);
-					if (!newNotification.read_at) {
+
+					queryClient.setQueryData<NotificationListItem[] | undefined>(
+						notificationQueryKey,
+						prev => {
+							if (!prev) return [newNotification];
+							if (alreadyExists) {
+								return prev.map(item =>
+									item.id === newNotification.id
+										? { ...item, ...newNotification }
+										: item
+								);
+							}
+
+							return [newNotification, ...prev].slice(0, 20);
+						}
+					);
+					if (!newNotification.read_at && !alreadyExists) {
 						queryClient.setQueryData<number>(
 							unreadCountQueryKey,
 							prev => (prev ?? 0) + 1
@@ -91,7 +114,7 @@ export default function NotificationButton() {
 				session.user.id
 			);
 			if (updatedNotification) {
-				queryClient.setQueryData<NotificationRow[] | undefined>(
+				queryClient.setQueryData<NotificationListItem[] | undefined>(
 					notificationQueryKey,
 					prev =>
 						prev?.map(item =>
@@ -167,7 +190,7 @@ export default function NotificationButton() {
 							className="h-7 self-start px-2 text-xs"
 							onClick={async () => {
 								await markAllNotificationsAsRead(session.user.id);
-								queryClient.setQueryData<NotificationRow[] | undefined>(
+								queryClient.setQueryData<NotificationListItem[] | undefined>(
 									notificationQueryKey,
 									prev =>
 										prev?.map(item =>
