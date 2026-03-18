@@ -32,10 +32,7 @@ const useWeeklyRecapModalStore = create(
 						if (state.data.steps.length === 0) return state;
 
 						const upperBound = Math.max(0, state.data.steps.length - 1);
-						const nextIndex = Math.min(
-							state.currentStepIndex + 1,
-							upperBound
-						);
+						const nextIndex = Math.min(state.currentStepIndex + 1, upperBound);
 						return { ...state, currentStepIndex: nextIndex };
 					});
 				},

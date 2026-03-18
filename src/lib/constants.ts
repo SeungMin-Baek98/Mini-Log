@@ -25,11 +25,18 @@ export const QUERY_KEYS = {
 		all: ['notification'],
 		list: ['notification', 'list'],
 		listByUser: (userId: string) => ['notification', 'list', userId],
-		unreadCountByUser: (userId: string) => ['notification', 'unreadCount', userId]
+		unreadCountByUser: (userId: string) => [
+			'notification',
+			'unreadCount',
+			userId
+		]
 	},
 	insight: {
 		all: ['insight'],
-		latestByUser: (userId: string) => ['insight', 'latest', userId]
+		latestAnonymous: ['insight', 'latest', 'anonymous'],
+		latestByUser: (userId: string) => ['insight', 'latest', userId],
+		historyAnonymous: ['insight', 'history', 'anonymous'],
+		historyByUser: (userId: string) => ['insight', 'history', userId]
 	}
 };
 
