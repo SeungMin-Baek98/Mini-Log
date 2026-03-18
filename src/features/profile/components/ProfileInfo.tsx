@@ -107,9 +107,7 @@ export default function ProfileInfo({
 									'아직 소개가 없어요. 이 공간에 하루의 분위기를 남겨보세요.'}
 							</div>
 						</div>
-						{isMine && (
-							<EditProfileButton className="max-sm:w-full max-sm:flex-1" />
-						)}
+						{isMine && <EditProfileButton className="w-full" />}
 					</div>
 
 					<div className="flex w-full flex-1 flex-col justify-between gap-4 sm:self-stretch">
