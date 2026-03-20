@@ -1,11 +1,18 @@
-import { Link } from 'react-router';
+import { Link, useLocation } from 'react-router';
 
 import logo from '@/assets/logo.png';
 import ThemeButton from './ThemeButton';
 import ProfileButton from './ProfileButton';
 import NotificationButton from './NotificationButton';
+import { Button } from '@/components/ui/button';
+import { buildPathWithNext } from '@/features/auth/lib/redirect';
+import { useSession } from '@/store/session';
 
 export default function Header() {
+	const session = useSession();
+	const location = useLocation();
+	const currentPath = `${location.pathname}${location.search}${location.hash}`;
+
 	return (
 		<header className="supports-[backdrop-filter]:bg-background/72 sticky top-0 z-50 border-b border-white/40 px-4 backdrop-blur-xl sm:px-6">
 			<div className="m-auto flex h-18 w-full max-w-5xl items-center justify-between">
@@ -26,8 +33,18 @@ export default function Header() {
 				</Link>
 				<div className="flex items-center gap-4">
 					<ThemeButton />
-					<NotificationButton />
-					<ProfileButton />
+					{session ? (
+						<>
+							<NotificationButton />
+							<ProfileButton />
+						</>
+					) : (
+						<Button asChild variant="outline" size="sm">
+							<Link to={buildPathWithNext('/sign-in', currentPath)}>
+								로그인/회원가입
+							</Link>
+						</Button>
+					)}
 				</div>
 			</div>
 		</header>

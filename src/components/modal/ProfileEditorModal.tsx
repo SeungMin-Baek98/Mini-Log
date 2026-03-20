@@ -91,6 +91,8 @@ export default function ProfileEditorModal() {
 		});
 	};
 
+	if (!session) return null;
+
 	return (
 		<Dialog open={isOpen} onOpenChange={close}>
 			<DialogContent className="flex flex-col gap-5">

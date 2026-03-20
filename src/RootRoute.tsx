@@ -17,15 +17,15 @@ export default function RootRoute() {
 		<Routes>
 			<Route element={<GlobalLayout />}>
 				<Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+				<Route path="/" element={<IndexPage />} />
+				<Route path="/post/:postId" element={<PostDetailPage />} />
+				<Route path="/profile/:userId" element={<ProfileDetailPage />} />
 				<Route element={<GuestOnlyLayout />}>
 					<Route path="/sign-in" element={<SigninPage />} />
 					<Route path="/sign-up" element={<SignUpPage />} />
 					<Route path="/forget-password" element={<ForgetPasswordPage />} />
 				</Route>
 				<Route element={<MemberOnlyLayout />}>
-					<Route path="/" element={<IndexPage />} />
-					<Route path="/post/:postId" element={<PostDetailPage />} />
-					<Route path="/profile/:userId" element={<ProfileDetailPage />} />
 					<Route path="/reset-password" element={<ResetPasswordPage />} />
 				</Route>
 				{/* 위의 경로 이외에 경로 접속시 Index페이지로 Redirect */}

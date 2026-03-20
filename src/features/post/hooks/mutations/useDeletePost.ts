@@ -18,7 +18,7 @@ export default function useDeletePost(callbacks?: UseMutationCallback) {
 			}
 
 			queryClient.removeQueries({
-				queryKey: QUERY_KEYS.post.byId(deletedPost.id)
+				queryKey: QUERY_KEYS.post.byIdBase(deletedPost.id)
 			});
 
 			await queryClient.invalidateQueries({

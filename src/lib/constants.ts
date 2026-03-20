@@ -7,9 +7,27 @@ export const QUERY_KEYS = {
 	},
 	post: {
 		all: ['post'],
-		list: ['post', 'list'],
-		userList: (userId: string) => ['post', 'userList', userId],
-		byId: (postId: number) => ['post', 'id', postId],
+		list: (viewerId = ANONYMOUS_VIEWER_ID) => [
+			'post',
+			'list',
+			'viewer',
+			viewerId
+		],
+		userList: (userId: string, viewerId = ANONYMOUS_VIEWER_ID) => [
+			'post',
+			'userList',
+			userId,
+			'viewer',
+			viewerId
+		],
+		byIdBase: (postId: number) => ['post', 'id', postId],
+		byId: (postId: number, viewerId = ANONYMOUS_VIEWER_ID) => [
+			'post',
+			'id',
+			postId,
+			'viewer',
+			viewerId
+		],
 		calendar: (userId: string, monthKey: string) => [
 			'post',
 			'calendar',
@@ -39,6 +57,8 @@ export const QUERY_KEYS = {
 		historyByUser: (userId: string) => ['insight', 'history', userId]
 	}
 };
+
+export const ANONYMOUS_VIEWER_ID = 'anonymous';
 
 export const BUCKET_NAME = 'uploads';
 

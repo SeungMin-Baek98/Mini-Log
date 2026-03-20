@@ -6,11 +6,13 @@ import { useWeeklyInsightData } from '@/features/insight/hooks/queries/useWeekly
 import { useSession } from '@/store/session';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
+import { useRequireAuth } from '@/features/auth/hooks/useRequireAuth';
 
 const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
 export default function WeeklyInsightCard() {
 	const session = useSession();
+	const requireAuth = useRequireAuth();
 	const { data: profile, isLoading: isProfileLoading } = useProfileData(
 		session?.user.id
 	);
@@ -38,6 +40,14 @@ export default function WeeklyInsightCard() {
 	}, [latestRecap?.periodEnd, isJustCreated]);
 
 	const handleGenerateInsight = async () => {
+		if (
+			!requireAuth({
+				message: 'AI 주간 회고는 로그인 후 생성할 수 있어요.'
+			})
+		) {
+			return;
+		}
+
 		try {
 			await generateInsight();
 			setIsJustCreated(true);
@@ -57,8 +67,9 @@ export default function WeeklyInsightCard() {
 	if (isHidden) return null;
 
 	return (
-		<section className="border-border/80 relative overflow-hidden rounded-[1.75rem] border bg-[linear-gradient(135deg,rgba(255,253,249,0.92),rgba(243,234,220,0.88))] p-5 shadow-[0_18px_40px_rgba(96,76,48,0.06)] sm:p-6">
-			<div className="bg-primary/10 absolute top-0 right-0 h-28 w-28 rounded-full blur-3xl" />
+		<section className="border-border/70 relative overflow-hidden rounded-[1.75rem] border bg-[linear-gradient(145deg,color-mix(in_oklab,var(--card)_88%,white)_0%,color-mix(in_oklab,var(--secondary)_72%,white)_58%,color-mix(in_oklab,var(--accent)_24%,white)_100%)] p-5 shadow-[0_18px_40px_rgba(96,76,48,0.06)] sm:p-6 dark:bg-[linear-gradient(145deg,color-mix(in_oklab,var(--card)_90%,black)_0%,color-mix(in_oklab,var(--secondary)_66%,black)_58%,color-mix(in_oklab,var(--accent)_16%,black)_100%)] dark:shadow-[0_20px_46px_rgba(0,0,0,0.28)]">
+			<div className="bg-primary/12 dark:bg-primary/18 absolute top-0 right-0 h-28 w-28 rounded-full blur-3xl" />
+			<div className="bg-accent/14 dark:bg-accent/18 absolute bottom-0 left-0 h-24 w-24 rounded-full blur-2xl" />
 			<div className="relative flex items-center justify-between gap-4 max-sm:flex-col max-sm:items-start">
 				<div>
 					<p className="text-primary/70 mb-2 text-xs font-medium tracking-[0.22em] uppercase">
@@ -67,6 +78,8 @@ export default function WeeklyInsightCard() {
 					<h2 className="text-2xl font-semibold">AI 주간 회고</h2>
 					<p className="text-muted-foreground mt-2 text-sm leading-6">
 						지난 한 주의 기록을 차분하게 정리해서 알림으로 보내드려요.
+						<br />
+						(단 가입 후 일주일이 지난 사용자에게만 보여집니다)
 					</p>
 				</div>
 				<Button

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate, useSearchParams } from 'react-router';
 import { toast } from 'sonner';
 
 import { Input } from '@/components/ui/input';
@@ -13,16 +13,31 @@ import {
 import { generateErrorMessage } from '@/lib/error';
 import { useSignInWithPassword } from '@/features/auth/hooks/mutations/useSignInWithPassword';
 import { useSignInWithOAuth } from '@/features/auth/hooks/mutations/useSignInWithOAuth';
+import {
+	buildPathWithNext,
+	getAuthRedirectPath
+} from '@/features/auth/lib/redirect';
 
 import gitHubLogo from '@/assets/github-mark.svg';
 import googleLogo from '@/assets/google-icon.png';
 import kakaoLogo from '@/assets/kakaotalk_sharing_btn_small.png';
 
 export default function SignInPage() {
+	const navigate = useNavigate();
+	const [searchParams] = useSearchParams();
+	const nextPath = getAuthRedirectPath(searchParams.get('next'));
+	const oauthRedirectTo = `${import.meta.env.VITE_PUBLIC_URL}${buildPathWithNext(
+		'/sign-in',
+		nextPath
+	)}`;
+
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const { mutate: signInWithPassword, isPending: isSignInWithPasswordPending } =
 		useSignInWithPassword({
+			onSuccess: () => {
+				navigate(nextPath, { replace: true });
+			},
 			onError: error => {
 				const message = generateErrorMessage(error);
 				toast.error(message, {
@@ -52,17 +67,17 @@ export default function SignInPage() {
 
 	/** 깃허브 로그인 */
 	const handleSignInWithGithubClick = () => {
-		signInWithOAuth('github');
+		signInWithOAuth({ provider: 'github', redirectTo: oauthRedirectTo });
 	};
 
 	/** 카카오 로그인 */
 	const handleSignInWithKakaoClick = () => {
-		signInWithOAuth('kakao');
+		signInWithOAuth({ provider: 'kakao', redirectTo: oauthRedirectTo });
 	};
 
 	/** 구글 로그인 */
 	const handleSignInWithGoogleClick = () => {
-		signInWithOAuth('google');
+		signInWithOAuth({ provider: 'google', redirectTo: oauthRedirectTo });
 	};
 
 	const isPending = isSignInWithPasswordPending || isSignInWithOAuthPending;
@@ -98,10 +113,7 @@ export default function SignInPage() {
 				/>
 			</AuthFieldGroup>
 			<AuthFieldGroup>
-				<AuthSubmitButton
-					disabled={isPending}
-					type="submit"
-					className="mt-10">
+				<AuthSubmitButton disabled={isPending} type="submit" className="mt-10">
 					로그인
 				</AuthSubmitButton>
 				<div className="flex flex-col gap-9">
@@ -135,12 +147,14 @@ export default function SignInPage() {
 			</AuthFieldGroup>
 
 			<AuthLinkList className="mt-4">
-				<Link className="text-muted-foreground hover:underline" to={'/sign-up'}>
+				<Link
+					className="text-muted-foreground hover:underline"
+					to={buildPathWithNext('/sign-up', nextPath)}>
 					계정이 없으시다면? 회원가입
 				</Link>
 				<Link
 					className="text-muted-foreground hover:underline"
-					to={'/forget-password'}>
+					to={buildPathWithNext('/forget-password', nextPath)}>
 					비밀번호를 잊으셨나요?
 				</Link>
 			</AuthLinkList>

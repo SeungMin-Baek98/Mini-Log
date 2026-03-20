@@ -12,7 +12,7 @@ export function useCreateComment(callbacks?: UseMutationCallback) {
 
 	return useMutation({
 		mutationFn: createComment,
-		onSuccess: newComment => {
+		onSuccess: async newComment => {
 			if (callbacks?.onSuccess) callbacks.onSuccess();
 
 			queryClient.setQueryData<Comment[]>(
@@ -29,7 +29,7 @@ export function useCreateComment(callbacks?: UseMutationCallback) {
 			);
 
 			queryClient.setQueryData<Post>(
-				QUERY_KEYS.post.byId(newComment.post_id),
+				QUERY_KEYS.post.byId(newComment.post_id, session?.user.id),
 				post => {
 					if (!post) return post;
 					return {
@@ -38,6 +38,10 @@ export function useCreateComment(callbacks?: UseMutationCallback) {
 					};
 				}
 			);
+
+			await queryClient.invalidateQueries({
+				queryKey: QUERY_KEYS.post.all
+			});
 		},
 		onError: error => {
 			if (callbacks?.onError) callbacks.onError(error);

@@ -2,6 +2,7 @@ import { useSession } from '@/store/session';
 import { HeartIcon } from 'lucide-react';
 import { toast } from 'sonner';
 
+import { useRequireAuth } from '@/features/auth/hooks/useRequireAuth';
 import useTogglePostLike from '@/features/post/hooks/mutations/useTogglePostLike';
 
 export default function LikePostButton({
@@ -14,6 +15,7 @@ export default function LikePostButton({
 	isLiked: boolean;
 }) {
 	const session = useSession();
+	const requireAuth = useRequireAuth();
 
 	const { mutate: togglePostLike, isPending } = useTogglePostLike({
 		onError: error => {
@@ -24,17 +26,27 @@ export default function LikePostButton({
 	});
 
 	const handleToggleLike = () => {
+		if (
+			!requireAuth({
+				message: '좋아요는 로그인 후 남길 수 있어요.'
+			})
+		) {
+			return;
+		}
+
 		togglePostLike({ postId: id, userId: session!.user.id });
 	};
 
 	return (
-		<div
+		<button
+			type="button"
 			onClick={handleToggleLike}
-			className="hover:bg-muted flex cursor-pointer items-center gap-2 rounded-xl border-1 p-2 px-4 text-sm">
+			disabled={isPending}
+			className="hover:bg-muted disabled:text-muted-foreground flex cursor-pointer items-center gap-2 rounded-xl border-1 p-2 px-4 text-sm disabled:cursor-not-allowed">
 			<HeartIcon
 				className={`h-4 w-4 ${isLiked && 'fill-foreground border-foreground'}`}
 			/>
 			<span>{likeCount}</span>
-		</div>
+		</button>
 	);
 }

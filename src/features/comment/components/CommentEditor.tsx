@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { useCreateComment } from '@/features/comment/hooks/mutations/useCreateComment';
 import { toast } from 'sonner';
 import { useUpdateComment } from '@/features/comment/hooks/mutations/useUpdateComments';
+import { useSession } from '@/store/session';
+import { useRequireAuth } from '@/features/auth/hooks/useRequireAuth';
 
 type CreateMode = {
 	type: 'CREATE';
@@ -28,6 +30,8 @@ type ReplyMode = {
 type Props = CreateMode | EditMode | ReplyMode;
 
 export default function CommentEditor(props: Props) {
+	const session = useSession();
+	const requireAuth = useRequireAuth();
 	const initialEditContent =
 		props.type === 'EDIT' ? props.initialContent : undefined;
 
@@ -63,6 +67,12 @@ export default function CommentEditor(props: Props) {
 
 	const handleSubmitClick = () => {
 		if (content.trim() === '') return;
+		if ((props.type === 'CREATE' || props.type === 'REPLY') && !session) {
+			requireAuth({
+				message: '댓글은 로그인 후 남길 수 있어요.'
+			});
+			return;
+		}
 
 		if (props.type === 'CREATE') {
 			createComment({ postId: props.postId, content });
@@ -84,11 +94,50 @@ export default function CommentEditor(props: Props) {
 
 	const isPending = isCreateCommentPending || isUpdateCommentPending;
 
+	if (!session && props.type !== 'EDIT') {
+		return (
+			<div className="flex flex-col gap-2">
+				<Textarea
+					readOnly
+					value=""
+					placeholder="댓글을 남겨보세요."
+					onClick={() =>
+						requireAuth({
+							message: '댓글은 로그인 후 남길 수 있어요.'
+						})
+					}
+					onFocus={() =>
+						requireAuth({
+							message: '댓글은 로그인 후 남길 수 있어요.'
+						})
+					}
+				/>
+				<div className="flex justify-end gap-2">
+					{props.type === 'REPLY' && (
+						<Button variant={'outline'} onClick={() => props.onClose()}>
+							취소
+						</Button>
+					)}
+					<Button
+						type="button"
+						onClick={() =>
+							requireAuth({
+								message: '댓글은 로그인 후 남길 수 있어요.'
+							})
+						}>
+						작성
+					</Button>
+				</div>
+			</div>
+		);
+	}
+
 	return (
 		<div className="flex flex-col gap-2">
 			<Textarea
 				disabled={isPending}
 				value={content}
+				placeholder="댓글을 남겨보세요."
 				onChange={e => {
 					setContent(e.target.value);
 				}}

@@ -45,9 +45,18 @@ export async function signInWithPassword({
 	return data;
 }
 
-export async function signInWithOAuth(provider: Provider) {
+export async function signInWithOAuth({
+	provider,
+	redirectTo
+}: {
+	provider: Provider;
+	redirectTo?: string;
+}) {
 	const { data, error } = await supabase.auth.signInWithOAuth({
-		provider
+		provider,
+		options: {
+			redirectTo
+		}
 	});
 
 	if (error) throw error;

@@ -12,9 +12,11 @@ import type { NestedComment } from '@/types';
 import defaultAvatar from '@/assets/default-avatar.jpg';
 import CommentEditor from './CommentEditor';
 import { cn } from '@/lib/utils';
+import { useRequireAuth } from '@/features/auth/hooks/useRequireAuth';
 
 export default function CommentItem(props: NestedComment) {
 	const session = useSession();
+	const requireAuth = useRequireAuth();
 	const openAlertModal = useOpenAlertModal();
 	const { mutate: deleteComment, isPending: isDeleteCommentPending } =
 		useDeleteComment({
@@ -33,6 +35,15 @@ export default function CommentItem(props: NestedComment) {
 		setIsEditing(!isEditing);
 	};
 	const toggleIsReply = () => {
+		if (
+			!session &&
+			!requireAuth({
+				message: '답글은 로그인 후 남길 수 있어요.'
+			})
+		) {
+			return;
+		}
+
 		setIsReply(!isReply);
 	};
 	const toggleShowReplies = () => {

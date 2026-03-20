@@ -5,6 +5,9 @@ import type { UseMutationCallback } from '@/types';
 export function useSignInWithPassword(callbacks?: UseMutationCallback) {
 	return useMutation({
 		mutationFn: signInWithPassword,
+		onSuccess: () => {
+			if (callbacks?.onSuccess) callbacks.onSuccess();
+		},
 		onError: error => {
 			console.error(error);
 
