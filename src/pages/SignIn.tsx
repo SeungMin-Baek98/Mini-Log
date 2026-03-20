@@ -26,7 +26,9 @@ export default function SignInPage() {
 	const navigate = useNavigate();
 	const [searchParams] = useSearchParams();
 	const nextPath = getAuthRedirectPath(searchParams.get('next'));
-	const oauthRedirectTo = `${import.meta.env.VITE_PUBLIC_URL}${buildPathWithNext(
+	const publicBaseUrl =
+		import.meta.env.VITE_PUBLIC_URL || globalThis.location?.origin || '';
+	const oauthRedirectTo = `${publicBaseUrl}${buildPathWithNext(
 		'/sign-in',
 		nextPath
 	)}`;

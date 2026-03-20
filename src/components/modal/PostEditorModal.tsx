@@ -109,19 +109,18 @@ export default function PostEditorModal() {
 		if (!postEditorModal.isOpen) return;
 
 		if (postEditorModal.type === 'CREATE') {
-			if (
-				!requireAuth({
+			const userId = session?.user.id;
+			if (!userId) {
+				requireAuth({
 					message: '게시글 작성은 로그인 후 사용할 수 있어요.'
-				})
-			) {
-				postEditorModal.actions.close();
+				});
 				return;
 			}
 
 			createPost({
 				content,
 				images: images.map(image => image.file),
-				userId: session!.user.id
+				userId
 			});
 		} else {
 			if (content === postEditorModal.content) return;
@@ -160,10 +159,6 @@ export default function PostEditorModal() {
 	};
 
 	const isPending = isCreatePostPending || isUpdatePostPending;
-
-	if (!session && postEditorModal.isOpen && postEditorModal.type === 'CREATE') {
-		return null;
-	}
 
 	return (
 		<Dialog open={postEditorModal.isOpen} onOpenChange={handleCloseModal}>

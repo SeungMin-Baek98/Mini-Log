@@ -4,6 +4,10 @@ import type { Provider } from '@supabase/supabase-js';
 
 import supabase from '@/utils/supabase';
 
+function getPublicBaseUrl() {
+	return import.meta.env.VITE_PUBLIC_URL || globalThis.location?.origin || '';
+}
+
 export async function signOut() {
 	const { error } = await supabase.auth.signOut();
 
@@ -66,7 +70,7 @@ export async function signInWithOAuth({
 
 export async function requestPasswordResetEmail(email: string) {
 	const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-		redirectTo: `${import.meta.env.VITE_PUBLIC_URL}/reset-password`
+		redirectTo: `${getPublicBaseUrl()}/reset-password`
 	});
 
 	if (error) throw error;

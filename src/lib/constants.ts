@@ -1,3 +1,5 @@
+export const ANONYMOUS_VIEWER_ID = 'anonymous';
+
 export const QUERY_KEYS = {
 	profile: {
 		all: ['profile'],
@@ -57,8 +59,6 @@ export const QUERY_KEYS = {
 		historyByUser: (userId: string) => ['insight', 'history', userId]
 	}
 };
-
-export const ANONYMOUS_VIEWER_ID = 'anonymous';
 
 export const BUCKET_NAME = 'uploads';
 

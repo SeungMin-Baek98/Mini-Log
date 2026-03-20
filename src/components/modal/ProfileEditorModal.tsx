@@ -49,21 +49,28 @@ export default function ProfileEditorModal() {
 
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
-	// 모달이 닫혀있고 이전에 선택한 이미지가 있다면 URL 해제 (메모리 누수 방지)
+	// 모달이 닫히거나 세션이 종료되면 미리보기와 모달 상태를 정리
 	useEffect(() => {
-		if (!isOpen) {
-			if (avatarImage) URL.revokeObjectURL(avatarImage.previewUrl);
+		if (!isOpen || !session) {
+			if (!session && isOpen) {
+				close();
+			}
+
+			if (avatarImage) {
+				URL.revokeObjectURL(avatarImage.previewUrl);
+				setAvatarImage(null);
+			}
 		}
-	}, [avatarImage, isOpen]);
+	}, [avatarImage, close, isOpen, session]);
 
 	// 서버에서 프로필 데이터를 불러오거나 모달이 열릴 때 상태 초기화
 	useEffect(() => {
-		if (isOpen && profile) {
+		if (isOpen && profile && session) {
 			setNickname(profile.nickname || '');
 			setBio(profile.bio || '');
 			setAvatarImage(null); // 새롭게 선택된 이미지previewUrl만 저장이 되기때문에 모달이 열릴 때 초기화만 하면 된다.
 		}
-	}, [profile, isOpen]);
+	}, [profile, isOpen, session]);
 
 	const handleUpdateProfileClick = () => {
 		if (nickname.trim() === '') return;

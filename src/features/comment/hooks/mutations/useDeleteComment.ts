@@ -1,5 +1,5 @@
 import { deleteComment } from '@/features/comment/api/comment';
-import { QUERY_KEYS } from '@/lib/constants';
+import { ANONYMOUS_VIEWER_ID, QUERY_KEYS } from '@/lib/constants';
 import { useSession } from '@/store/session';
 import { type Comment, type Post, type UseMutationCallback } from '@/types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -7,6 +7,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 export function useDeleteComment(callbacks?: UseMutationCallback) {
 	const queryClient = useQueryClient();
 	const session = useSession();
+	const viewerId = session?.user.id ?? ANONYMOUS_VIEWER_ID;
 
 	return useMutation({
 		mutationFn: deleteComment,
@@ -31,7 +32,7 @@ export function useDeleteComment(callbacks?: UseMutationCallback) {
 			);
 
 			queryClient.setQueryData<Post>(
-				QUERY_KEYS.post.byId(deletedComment.post_id, session?.user.id),
+				QUERY_KEYS.post.byId(deletedComment.post_id, viewerId),
 				post => {
 					if (!post) return post;
 

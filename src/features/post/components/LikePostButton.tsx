@@ -37,11 +37,17 @@ export default function LikePostButton({
 		togglePostLike({ postId: id, userId: session!.user.id });
 	};
 
+	const likeButtonLabel = isLiked
+		? `좋아요 취소, 현재 좋아요 ${likeCount}개`
+		: `좋아요, 현재 좋아요 ${likeCount}개`;
+
 	return (
 		<button
 			type="button"
 			onClick={handleToggleLike}
 			disabled={isPending}
+			aria-label={likeButtonLabel}
+			aria-pressed={isLiked}
 			className="hover:bg-muted disabled:text-muted-foreground flex cursor-pointer items-center gap-2 rounded-xl border-1 p-2 px-4 text-sm disabled:cursor-not-allowed">
 			<HeartIcon
 				className={`h-4 w-4 ${isLiked && 'fill-foreground border-foreground'}`}
