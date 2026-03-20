@@ -1,6 +1,6 @@
 import { useSession } from '@/store/session';
 import { useProfileData } from '@/features/profile/hooks/queries/useProfileData';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Fallback from '@/components/Fallback';
 import Loader from '@/components/Loader';
@@ -57,6 +57,14 @@ export default function ProfileInfo({
 	} = useProfileData(userId);
 	const { data: profileStats, isPending: isFetchingProfileStats } =
 		useProfilePostStats(userId);
+
+	useEffect(() => {
+		// 이 페이지 접속 시
+		// 오늘 날짜 선택 상태로 초기화
+		if (!selectedDate) {
+			onDateChange?.(new Date());
+		}
+	}, [selectedDate, onDateChange]);
 
 	if (fetchProfileError) return <Fallback />;
 	if (isFetchingProfilePending) return <Loader />;
