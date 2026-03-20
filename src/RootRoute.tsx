@@ -29,6 +29,20 @@ import {
 } from '@/lib/route-error';
 import supabase from '@/utils/supabase';
 
+async function getCurrentSessionOrThrow() {
+	const { data, error } = await supabase.auth.getSession();
+
+	if (error) {
+		throw new AppRouteError({
+			status: 500,
+			title: '세션을 확인하지 못했어요',
+			description: '잠시 후 다시 시도해주세요.'
+		});
+	}
+
+	return data.session;
+}
+
 async function postDetailLoader({ params }: LoaderFunctionArgs) {
 	const postId = parsePositiveInteger(params.postId);
 
@@ -40,17 +54,16 @@ async function postDetailLoader({ params }: LoaderFunctionArgs) {
 		});
 	}
 
-	const {
-		data: { session }
-	} = await supabase.auth.getSession();
+	const session = await getCurrentSessionOrThrow();
 
 	try {
-		await queryClient.ensureQueryData(
-			getPostByIdQueryOptions({
+		await queryClient.fetchQuery({
+			...getPostByIdQueryOptions({
 				postId,
 				userId: session?.user.id
-			})
-		);
+			}),
+			staleTime: 0
+		});
 	} catch (error) {
 		if (isNotFoundRouteError(error)) {
 			throw new AppRouteError({
@@ -81,17 +94,16 @@ async function profileDetailLoader({ params }: LoaderFunctionArgs) {
 		});
 	}
 
-	const {
-		data: { session }
-	} = await supabase.auth.getSession();
+	const session = await getCurrentSessionOrThrow();
 
 	try {
-		await queryClient.ensureQueryData(
-			getProfileQueryOptions({
+		await queryClient.fetchQuery({
+			...getProfileQueryOptions({
 				userId,
 				sessionUserId: session?.user.id
-			})
-		);
+			}),
+			staleTime: 0
+		});
 	} catch (error) {
 		if (isNotFoundRouteError(error)) {
 			throw new AppRouteError({

@@ -34,9 +34,13 @@ export function isUuid(value: string) {
 export function parsePositiveInteger(value?: string) {
 	if (!value) return null;
 
-	const parsedValue = Number(value);
+	if (!/^[0-9]+$/.test(value)) {
+		return null;
+	}
 
-	if (!Number.isInteger(parsedValue) || parsedValue <= 0) {
+	const parsedValue = Number.parseInt(value, 10);
+
+	if (!Number.isSafeInteger(parsedValue) || parsedValue <= 0) {
 		return null;
 	}
 
