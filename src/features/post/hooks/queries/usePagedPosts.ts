@@ -1,5 +1,5 @@
 import { fetchPostsPage } from '@/features/post/api/post';
-import { QUERY_KEYS } from '@/lib/constants';
+import { ANONYMOUS_VIEWER_ID, QUERY_KEYS } from '@/lib/constants';
 import { useSession } from '@/store/session';
 import type { PostSortOrder } from '@/types';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -28,9 +28,10 @@ export function usePagedPostsData(options?: Options) {
 
 	const queryClient = useQueryClient();
 	const session = useSession();
+	const viewerId = session?.user.id ?? ANONYMOUS_VIEWER_ID;
 	const baseKey = !authorId
-		? QUERY_KEYS.post.list
-		: QUERY_KEYS.post.userList(authorId);
+		? QUERY_KEYS.post.list(viewerId)
+		: QUERY_KEYS.post.userList(authorId, viewerId);
 	const queryKey = dateKey
 		? [...baseKey, 'sort', sortOrder, 'date', dateKey, 'page', page]
 		: [...baseKey, 'sort', sortOrder, 'page', page];
@@ -44,14 +45,14 @@ export function usePagedPostsData(options?: Options) {
 			const { posts, totalCount } = await fetchPostsPage({
 				from,
 				to,
-				userId: session!.user.id,
+				userId: session?.user.id,
 				authorId,
 				dateRange,
 				sortOrder
 			});
 
 			posts.forEach(post => {
-				queryClient.setQueryData(QUERY_KEYS.post.byId(post.id), post);
+				queryClient.setQueryData(QUERY_KEYS.post.byId(post.id, viewerId), post);
 			});
 
 			return {

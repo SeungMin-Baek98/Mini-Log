@@ -25,6 +25,10 @@ const useSessionStore = create(
 	)
 );
 
+export const syncSessionStore = (session: Session | null) => {
+	useSessionStore.getState().actions.setSession(session);
+};
+
 /** sessionState 접근하는 Custom Hook   */
 export const useSession = () => {
 	const session = useSessionStore(store => store.session);

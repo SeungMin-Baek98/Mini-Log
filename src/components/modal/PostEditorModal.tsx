@@ -6,6 +6,7 @@ import { useCreatePost } from '@/features/post/hooks/mutations/useCreatePost';
 import { Carousel, CarouselContent, CarouselItem } from '../ui/carousel';
 import { useSession } from '@/store/session';
 import { useOpenAlertModal } from '@/store/alertModal';
+import { useRequireAuth } from '@/features/auth/hooks/useRequireAuth';
 
 import { Button } from '../ui/button';
 import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
@@ -18,6 +19,7 @@ type Image = {
 
 export default function PostEditorModal() {
 	const session = useSession();
+	const requireAuth = useRequireAuth();
 	const postEditorModal = usePostEditorModal();
 	const modalType = postEditorModal.isOpen ? postEditorModal.type : null;
 	const editContent =
@@ -107,10 +109,18 @@ export default function PostEditorModal() {
 		if (!postEditorModal.isOpen) return;
 
 		if (postEditorModal.type === 'CREATE') {
+			const userId = session?.user.id;
+			if (!userId) {
+				requireAuth({
+					message: '게시글 작성은 로그인 후 사용할 수 있어요.'
+				});
+				return;
+			}
+
 			createPost({
 				content,
 				images: images.map(image => image.file),
-				userId: session!.user.id
+				userId
 			});
 		} else {
 			if (content === postEditorModal.content) return;

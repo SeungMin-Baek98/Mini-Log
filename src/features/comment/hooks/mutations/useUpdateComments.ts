@@ -1,14 +1,15 @@
 import { updateComment } from '@/features/comment/api/comment';
 import { QUERY_KEYS } from '@/lib/constants';
+import { useQueryClient } from '@tanstack/react-query';
 import type { Comment, UseMutationCallback } from '@/types';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
 export function useUpdateComment(callbacks?: UseMutationCallback) {
 	const queryClient = useQueryClient();
 
 	return useMutation({
 		mutationFn: updateComment,
-		onSuccess: updatedComment => {
+		onSuccess: async updatedComment => {
 			if (callbacks?.onSuccess) callbacks.onSuccess();
 
 			queryClient.setQueryData<Comment[]>(

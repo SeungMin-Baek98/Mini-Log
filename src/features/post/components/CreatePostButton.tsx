@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { PlusCircleIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
+import { useRequireAuth } from '@/features/auth/hooks/useRequireAuth';
 
 type ButtonProps = {
 	onClick: () => void;
@@ -66,6 +67,19 @@ function NormalButton({
 export default function CreatePostButton() {
 	const [isScrollDown, setIsScrollDown] = useState(false);
 	const openCreatePostModal = useOpenCreatePostModal();
+	const requireAuth = useRequireAuth();
+
+	const handleOpenCreatePostModal = () => {
+		if (
+			!requireAuth({
+				message: '게시글 작성은 로그인 후 사용할 수 있어요.'
+			})
+		) {
+			return;
+		}
+
+		openCreatePostModal();
+	};
 
 	useEffect(() => {
 		const handleScroll = () => {
@@ -90,10 +104,15 @@ export default function CreatePostButton() {
 	return (
 		<>
 			<div className="min-h-[72px]">
-				<NormalButton onClick={openCreatePostModal} isHidden={isScrollDown} />
+				<NormalButton
+					onClick={handleOpenCreatePostModal}
+					isHidden={isScrollDown}
+				/>
 			</div>
 			<AnimatePresence>
-				{isScrollDown ? <FloatingButton onClick={openCreatePostModal} /> : null}
+				{isScrollDown ? (
+					<FloatingButton onClick={handleOpenCreatePostModal} />
+				) : null}
 			</AnimatePresence>
 		</>
 	);

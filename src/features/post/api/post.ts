@@ -1,7 +1,34 @@
 import { uploadImage } from '@/features/image/api/image';
-import type { PostEntity, PostSortOrder } from '@/types';
+import type { Post, PostEntity, PostSortOrder, ProfileEntity } from '@/types';
 
 import supabase from '@/utils/supabase';
+
+type PostRow = PostEntity & {
+	author: ProfileEntity;
+	myLiked?: Array<{ user_id: string }> | null;
+};
+
+function getPostSelectClause(userId?: string) {
+	if (!userId) {
+		return '*, author: profile!author_id (*)';
+	}
+
+	return '*, author: profile!author_id (*), myLiked: like!post_id (*)';
+}
+
+function applyViewerFilter<
+	T extends { eq: (column: string, value: string) => T }
+>(request: T, userId?: string) {
+	if (!userId) return request;
+	return request.eq('like.user_id', userId);
+}
+
+function mapPostWithViewerState(post: PostRow, userId?: string): Post {
+	return {
+		...post,
+		isLiked: !!userId && !!post.myLiked?.length
+	};
+}
 
 export async function fetchPosts({
 	from,
@@ -13,15 +40,15 @@ export async function fetchPosts({
 }: {
 	from: number;
 	to: number;
-	userId: string;
+	userId?: string;
 	authorId?: string;
 	dateRange?: { start: Date; end: Date };
 	sortOrder?: PostSortOrder;
 }) {
-	const request = supabase
-		.from('post')
-		.select('*, author: profile!author_id (*), myLiked: like!post_id (*)')
-		.eq('like.user_id', userId)
+	const request = applyViewerFilter(
+		supabase.from('post').select(getPostSelectClause(userId)) as any,
+		userId
+	)
 		.order('created_at', { ascending: sortOrder === 'oldest' })
 		.range(from, to);
 
@@ -37,10 +64,7 @@ export async function fetchPosts({
 
 	if (error) throw error;
 
-	return data.map(post => ({
-		...post,
-		isLiked: post.myLiked && post.myLiked.length > 0
-	}));
+	return (data as PostRow[]).map(post => mapPostWithViewerState(post, userId));
 }
 
 export async function fetchPostsPage({
@@ -53,17 +77,17 @@ export async function fetchPostsPage({
 }: {
 	from: number;
 	to: number;
-	userId: string;
+	userId?: string;
 	authorId?: string;
 	dateRange?: { start: Date; end: Date };
 	sortOrder?: PostSortOrder;
 }) {
-	const request = supabase
-		.from('post')
-		.select('*, author: profile!author_id (*), myLiked: like!post_id (*)', {
-			count: 'exact'
-		})
-		.eq('like.user_id', userId)
+	const request = applyViewerFilter(
+		supabase
+			.from('post')
+			.select(getPostSelectClause(userId), { count: 'exact' }) as any,
+		userId
+	)
 		.order('created_at', { ascending: sortOrder === 'oldest' })
 		.range(from, to);
 
@@ -79,10 +103,9 @@ export async function fetchPostsPage({
 	if (error) throw error;
 
 	return {
-		posts: data.map(post => ({
-			...post,
-			isLiked: post.myLiked && post.myLiked.length > 0
-		})),
+		posts: (data as PostRow[]).map(post =>
+			mapPostWithViewerState(post, userId)
+		),
 		totalCount: count ?? 0
 	};
 }
@@ -92,21 +115,18 @@ export async function fetchPostById({
 	userId
 }: {
 	postId: number;
-	userId: string;
+	userId?: string;
 }) {
-	const { data, error } = await supabase
-		.from('post')
-		.select('*, author: profile!author_id (*), myLiked: like!post_id (*)')
-		.eq('like.user_id', userId)
+	const { data, error } = await applyViewerFilter(
+		supabase.from('post').select(getPostSelectClause(userId)) as any,
+		userId
+	)
 		.eq('id', postId)
 		.single();
 
 	if (error) throw error;
 
-	return {
-		...data,
-		isLiked: data.myLiked && data.myLiked.length > 0
-	};
+	return mapPostWithViewerState(data as PostRow, userId);
 }
 
 export async function fetchPostsByDate({
@@ -120,7 +140,7 @@ export async function fetchPostsByDate({
 }) {
 	const { data, error } = await supabase
 		.from('post')
-		.select('*, author: profile!author_id (*), myLiked: like!post_id (*)')
+		.select('created_at')
 		.eq('author_id', userId)
 		.gte('created_at', start.toISOString())
 		.lte('created_at', end.toISOString());

@@ -1,5 +1,5 @@
 import { fetchPosts } from '@/features/post/api/post';
-import { QUERY_KEYS } from '@/lib/constants';
+import { ANONYMOUS_VIEWER_ID, QUERY_KEYS } from '@/lib/constants';
 import { useSession } from '@/store/session';
 import type { PostSortOrder } from '@/types';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
@@ -26,10 +26,11 @@ export function useInfinitePostsData(options?: Options) {
 
 	const queryClient = useQueryClient();
 	const session = useSession();
+	const viewerId = session?.user.id ?? ANONYMOUS_VIEWER_ID;
 
 	const baseKey = !authorId
-		? QUERY_KEYS.post.list
-		: QUERY_KEYS.post.userList(authorId);
+		? QUERY_KEYS.post.list(viewerId)
+		: QUERY_KEYS.post.userList(authorId, viewerId);
 	const queryKey = dateKey
 		? [...baseKey, 'sort', sortOrder, 'date', dateKey]
 		: [...baseKey, 'sort', sortOrder];
@@ -44,14 +45,14 @@ export function useInfinitePostsData(options?: Options) {
 			const posts = await fetchPosts({
 				from,
 				to,
-				userId: session!.user.id,
+				userId: session?.user.id,
 				authorId,
 				dateRange,
 				sortOrder
 			});
 
 			posts.forEach(post => {
-				queryClient.setQueryData(QUERY_KEYS.post.byId(post.id), post);
+				queryClient.setQueryData(QUERY_KEYS.post.byId(post.id, viewerId), post);
 			});
 
 			return posts.map(post => post.id);

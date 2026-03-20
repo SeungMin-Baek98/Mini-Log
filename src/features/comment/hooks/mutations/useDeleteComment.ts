@@ -1,14 +1,17 @@
 import { deleteComment } from '@/features/comment/api/comment';
-import { QUERY_KEYS } from '@/lib/constants';
+import { ANONYMOUS_VIEWER_ID, QUERY_KEYS } from '@/lib/constants';
+import { useSession } from '@/store/session';
 import { type Comment, type Post, type UseMutationCallback } from '@/types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export function useDeleteComment(callbacks?: UseMutationCallback) {
 	const queryClient = useQueryClient();
+	const session = useSession();
+	const viewerId = session?.user.id ?? ANONYMOUS_VIEWER_ID;
 
 	return useMutation({
 		mutationFn: deleteComment,
-		onSuccess: deletedComment => {
+		onSuccess: async deletedComment => {
 			if (callbacks?.onSuccess) callbacks.onSuccess();
 
 			const cachedComments = queryClient.getQueryData<Comment[]>(
@@ -29,7 +32,7 @@ export function useDeleteComment(callbacks?: UseMutationCallback) {
 			);
 
 			queryClient.setQueryData<Post>(
-				QUERY_KEYS.post.byId(deletedComment.post_id),
+				QUERY_KEYS.post.byId(deletedComment.post_id, viewerId),
 				post => {
 					if (!post) return post;
 
@@ -39,6 +42,10 @@ export function useDeleteComment(callbacks?: UseMutationCallback) {
 					};
 				}
 			);
+
+			await queryClient.invalidateQueries({
+				queryKey: QUERY_KEYS.post.all
+			});
 		},
 		onError: error => {
 			if (callbacks?.onError) callbacks.onError(error);
