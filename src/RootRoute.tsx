@@ -19,7 +19,10 @@ import GuestOnlyLayout from './components/layout/GuestOnlyLayout';
 import MemberOnlyLayout from './components/layout/MemberOnlyLayout';
 import RouteErrorPage from './pages/RouteError';
 import { queryClient } from '@/lib/queryClient';
-import { getPostByIdQueryOptions } from '@/features/post/hooks/queries/usePostByIdData';
+import {
+	getPostByIdQueryOptions,
+	POST_DETAIL_ROUTE_ID
+} from '@/features/post/hooks/queries/usePostByIdData';
 import { getProfileQueryOptions } from '@/features/profile/hooks/queries/useProfileData';
 import {
 	AppRouteError,
@@ -80,7 +83,9 @@ async function postDetailLoader({ params }: LoaderFunctionArgs) {
 		});
 	}
 
-	return null;
+	return {
+		viewerUserId: session?.user.id ?? null
+	};
 }
 
 async function profileDetailLoader({ params }: LoaderFunctionArgs) {
@@ -129,6 +134,7 @@ export const router = createBrowserRouter(
 			<Route index element={<IndexPage />} />
 			<Route path="privacy-policy" element={<PrivacyPolicyPage />} />
 			<Route
+				id={POST_DETAIL_ROUTE_ID}
 				path="post/:postId"
 				loader={postDetailLoader}
 				element={<PostDetailPage />}
