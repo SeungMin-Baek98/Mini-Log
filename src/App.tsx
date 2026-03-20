@@ -1,12 +1,14 @@
+import { RouterProvider } from 'react-router';
+
 import ModalProvider from './provider/ModalProvider';
 import SessionProvider from './provider/SessionProvider';
-import RootRoute from './RootRoute';
+import { router } from './RootRoute';
 
 export default function App() {
 	return (
 		<SessionProvider>
 			<ModalProvider>
-				<RootRoute />
+				<RouterProvider router={router} />
 			</ModalProvider>
 		</SessionProvider>
 	);
