@@ -34,9 +34,8 @@ export default function CommentItem(props: NestedComment) {
 	const toggleIsEditing = () => {
 		setIsEditing(!isEditing);
 	};
-	const toggleIsReply = () => {
+	const openReplyEditor = () => {
 		if (
-			!session &&
 			!requireAuth({
 				message: '답글은 로그인 후 남길 수 있어요.'
 			})
@@ -44,7 +43,10 @@ export default function CommentItem(props: NestedComment) {
 			return;
 		}
 
-		setIsReply(!isReply);
+		setIsReply(true);
+	};
+	const closeReplyEditor = () => {
+		setIsReply(false);
 	};
 	const toggleShowReplies = () => {
 		setShowReplies(!showReplies);
@@ -100,11 +102,11 @@ export default function CommentItem(props: NestedComment) {
 					)}
 					<div className="text-muted-foreground flex justify-between text-sm">
 						<div className="flex items-center gap-2">
-							<div
-								onClick={toggleIsReply}
-								className="cursor-pointer hover:underline">
-								댓글
-							</div>
+								<div
+									onClick={openReplyEditor}
+									className="cursor-pointer hover:underline">
+									댓글
+								</div>
 							{props.children.length > 0 && (
 								<>
 									<div className="bg-border h-[13px] w-[2px]"></div>
@@ -141,14 +143,14 @@ export default function CommentItem(props: NestedComment) {
 				</div>
 			</div>
 			{isReply && (
-				<CommentEditor
-					type="REPLY"
-					postId={props.post_id}
-					parentCommentId={props.id}
-					rootCommentId={props.root_comment_id || props.id}
-					onClose={toggleIsReply}
-				/>
-			)}
+					<CommentEditor
+						type="REPLY"
+						postId={props.post_id}
+						parentCommentId={props.id}
+						rootCommentId={props.root_comment_id || props.id}
+						onClose={closeReplyEditor}
+					/>
+				)}
 			{showReplies &&
 				props.children.map(comment => (
 					<CommentItem key={comment.id} {...comment} />
