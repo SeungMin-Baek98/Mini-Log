@@ -41,7 +41,7 @@ export default function Header() {
 					) : (
 						<Button asChild variant="outline" size="sm">
 							<Link to={buildPathWithNext('/sign-in', currentPath)}>
-								로그인/회원가입
+								로그인
 							</Link>
 						</Button>
 					)}
