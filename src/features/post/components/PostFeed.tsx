@@ -7,9 +7,41 @@ import type { PostSortOrder } from '@/types';
 import Fallback from '@/components/Fallback';
 import Loader from '@/components/Loader';
 import PostItem from './PostItem';
-import Nodata from '@/components/Nodata';
+import NoData from '@/components/Nodata';
 import { Pagination } from '@/components/ui/pagination';
 import FeedSkeleton from '@/components/skeleton/FeedSkeleton';
+
+function getEmptyStateCopy({
+	authorId,
+	date
+}: {
+	authorId?: string;
+	date?: Date | null;
+}) {
+	if (date) {
+		return {
+			eyebrow: 'Selected day',
+			title: '선택한 날짜에는 기록이 없어요',
+			description:
+				'달력을 조금 더 둘러보면 다른 날의 순간들을 다시 만날 수 있어요.'
+		};
+	}
+
+	if (authorId) {
+		return {
+			eyebrow: 'Quiet archive',
+			title: '이 프로필에는 아직 기록이 없어요',
+			description: '새로운 게시글이 생기면 이곳에서 차분하게 모아볼 수 있어요.'
+		};
+	}
+
+	return {
+		eyebrow: 'Fresh feed',
+		title: '아직 올라온 기록이 없어요',
+		description:
+			'첫 이야기가 올라오면 이 공간이 하루의 기록으로 천천히 채워질 거예요.'
+	};
+}
 
 export default function PostFeed({
 	authorId,
@@ -54,6 +86,7 @@ export default function PostFeed({
 	const totalPages = pagedQuery.data
 		? Math.ceil(totalCount / pagedQuery.data.pageSize)
 		: 0;
+	const emptyStateCopy = getEmptyStateCopy({ authorId, date });
 
 	useEffect(() => {
 		if (mode !== 'paged') return;
@@ -69,7 +102,7 @@ export default function PostFeed({
 
 		const hasPosts = infiniteQuery.data.pages.some(page => page.length > 0);
 		if (!hasPosts) {
-			return <Nodata />;
+			return <NoData {...emptyStateCopy} />;
 		}
 
 		return (
@@ -91,7 +124,7 @@ export default function PostFeed({
 	const postIds = pagedQuery.data.postIds;
 
 	if (totalCount === 0) {
-		return <Nodata />;
+		return <NoData {...emptyStateCopy} />;
 	}
 
 	if (page > totalPages) {
