@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+import { FeatureSurface } from '@/components/ui/surface';
 import { cn } from '@/lib/utils';
 
 const previewItems = [
@@ -103,58 +104,57 @@ function Chip({
 
 export default function AuthPreviewPanel() {
 	return (
-		<section className="border-border/70 relative overflow-visible rounded-[2rem] border bg-[linear-gradient(145deg,color-mix(in_oklab,var(--card)_86%,white)_0%,color-mix(in_oklab,var(--secondary)_72%,white)_55%,color-mix(in_oklab,var(--accent)_26%,white)_100%)] p-6 shadow-[0_24px_60px_rgba(96,76,48,0.10)] sm:p-8 dark:bg-[linear-gradient(145deg,color-mix(in_oklab,var(--card)_88%,black)_0%,color-mix(in_oklab,var(--secondary)_62%,black)_55%,color-mix(in_oklab,var(--accent)_18%,black)_100%)] dark:shadow-[0_24px_60px_rgba(0,0,0,0.28)]">
-			<div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[2rem]">
-				<div className="bg-primary/12 absolute top-0 right-0 h-40 w-40 rounded-full blur-3xl" />
-				<div className="bg-accent/18 absolute bottom-0 left-0 h-32 w-32 rounded-full blur-2xl" />
-			</div>
-			<div className="relative flex h-full flex-col justify-between gap-8">
-				<div className="space-y-4">
-					<p className="text-primary/75 text-xs font-semibold tracking-[0.28em] uppercase">
-						Daily moments
+		<FeatureSurface
+			theme="preview"
+			radius="xl"
+			padding="roomy"
+			overflow="visible"
+			contentClassName="flex h-full flex-col justify-between gap-8">
+			<div className="space-y-4">
+				<p className="text-primary/75 text-xs font-semibold tracking-[0.28em] uppercase">
+					Daily moments
+				</p>
+				<div className="space-y-3">
+					<h1 className="max-w-md text-2xl leading-tight font-semibold sm:text-4xl">
+						흘러가는 하루를
+						<br />
+						차분히 남겨두는 기록장
+					</h1>
+					<p className="text-muted-foreground max-w-lg text-sm leading-7 sm:text-base">
+						스쳐 지나가는 장면을 사진과 짧은 글로 남기고, 시간이 지난 뒤엔 AI가
+						한 주의 흐름까지 정리해드려요.
 					</p>
-					<div className="space-y-3">
-						<h1 className="max-w-md text-2xl leading-tight font-semibold sm:text-4xl">
-							흘러가는 하루를
-							<br />
-							차분히 남겨두는 기록장
-						</h1>
-						<p className="text-muted-foreground max-w-lg text-sm leading-7 sm:text-base">
-							스쳐 지나가는 장면을 사진과 짧은 글로 남기고, 시간이 지난 뒤엔
-							AI가 한 주의 흐름까지 정리해드려요.
-						</p>
-					</div>
-				</div>
-
-				<div className="grid gap-4">
-					{previewItems.map(item => (
-						<article
-							key={item.label}
-							className="border-border/70 bg-background/78 rounded-[1.5rem] border p-5 backdrop-blur-sm">
-							<p className="text-primary/70 text-[11px] font-semibold tracking-[0.24em] uppercase">
-								{item.label}
-							</p>
-							<h2 className="mt-3 text-base leading-7 font-semibold">
-								{item.title}
-							</h2>
-							<p className="text-muted-foreground mt-2 text-sm leading-6">
-								{item.description}
-							</p>
-						</article>
-					))}
-				</div>
-
-				<div className="text-muted-foreground relative flex flex-wrap items-center gap-3 text-sm">
-					{featureChips.map(chip => (
-						<Chip
-							key={chip.text}
-							text={chip.text}
-							subTitle={chip.subTitle}
-							description={chip.description}
-						/>
-					))}
 				</div>
 			</div>
-		</section>
+
+			<div className="grid gap-4">
+				{previewItems.map(item => (
+					<article
+						key={item.label}
+						className="border-border/70 bg-background/78 rounded-[1.5rem] border p-5 backdrop-blur-sm">
+						<p className="text-primary/70 text-[11px] font-semibold tracking-[0.24em] uppercase">
+							{item.label}
+						</p>
+						<h2 className="mt-3 text-base leading-7 font-semibold">
+							{item.title}
+						</h2>
+						<p className="text-muted-foreground mt-2 text-sm leading-6">
+							{item.description}
+						</p>
+					</article>
+				))}
+			</div>
+
+			<div className="text-muted-foreground relative flex flex-wrap items-center gap-3 text-sm">
+				{featureChips.map(chip => (
+					<Chip
+						key={chip.text}
+						text={chip.text}
+						subTitle={chip.subTitle}
+						description={chip.description}
+					/>
+				))}
+			</div>
+		</FeatureSurface>
 	);
 }

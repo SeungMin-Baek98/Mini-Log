@@ -2,6 +2,7 @@ import { Link, useNavigate, useRouteError } from 'react-router';
 import { ChevronLeft, Home, TriangleAlert } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
+import { Surface } from '@/components/ui/surface';
 import { AppRouteError } from '@/lib/route-error';
 
 const DEFAULT_ERROR_COPY = {
@@ -24,7 +25,9 @@ export default function RouteErrorPage() {
 
 	return (
 		<div className="bg-background flex min-h-screen items-center justify-center px-4 py-12 sm:px-6">
-			<div className="border-border/80 bg-card/95 flex w-full max-w-xl flex-col items-center gap-5 rounded-[2rem] border px-6 py-10 text-center shadow-[0_22px_50px_rgba(96,76,48,0.08)] sm:px-10">
+			<Surface
+				radius="xl"
+				className="flex w-full max-w-xl flex-col items-center gap-5 px-6 py-10 text-center shadow-[0_22px_50px_rgba(96,76,48,0.08)] sm:px-10">
 				<div className="bg-primary/10 text-primary rounded-full p-4">
 					<TriangleAlert className="h-8 w-8" />
 				</div>
@@ -49,7 +52,7 @@ export default function RouteErrorPage() {
 						</Link>
 					</Button>
 				</div>
-			</div>
+			</Surface>
 		</div>
 	);
 }
