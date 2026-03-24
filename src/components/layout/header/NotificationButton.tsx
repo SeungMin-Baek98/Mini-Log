@@ -103,7 +103,12 @@ export default function NotificationButton() {
 		return () => {
 			channel.unsubscribe();
 		};
-	}, [notificationQueryKey, queryClient, session?.user.id, unreadCountQueryKey]);
+	}, [
+		notificationQueryKey,
+		queryClient,
+		session?.user.id,
+		unreadCountQueryKey
+	]);
 
 	if (!session?.user) return null;
 
