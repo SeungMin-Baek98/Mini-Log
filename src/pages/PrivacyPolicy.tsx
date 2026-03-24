@@ -4,6 +4,7 @@ import {
 	AccordionItem,
 	AccordionTrigger
 } from '@/components/ui/accordion';
+import { Surface } from '@/components/ui/surface';
 
 const policySections = [
 	{
@@ -117,7 +118,11 @@ const policySections = [
 
 export default function PrivacyPolicyPage() {
 	return (
-		<div className="bg-card/90 border-border text-card-foreground mx-auto max-w-3xl space-y-8 rounded-[2rem] border p-6 shadow-[0_18px_40px_color-mix(in_oklab,var(--foreground)_8%,transparent)] backdrop-blur-sm sm:p-8">
+		<Surface
+			tone="page"
+			radius="xl"
+			padding="roomy"
+			className="mx-auto max-w-3xl space-y-8">
 			<div className="space-y-3">
 				<p className="text-primary text-xs font-semibold tracking-[0.24em] uppercase">
 					Privacy Policy
@@ -155,6 +160,6 @@ export default function PrivacyPolicyPage() {
 					</AccordionItem>
 				))}
 			</Accordion>
-		</div>
+		</Surface>
 	);
 }

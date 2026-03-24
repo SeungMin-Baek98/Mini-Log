@@ -9,6 +9,7 @@ import Calendar from '@/features/calendar/components/Calendar';
 import { Select, type SelectOption } from '@/components/ui/select';
 import type { PostSortOrder } from '@/types';
 import { Tab, type TabCategory } from '@/components/ui/tab';
+import { Surface } from '@/components/ui/surface';
 
 const POST_SORT_OPTIONS: SelectOption<PostSortOrder>[] = [
 	{ label: '최신순', value: 'latest' },
@@ -76,13 +77,13 @@ export default function ProfileDetailPage() {
 			)}
 
 			{selectedTab === 'date' && (
-				<div className="border-border/80 bg-card/90 dark:bg-card/80 rounded-[1.75rem] border p-5 shadow-[0_18px_40px_rgba(96,76,48,0.05)] dark:shadow-[0_18px_40px_rgba(0,0,0,0.24)]">
+				<Surface tone="muted" padding="compact">
 					<Calendar
 						userId={userId}
 						onChange={date => setSelectedDate(date, currentUserId)}
 						value={selectedDate}
 					/>
-				</div>
+				</Surface>
 			)}
 			{selectedTab === 'date' && selectedDate && (
 				<PostFeed authorId={userId} date={selectedDate} />

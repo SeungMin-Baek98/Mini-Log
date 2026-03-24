@@ -20,6 +20,7 @@ import Loader from '@/components/Loader';
 import Fallback from '@/components/Fallback';
 import LikePostButton from './LikePostButton';
 import CommentButton from './CommentButton';
+import { Surface } from '@/components/ui/surface';
 
 export default function PostItem({
 	postId,
@@ -50,8 +51,10 @@ export default function PostItem({
 	const isMine = userId === post.author_id;
 
 	return (
-		<div
-			className={`border-border/80 bg-card/95 flex flex-col gap-5 overflow-hidden rounded-[1.75rem] border p-5 shadow-[0_18px_40px_rgba(96,76,48,0.06)] sm:p-6 ${
+		<Surface
+			as="article"
+			padding="card"
+			className={`flex flex-col gap-5 overflow-hidden ${
 				type === 'DETAIL' ? 'sm:p-7' : ''
 			}`}>
 			{/* 1. 유저 정보, 수정/삭제 버튼 */}
@@ -140,6 +143,6 @@ export default function PostItem({
 					disabled={type === 'DETAIL'}
 				/>
 			</div>
-		</div>
+		</Surface>
 	);
 }
