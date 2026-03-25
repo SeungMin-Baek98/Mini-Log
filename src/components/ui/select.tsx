@@ -9,8 +9,8 @@ export type SelectOption<T extends string = string> = {
 };
 
 type SelectProps<T extends string> = Omit<
-	React.ComponentProps<'select'>,
-	'value' | 'onChange'
+	React.ButtonHTMLAttributes<HTMLButtonElement>,
+	'value' | 'onChange' | 'type'
 > & {
 	options: SelectOption<T>[];
 	value: T;
@@ -24,10 +24,12 @@ function Select<T extends string>({
 	options,
 	value,
 	onChange,
+	disabled,
 	...props
 }: SelectProps<T>) {
 	const [open, setOpen] = React.useState(false);
 	const rootRef = React.useRef<HTMLDivElement>(null);
+	const isDisabled = disabled || options.length === 0;
 
 	const selectedOption = options.find(option => option.value === value);
 
@@ -42,19 +44,35 @@ function Select<T extends string>({
 		return () => document.removeEventListener('mousedown', handleClickOutside);
 	}, []);
 
+	React.useEffect(() => {
+		if (isDisabled) {
+			setOpen(false);
+		}
+	}, [isDisabled]);
+
 	return (
-		<div ref={rootRef} className={cn('relative w-32', className)}>
+		<div ref={rootRef} className={cn('relative w-32', containerClassName)}>
 			<button
+				{...props}
 				type="button"
-				onClick={() => setOpen(prev => !prev)}
-				className="border-input bg-card text-foreground flex h-11 w-full items-center justify-between rounded-full border px-4 text-sm">
+				disabled={isDisabled}
+				aria-expanded={open}
+				aria-haspopup="listbox"
+				onClick={() => {
+					if (isDisabled) return;
+					setOpen(prev => !prev);
+				}}
+				className={cn(
+					'border-input bg-card text-foreground flex h-11 w-full items-center justify-between rounded-2xl border px-4 text-sm disabled:cursor-not-allowed disabled:opacity-50',
+					className
+				)}>
 				<span>{selectedOption?.label ?? '선택해주세요'}</span>
 				<ChevronDown
 					className={cn('size-4 transition', open && 'rotate-180')}
 				/>
 			</button>
 
-			{open && (
+			{open && !isDisabled && (
 				<ul
 					role="listbox"
 					className="bg-card absolute top-full z-50 mt-2 w-full overflow-hidden rounded-2xl border shadow-lg">

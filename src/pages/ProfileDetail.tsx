@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Navigate, useParams } from 'react-router';
 
 import ProfileInfo from '@/features/profile/components/ProfileInfo';
+import { useProfilePostStats } from '@/features/profile/hooks/queries/useProfilePostStats';
 import PostFeed from '@/features/post/components/PostFeed';
 import { useProfileSelectedDate } from '@/store/profileSelectedDate';
 
@@ -22,11 +23,13 @@ export default function ProfileDetailPage() {
 	const currentUserId = userId ?? null;
 	const [selectedTab, setSelectedTab] = useState<TabCategory>('all');
 	const [sortOrder, setSortOrder] = useState<PostSortOrder>('latest');
+	const { data: profileStats } = useProfilePostStats(userId);
 	const {
 		selectedDate,
 		selectedUserId,
 		actions: { setSelectedDate, clear }
 	} = useProfileSelectedDate();
+	const hasPosts = (profileStats?.totalPosts ?? 0) > 0;
 
 	useEffect(() => {
 		window.scrollTo({
@@ -68,6 +71,7 @@ export default function ProfileDetailPage() {
 							options={POST_SORT_OPTIONS}
 							value={sortOrder}
 							onChange={setSortOrder}
+							disabled={!hasPosts}
 							containerClassName="w-32"
 							aria-label="게시글 정렬"
 						/>
