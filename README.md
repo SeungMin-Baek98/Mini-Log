@@ -103,18 +103,18 @@
 
 ## 기술 스택
 
-| 분류 | 기술 |
-| --- | --- |
-| Framework | React 19, React Router 7 |
-| Language | TypeScript |
-| Build | Vite |
-| Styling | Tailwind CSS v4 |
-| UI | Radix UI, shadcn/ui, Motion |
-| Server State | TanStack Query |
-| Client State | Zustand |
-| Backend | Supabase Auth, Database, Storage, Realtime, Edge Functions |
-| Test | Vitest, Playwright MCP, Storybook |
-| CI | GitHub Actions |
+| 분류         | 기술                                                       |
+| ------------ | ---------------------------------------------------------- |
+| Framework    | React 19, React Router 7                                   |
+| Language     | TypeScript                                                 |
+| Build        | Vite                                                       |
+| Styling      | Tailwind CSS v4                                            |
+| UI           | Radix UI, shadcn/ui, Motion                                |
+| Server State | TanStack Query                                             |
+| Client State | Zustand                                                    |
+| Backend      | Supabase Auth, Database, Storage, Realtime, Edge Functions |
+| Test         | Vitest, Playwright MCP, Storybook                          |
+| CI           | GitHub Actions                                             |
 
 ## 프로젝트 구조
 
@@ -134,9 +134,6 @@ src/
 - [현재 기능 정리](docs/current-features.md)
 - [프로젝트 구조와 데이터 흐름](docs/project-structure.md)
 - [Playwright QA 리포트 (2026-03-20)](docs/playwright-qa-report.md)
-- [Playwright 테스트 리포트 (2026-01-28 스냅샷)](playwright-test-report.md)
-- [E2E 테스트 리포트 (2026-01-28 스냅샷)](e2e-test-report.md)
-- [렌더링 전략 정리 노트](rendering-strategies.md)
 
 ## 실행 방법
 
