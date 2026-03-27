@@ -124,4 +124,5 @@ src/
 ## 7. 문서 연결
 
 - 기능 범위는 [docs/current-features.md](current-features.md)
+- 모달 이벤트 흐름은 [docs/modal-event-flow.md](modal-event-flow.md)
 - 제품 소개와 실행 방법은 [README.md](../README.md)

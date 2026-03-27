@@ -121,4 +121,5 @@
 - 서비스 소개와 실행 방법은 루트 [README.md](../README.md)에서 확인합니다.
 - 현재 기능 범위는 이 문서를 기준으로 봅니다.
 - 구조와 데이터 흐름은 [docs/project-structure.md](project-structure.md)에서 확인합니다.
+- 모달 동작과 이벤트 흐름은 [docs/modal-event-flow.md](modal-event-flow.md)에서 확인합니다.
 - 루트의 테스트 리포트 문서는 특정 시점의 기록이므로, 현재 기능 목록의 기준 문서로 사용하지 않습니다.
