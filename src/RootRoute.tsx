@@ -1,3 +1,4 @@
+import { lazy } from 'react';
 import {
 	createBrowserRouter,
 	createRoutesFromElements,
@@ -36,7 +37,6 @@ import {
 	parsePositiveInteger
 } from '@/lib/route-error';
 import supabase from '@/utils/supabase';
-import { lazy } from 'react';
 
 async function getCurrentSessionOrThrow() {
 	const { data, error } = await supabase.auth.getSession();

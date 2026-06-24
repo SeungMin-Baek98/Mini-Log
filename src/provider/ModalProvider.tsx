@@ -1,4 +1,11 @@
+import { lazy, Suspense } from 'react';
 import { createPortal } from 'react-dom';
+
+import { useAlertModal } from '@/store/alertModal';
+import { usePostEditorModal } from '@/store/postEditorModal';
+import { useProfileEditorModal } from '@/store/profileEditorModal';
+import { useShowOriginImagesModal } from '@/store/showOriginImagesModal';
+import { useWeeklyRecapModal } from '@/store/weeklyRecapModal';
 
 const PostEditorModal = lazy(
 	() => import('@/components/modal/PostEditorModal')
@@ -13,13 +20,6 @@ const ShowOriginImagesModal = lazy(
 const WeeklyRecapModal = lazy(
 	() => import('@/components/modal/WeeklyRecapModal')
 );
-
-import { usePostEditorModal } from '@/store/postEditorModal';
-import { lazy, Suspense } from 'react';
-import { useAlertModal } from '@/store/alertModal';
-import { useProfileEditorModal } from '@/store/profileEditorModal';
-import { useShowOriginImagesModal } from '@/store/showOriginImagesModal';
-import { useWeeklyRecapModal } from '@/store/weeklyRecapModal';
 
 function LazyModals() {
 	const postEditorModal = usePostEditorModal();
