@@ -1,3 +1,4 @@
+import { lazy } from 'react';
 import {
 	createBrowserRouter,
 	createRoutesFromElements,
@@ -6,18 +7,23 @@ import {
 	Route
 } from 'react-router';
 
-import SigninPage from './pages/SignIn';
-import SignUpPage from './pages/Signup';
-import ForgetPasswordPage from './pages/ForgetPassword';
-import IndexPage from './pages/Index';
-import ProfileDetailPage from './pages/ProfileDetail';
-import PostDetailPage from './pages/PostDetail';
-import ResetPasswordPage from './pages/ResetPassword';
-import PrivacyPolicyPage from './pages/PrivacyPolicy';
-import GlobalLayout from './components/layout/GlobalLayout';
-import GuestOnlyLayout from './components/layout/GuestOnlyLayout';
-import MemberOnlyLayout from './components/layout/MemberOnlyLayout';
-import RouteErrorPage from './pages/RouteError';
+const SigninPage = lazy(() => import('./pages/SignIn'));
+const SignUpPage = lazy(() => import('./pages/Signup'));
+const ForgetPasswordPage = lazy(() => import('./pages/ForgetPassword'));
+const IndexPage = lazy(() => import('./pages/Index'));
+const ProfileDetailPage = lazy(() => import('./pages/ProfileDetail'));
+const PostDetailPage = lazy(() => import('./pages/PostDetail'));
+const ResetPasswordPage = lazy(() => import('./pages/ResetPassword'));
+const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicy'));
+const GlobalLayout = lazy(() => import('./components/layout/GlobalLayout'));
+const GuestOnlyLayout = lazy(
+	() => import('./components/layout/GuestOnlyLayout')
+);
+const MemberOnlyLayout = lazy(
+	() => import('./components/layout/MemberOnlyLayout')
+);
+const RouteErrorPage = lazy(() => import('./pages/RouteError'));
+
 import { queryClient } from '@/lib/queryClient';
 import {
 	getPostByIdQueryOptions,

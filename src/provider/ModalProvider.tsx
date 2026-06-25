@@ -1,10 +1,43 @@
+import { lazy, Suspense } from 'react';
 import { createPortal } from 'react-dom';
 
-import PostEditorModal from '@/components/modal/PostEditorModal';
-import AlertModal from '@/components/modal/AlertModal';
-import ProfileEditorModal from '@/components/modal/ProfileEditorModal';
-import ShowOriginImagesModal from '@/components/modal/ShowOriginImagesModal';
-import WeeklyRecapModal from '@/components/modal/WeeklyRecapModal';
+import { useAlertModal } from '@/store/alertModal';
+import { usePostEditorModal } from '@/store/postEditorModal';
+import { useProfileEditorModal } from '@/store/profileEditorModal';
+import { useShowOriginImagesModal } from '@/store/showOriginImagesModal';
+import { useWeeklyRecapModal } from '@/store/weeklyRecapModal';
+
+const PostEditorModal = lazy(
+	() => import('@/components/modal/PostEditorModal')
+);
+const AlertModal = lazy(() => import('@/components/modal/AlertModal'));
+const ProfileEditorModal = lazy(
+	() => import('@/components/modal/ProfileEditorModal')
+);
+const ShowOriginImagesModal = lazy(
+	() => import('@/components/modal/ShowOriginImagesModal')
+);
+const WeeklyRecapModal = lazy(
+	() => import('@/components/modal/WeeklyRecapModal')
+);
+
+function LazyModals() {
+	const postEditorModal = usePostEditorModal();
+	const alertModal = useAlertModal();
+	const profileEditorModal = useProfileEditorModal();
+	const showOriginImagesModal = useShowOriginImagesModal();
+	const weeklyRecapModal = useWeeklyRecapModal();
+
+	return (
+		<Suspense fallback={null}>
+			{postEditorModal.isOpen && <PostEditorModal />}
+			{alertModal.isOpen && <AlertModal />}
+			{profileEditorModal.isOpen && <ProfileEditorModal />}
+			{showOriginImagesModal.isOpen && <ShowOriginImagesModal />}
+			{weeklyRecapModal.isOpen && <WeeklyRecapModal />}
+		</Suspense>
+	);
+}
 
 export default function ModalProvider({
 	children
@@ -13,16 +46,7 @@ export default function ModalProvider({
 }) {
 	return (
 		<>
-			{createPortal(
-				<>
-					<PostEditorModal />
-					<AlertModal />
-					<ProfileEditorModal />
-					<ShowOriginImagesModal />
-					<WeeklyRecapModal />
-				</>,
-				document.getElementById('modal-root')!
-			)}
+			{createPortal(<LazyModals />, document.getElementById('modal-root')!)}
 			{children}
 		</>
 	);
