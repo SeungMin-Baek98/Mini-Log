@@ -1,15 +1,16 @@
 const MAX_IMAGE_DIMENSION_PX = 1200;
 const WEBP_QUALITY = 0.82;
 
-function getResizedDimensions(width: number, height: number) {
-	if (width <= MAX_IMAGE_DIMENSION_PX && height <= MAX_IMAGE_DIMENSION_PX) {
+function getResizedDimensions(
+	width: number,
+	height: number,
+	maxDimension: number
+) {
+	if (width <= maxDimension && height <= maxDimension) {
 		return { width, height };
 	}
 
-	const ratio = Math.min(
-		MAX_IMAGE_DIMENSION_PX / width,
-		MAX_IMAGE_DIMENSION_PX / height
-	);
+	const ratio = Math.min(maxDimension / width, maxDimension / height);
 
 	return {
 		width: Math.round(width * ratio),
@@ -41,13 +42,25 @@ function replaceExtension(fileName: string, extension: string) {
 	return `${baseName}.${extension}`;
 }
 
-export async function optimizeImage(file: File) {
+export async function optimizeImage(
+	file: File,
+	options?: {
+		maxDimension?: number;
+		quality?: number;
+	}
+) {
 	if (!file.type.startsWith('image/') || file.type === 'image/gif') {
 		return file;
 	}
 
+	const maxDimension = options?.maxDimension ?? MAX_IMAGE_DIMENSION_PX;
+	const quality = options?.quality ?? WEBP_QUALITY;
 	const image = await loadImage(file);
-	const { width, height } = getResizedDimensions(image.width, image.height);
+	const { width, height } = getResizedDimensions(
+		image.width,
+		image.height,
+		maxDimension
+	);
 	const canvas = document.createElement('canvas');
 	canvas.width = width;
 	canvas.height = height;
@@ -70,7 +83,7 @@ export async function optimizeImage(file: File) {
 				resolve(blob);
 			},
 			'image/webp',
-			WEBP_QUALITY
+			quality
 		);
 	});
 

@@ -24,10 +24,12 @@ import { Surface } from '@/components/ui/surface';
 
 export default function PostItem({
 	postId,
-	type
+	type,
+	prioritizeImage = false
 }: {
 	postId: number;
 	type: 'FEED' | 'DETAIL';
+	prioritizeImage?: boolean;
 }) {
 	const session = useSession();
 	const userId = session?.user.id;
@@ -119,7 +121,18 @@ export default function PostItem({
 										src={url}
 										onClick={() => handleShowOriginImagesModal(index)}
 										alt={`게시 이미지 ${index + 1}`}
-										className="h-full w-full object-cover transition-transform duration-500 hover:scale-[1.03]"
+										fetchPriority={
+											(prioritizeImage || type === 'DETAIL') && index === 0
+												? 'high'
+												: 'auto'
+										}
+										loading={
+											(prioritizeImage || type === 'DETAIL') && index === 0
+												? 'eager'
+												: 'lazy'
+										}
+										decoding="async"
+										className="h-full w-full object-cover"
 									/>
 								</div>
 							</CarouselItem>
