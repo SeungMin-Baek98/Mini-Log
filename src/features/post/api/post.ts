@@ -1,4 +1,5 @@
 import { uploadImage } from '@/features/image/api/image';
+import { getImageFileExtension } from '@/features/image/lib/imageFileExtension';
 import { optimizeImage } from '@/features/image/lib/optimizeImage';
 import type { Post, PostEntity, PostSortOrder, ProfileEntity } from '@/types';
 
@@ -29,11 +30,6 @@ function mapPostWithViewerState(post: PostRow, userId?: string): Post {
 		...post,
 		isLiked: !!userId && !!post.myLiked?.length
 	};
-}
-
-function getImageFileExtension(file: File) {
-	if (file.type === 'image/webp') return 'webp';
-	return file.name.split('.').pop() || 'webp';
 }
 
 export async function fetchPosts({

@@ -91,6 +91,8 @@ export async function optimizeImage(
 		);
 	});
 
+	if (blob.size >= file.size) return file;
+
 	return new File([blob], replaceExtension(file.name, 'webp'), {
 		type: 'image/webp'
 	});

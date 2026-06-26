@@ -2,11 +2,7 @@ import { getRandomNickname } from '@/lib/utils';
 import supabase from '@/utils/supabase';
 import { deleteImagesInPath, uploadImage } from '@/features/image/api/image';
 import { optimizeImage } from '@/features/image/lib/optimizeImage';
-
-function getImageFileExtension(file: File) {
-	if (file.type === 'image/webp') return 'webp';
-	return file.name.split('.').pop() || 'webp';
-}
+import { getImageFileExtension } from '@/features/image/lib/imageFileExtension';
 
 /** 유저의 프로필 정보를 불러오는 함수 */
 export async function fetchProfile(userId: string) {

@@ -25,7 +25,7 @@ export default function Header() {
 							<img
 								src={logoMark}
 								alt="미니 로그의 로고, 메세지 말풍선을 형상화한 모양이다"
-								className="inset-0 h-8 w-8 object-cover"
+								className="h-8 w-8 object-contain"
 							/>
 							미니 로그
 						</div>
