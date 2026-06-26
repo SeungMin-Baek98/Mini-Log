@@ -49,7 +49,11 @@ export async function optimizeImage(
 		quality?: number;
 	}
 ) {
-	if (!file.type.startsWith('image/') || file.type === 'image/gif') {
+	if (
+		!file.type.startsWith('image/') ||
+		file.type === 'image/gif' ||
+		file.type === 'image/svg+xml'
+	) {
 		return file;
 	}
 
