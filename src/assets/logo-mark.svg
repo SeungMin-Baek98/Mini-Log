@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+	<title id="title">Mini Log logo mark</title>
+	<rect x="8" y="13" width="48" height="38" rx="6" fill="#9b7a52"/>
+	<path d="M12 17h15c5 0 9 3 9 8v24c-3-4-7-6-12-6H12V17Z" fill="#f7eed5"/>
+	<path d="M52 17H37c-5 0-9 3-9 8v24c3-4 7-6 12-6h12V17Z" fill="#fff8e7"/>
+	<path d="M16 21h10c4 0 7 3 7 7v16c-3-3-6-4-10-4h-7V21Z" fill="none" stroke="#6f5538" stroke-width="2.5" stroke-linejoin="round"/>
+	<path d="M48 21H38c-4 0-7 3-7 7v16c3-3 6-4 10-4h7V21Z" fill="none" stroke="#6f5538" stroke-width="2.5" stroke-linejoin="round"/>
+	<circle cx="32" cy="31" r="10" fill="#f47f6f"/>
+	<path d="M32 41v10" stroke="#6f5538" stroke-width="3" stroke-linecap="round"/>
+</svg>

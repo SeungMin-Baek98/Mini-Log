@@ -107,9 +107,14 @@ export default function PostFeed({
 
 		return (
 			<div className="flex flex-col gap-6 sm:gap-8">
-				{infiniteQuery.data.pages.map(page =>
-					page.map(postId => (
-						<PostItem key={postId} postId={postId} type="FEED" />
+				{infiniteQuery.data.pages.map((postIds, pageIndex) =>
+					postIds.map((postId, postIndex) => (
+						<PostItem
+							key={postId}
+							postId={postId}
+							type="FEED"
+							prioritizeImage={pageIndex === 0 && postIndex === 0}
+						/>
 					))
 				)}
 				{isFetchingNextPage && <Loader />}
@@ -133,8 +138,13 @@ export default function PostFeed({
 
 	return (
 		<div className="flex flex-col gap-6 sm:gap-8">
-			{postIds.map(postId => (
-				<PostItem key={postId} postId={postId} type="FEED" />
+			{postIds.map((postId, index) => (
+				<PostItem
+					key={postId}
+					postId={postId}
+					type="FEED"
+					prioritizeImage={index === 0}
+				/>
 			))}
 			<Pagination
 				className="pt-2"

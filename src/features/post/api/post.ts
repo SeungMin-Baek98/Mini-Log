@@ -1,4 +1,6 @@
 import { uploadImage } from '@/features/image/api/image';
+import { getImageFileExtension } from '@/features/image/lib/imageFileExtension';
+import { optimizeImage } from '@/features/image/lib/optimizeImage';
 import type { Post, PostEntity, PostSortOrder, ProfileEntity } from '@/types';
 
 import supabase from '@/utils/supabase';
@@ -185,13 +187,14 @@ export async function createPostWithImages({
 	try {
 		// 2. 이미지 업로드
 		const imagesUrls = await Promise.all(
-			images.map(image => {
-				const fileExtension = image.name.split('.').pop() || 'webp';
+			images.map(async image => {
+				const optimizedImage = await optimizeImage(image);
+				const fileExtension = getImageFileExtension(optimizedImage);
 				const fileName = `${Date.now()}-${crypto.randomUUID()}.${fileExtension}`;
 				const filePath = `${userId}/${post.id}/${fileName}`;
 
 				return uploadImage({
-					file: image,
+					file: optimizedImage,
 					filePath
 				});
 			})

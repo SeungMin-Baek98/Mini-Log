@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router';
 
-import logo from '@/assets/logo.png';
+import logoMark from '@/assets/logo-mark.svg';
 import ThemeButton from './ThemeButton';
 import ProfileButton from './ProfileButton';
 import NotificationButton from './NotificationButton';
@@ -23,9 +23,9 @@ export default function Header() {
 						</span>
 						<div className="flex gap-2 text-lg font-semibold">
 							<img
-								src={logo}
+								src={logoMark}
 								alt="미니 로그의 로고, 메세지 말풍선을 형상화한 모양이다"
-								className="inset-0 h-8 w-8 object-cover"
+								className="h-8 w-8 object-contain"
 							/>
 							미니 로그
 						</div>
