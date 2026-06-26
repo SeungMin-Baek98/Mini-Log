@@ -1,4 +1,5 @@
 import { uploadImage } from '@/features/image/api/image';
+import { optimizeImage } from '@/features/image/lib/optimizeImage';
 import type { Post, PostEntity, PostSortOrder, ProfileEntity } from '@/types';
 
 import supabase from '@/utils/supabase';
@@ -28,6 +29,11 @@ function mapPostWithViewerState(post: PostRow, userId?: string): Post {
 		...post,
 		isLiked: !!userId && !!post.myLiked?.length
 	};
+}
+
+function getImageFileExtension(file: File) {
+	if (file.type === 'image/webp') return 'webp';
+	return file.name.split('.').pop() || 'webp';
 }
 
 export async function fetchPosts({
@@ -185,13 +191,14 @@ export async function createPostWithImages({
 	try {
 		// 2. 이미지 업로드
 		const imagesUrls = await Promise.all(
-			images.map(image => {
-				const fileExtension = image.name.split('.').pop() || 'webp';
+			images.map(async image => {
+				const optimizedImage = await optimizeImage(image);
+				const fileExtension = getImageFileExtension(optimizedImage);
 				const fileName = `${Date.now()}-${crypto.randomUUID()}.${fileExtension}`;
 				const filePath = `${userId}/${post.id}/${fileName}`;
 
 				return uploadImage({
-					file: image,
+					file: optimizedImage,
 					filePath
 				});
 			})
