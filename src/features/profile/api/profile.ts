@@ -1,7 +1,7 @@
 import { getRandomNickname } from '@/lib/utils';
 import supabase from '@/utils/supabase';
 import { deleteImagesInPath, uploadImage } from '@/features/image/api/image';
-import { optimizeImage } from '@/features/image/lib/optimizeImage';
+import { convertImageExtentionToWebp } from '@/features/image/lib/convertImageToWebp';
 import { getImageFileExtension } from '@/features/image/lib/imageFileExtension';
 
 /** 유저의 프로필 정보를 불러오는 함수 */
@@ -49,10 +49,13 @@ export async function updateProfile({
 	// 2. 새로운 아바타 이미지 업로드
 	let newAvatarImageUrl;
 	if (avatarImageFile) {
-		const optimizedAvatarImage = await optimizeImage(avatarImageFile, {
-			maxDimension: 512,
-			quality: 0.82
-		});
+		const optimizedAvatarImage = await convertImageExtentionToWebp(
+			avatarImageFile,
+			{
+				maxDimension: 512,
+				quality: 0.82
+			}
+		);
 		const fileExtension = getImageFileExtension(optimizedAvatarImage);
 		const filePath = `${userId}/avatar/${new Date().getTime()}-${crypto.randomUUID()}.${fileExtension}`;
 

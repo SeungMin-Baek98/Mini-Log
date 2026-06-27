@@ -42,7 +42,7 @@ function replaceExtension(fileName: string, extension: string) {
 	return `${baseName}.${extension}`;
 }
 
-export async function optimizeImage(
+export async function convertImageExtentionToWebp(
 	file: File,
 	options?: {
 		maxDimension?: number;
