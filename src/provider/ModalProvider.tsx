@@ -6,11 +6,12 @@ import { usePostEditorModal } from '@/store/postEditorModal';
 import { useProfileEditorModal } from '@/store/profileEditorModal';
 import { useShowOriginImagesModal } from '@/store/showOriginImagesModal';
 import { useWeeklyRecapModal } from '@/store/weeklyRecapModal';
+import AlertModal from '@/components/modal/AlertModal';
 
 const PostEditorModal = lazy(
 	() => import('@/components/modal/PostEditorModal')
 );
-const AlertModal = lazy(() => import('@/components/modal/AlertModal'));
+
 const ProfileEditorModal = lazy(
 	() => import('@/components/modal/ProfileEditorModal')
 );
