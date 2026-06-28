@@ -25,10 +25,6 @@ export default function SessionProvider({
 	const isSessionLoaded = useIsSessionLoaded();
 	const setSession = useSetSession();
 
-	const { data: profile, isLoading: isProfileLoading } = useProfileData(
-		session?.user.id
-	);
-
 	const expireSession = useCallback(async () => {
 		clearSessionStartedAt();
 		await signOut();
@@ -93,7 +89,6 @@ export default function SessionProvider({
 	}, [expireSession, session]);
 
 	if (!isSessionLoaded) return <GlobalLoader />;
-	if (isProfileLoading) return <GlobalLoader />;
 
 	return children;
 }
